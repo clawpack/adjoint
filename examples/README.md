@@ -18,29 +18,29 @@ the use of the adjoint method for guiding adaptive mesh refinement in Clawpack i
 ### Software Dependencies
 **All the required software is open source.**
 
-* ** ** gfortran 5.0.0
-* ** ** python 2.7.10
-* ** ** clawpack 5.3.0 : [Clawpack](http://www.clawpack.org/ )
-* ** ** git: to clone this repository
+* gfortran 5.0.0
+* python 2.7.10
+* clawpack 5.3.0 : [Clawpack](http://www.clawpack.org/ )
+* git: to clone this repository
 
 Note: Clawpack 5.0 or higher is required, other versions of gfortran and python might work as well.
 
 **Operating system.**
 
-* ** ** Linux
-* ** ** Mac OS X
+* Linux
+* Mac OS X
 
 ### Examples Included
 There are a total of five examples presented in the paper.
 
-* ** ** 1-dimensional heterogeneous acoustics 
-    * ** **An example with wall boundary conditions, and demonstrates both a time point and time range of interest.
-* ** ** 2-dimensional radially symmetric acoustics 
-    * ** ** An example with wall boundary conditions, and a time point of interest.
-    * ** ** An example with wall boundary conditions, and a time range of interest.
-    * ** ** An example with both wall and outflow boundary conditions, and a time range of interest.
-* ** ** 2-dimensional shallow water equations 
-    * ** ** A tsunami propagation example.
+* 1-dimensional heterogeneous acoustics 
+    * An example with wall boundary conditions, and demonstrates both a time point and time range of interest.
+* 2-dimensional radially symmetric acoustics 
+    * An example with wall boundary conditions, and a time point of interest.
+    * An example with wall boundary conditions, and a time range of interest.
+    * An example with both wall and outflow boundary conditions, and a time range of interest.
+* 2-dimensional shallow water equations 
+    * A tsunami propagation example.
 
 ### Folder Organization
 * **acoustics_1d_heterogeneous:** contains the code to run the 1-dimensional heterogeneous acoustics example. 
@@ -77,4 +77,4 @@ Add link to git repository here.
 
 * **Run the code**
 
-    * ** ** Go any of the folders and follow the instructions in the README.md in that folder.
+    * Go any of the folders and follow the instructions in the README.md in that folder.

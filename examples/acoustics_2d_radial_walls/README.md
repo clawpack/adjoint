@@ -12,7 +12,7 @@ forward code.
 
 ### Running the Code
 
-* ** ** Go to the folder **adjoint** and run in a terminal:
+* Go to the folder **adjoint** and run in a terminal:
 
 ```
 make new
@@ -23,7 +23,7 @@ The code will produce two new folders: _output and _plots.
 The first one contains all the output files, while the latter one contains the plots and interactive 
 visualization apps.
 
-* ** ** Go to the main folder **acoustics_2d_radial_walls** and run in the terminal:
+* Go to the main folder **acoustics_2d_radial_walls** and run in the terminal:
 
 ```
 make new
@@ -36,7 +36,7 @@ visualization apps.
 
 ### Running Variations
 
-* ** ** Running the example with adjoint flagging:
+* Running the example with adjoint flagging:
 
 Run in the terminal:
 
@@ -44,7 +44,7 @@ Run in the terminal:
 python run_adjoint_flagging.py
 ```
 
-* ** ** Running the example with pressure flagging:
+* Running the example with pressure flagging:
 
 Open the file **setrun.py**, and modify variable *armdata.flag2refine_tol* to be 0.1. Note: the example will run without this modification, but the modification is needed to generate the exact plots shown in the paper.
 
@@ -55,7 +55,7 @@ make new -f Makefile_pflag
 make .plots -f Makefile_pflag
 ```
 
-* ** ** To compare the two methods:
+* To compare the two methods:
 
 Run in the terminal:
 
@@ -63,5 +63,6 @@ Run in the terminal:
 python compare_methods.py
 ```
 
+This will run both the pressure flagging and the adjoint flagging methods. The results from both methods will be compages in the resulting gauge plot. See paper for an analysis of the results. 
 
 

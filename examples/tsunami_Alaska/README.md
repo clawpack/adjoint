@@ -3,7 +3,7 @@ This code produces the shallow water equations tsunami example presented in the 
 
 ### Running the Code
 
-* ** ** Go to the folder **adjoint** and run in a terminal:
+* Go to the folder **adjoint** and run in a terminal:
 
 ```
 python maketopo.py
@@ -15,7 +15,7 @@ The code will produce two new folders: _output and _plots.
 The first one contains all the output files, while the latter one contains the plots and interactive 
 visualization apps.
 
-* ** ** Go to the main folder **tsunami_Alaska** and run in the terminal:
+* Go to the main folder **tsunami_Alaska** and run in the terminal:
 
 ```
 python maketopo.py
@@ -29,7 +29,7 @@ visualization apps.
 
 ### Running Variations
 
-* ** ** Running the example with adjoint flagging:
+* Running the example with adjoint flagging:
 
 Run in the terminal:
 
@@ -37,7 +37,7 @@ Run in the terminal:
 python run_adjoint_flagging.py
 ```
 
-* ** ** Running the example with surface flagging:
+* Running the example with surface flagging:
 
 Run in the terminal:
 
@@ -47,10 +47,12 @@ make new -f Makefile_sflag
 make .plots -f Makefile_sflag
 ```
 
-* ** ** To compare the two methods:
+* To compare the two methods:
 
 Run in the terminal:
 
 ```
 python compare_methods.py
 ```
+
+This will run two version of the surface-flagging method (one with a low tolerance and one with a high tolerance), and the adjoint-flagging method. The output at the two gauges will be compared in the gauge plot. See the paper for analysis on the results.
