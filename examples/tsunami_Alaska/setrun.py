@@ -463,6 +463,7 @@ def setadjoint(rundata):
     import glob
     
     files = glob.glob("adjoint/_output/fort.tck*")
+    files.sort()
     
     probdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
     probdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')

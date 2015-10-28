@@ -354,6 +354,7 @@ def setadjoint(rundata):
     os.system('mkdir -p %s' % outdir2)
     
     files = glob.glob(outdir+'/fort.q0*')
+    files.sort()
     n = len(files)
     
     for k in range(n):
