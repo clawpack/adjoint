@@ -31,6 +31,8 @@ def setrun(claw_pkg='amrclaw'):
 
     num_dim = 2
     rundata = data.ClawRunData(claw_pkg, num_dim)
+    
+    rundata = setadjoint(rundata)
 
     #------------------------------------------------------------------
     # Problem-specific parameters to be written to setprob.data:
@@ -294,7 +296,7 @@ def setrun(claw_pkg='amrclaw'):
     
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = True      # use this?
-    amrdata.flag2refine_tol = 0.02 # tolerance used in this routine
+    amrdata.flag2refine_tol = 0.1 # tolerance used in this routine
     # User can modify flag2refine to change the criterion for flagging.
     # Default: check maximum absolute difference of first component of q
     # between a cell and each of its neighbors.
@@ -340,20 +342,18 @@ def setrun(claw_pkg='amrclaw'):
     # end of function setrun
     # ----------------------
 
-<<<<<<< Updated upstream
 #-------------------
 def setadjoint(rundata):
     #-------------------
     
     import os,sys,glob
     
-    outdir = 'adjoint/_output'
+    outdir = '../adjoint/_output'
     outdir2 = 'adjoint/_outputReversed'
     
     os.system('mkdir -p %s' % outdir2)
     
     files = glob.glob(outdir+'/fort.q0*')
-    files.sort()
     n = len(files)
     
     for k in range(n):
@@ -372,8 +372,6 @@ def setadjoint(rundata):
 # end of function setadjoint
 # ----------------------
 
-=======
->>>>>>> Stashed changes
 if __name__ == '__main__':
     # Set up run-time parameters and write all data files.
     import sys

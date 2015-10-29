@@ -113,12 +113,6 @@ def setplot(plotdata):
     plotitem.plotstyle = 'b-'
     plotitem.kwargs = {'linewidth': 3}
     plotaxes.afteraxes = fixup_gauge
-                                         
-    # Plot q[0] from previous run as red squares:
-    #plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
-    #plotitem.plot_var = 0
-    #plotitem.plotstyle = 'rs'
-    #plotitem.outdir = '../_output_pflag'
 
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via clawpack.visclaw.frametools.printframes:
@@ -174,6 +168,7 @@ def fixup_gauge(current_data):
     pylab.title('Pressure at Gauge 0', fontsize=size)
     pylab.xticks([1.25, 1.35, 1.45], fontsize=size)
     pylab.yticks([0, 0.1, 0.2, 0.3, 0.4], fontsize=size)
+
 
 #-------------------
 def setadjoint():

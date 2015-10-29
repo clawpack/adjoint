@@ -3,7 +3,7 @@
       use adjoint_module, only: read_adjoint_data, set_time_window
       implicit double precision (a-h,o-z)
       character*25 fname
-      character*7 adjointFolder
+      character*10 adjointFolder
       common /cparam/ rho,bulk,cc,zz
 
 c
@@ -32,7 +32,7 @@ c     # Setting time range of interest
       t_final = 1.5d0
 
 c     # Setting up folder to read adjoint data from
-      adjointFolder = 'adjoint'
+      adjointFolder = '../adjoint'
 
       call read_adjoint_data(adjointFolder)
       call set_time_window(t_rangeStart, t_final)

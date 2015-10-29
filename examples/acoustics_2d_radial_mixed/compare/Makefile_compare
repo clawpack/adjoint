@@ -12,15 +12,15 @@ CLAWMAKE = $(CLAW)/clawutil/src/Makefile.common
 # Adjust these variables if desired:
 # ----------------------------------
 
-CLAW_PKG = amrclaw                   # Clawpack package to use
-EXE = xamr                           # Executable to create
-SETRUN_FILE = setrun.py              # File containing function to make data
-OUTDIR = _output                     # Directory for output
-SETPLOT_FILE = setplot_pflag.py      # File containing function to set plots
-PLOTDIR = _plots                     # Directory for plots
+CLAW_PKG = amrclaw                  # Clawpack package to use
+EXE = xamr                          # Executable to create
+SETRUN_FILE = ../setrun.py          # File containing function to make data
+OUTDIR = _output                    # Directory for output
+SETPLOT_FILE = setplot_compare.py   # File containing function to set plots
+PLOTDIR = _plots                    # Directory for plots
 
-OVERWRITE ?= True                    # False ==> make a copy of OUTDIR first
-RESTART ?= False                     # Should = clawdata.restart in setrun
+OVERWRITE ?= True                   # False ==> make a copy of OUTDIR first
+RESTART ?= False                    # Should = clawdata.restart in setrun
 
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
@@ -32,17 +32,19 @@ FFLAGS ?=
 # ---------------------------------
 
 AMRLIB = $(CLAW)/amrclaw/src/2d
+ADJLIB = $(CLAW)/adjoint/src
 
 MODULES = \
+  $(ADJLIB)/acoustics/2d/adjoint_module.f90 \
   $(AMRLIB)/amr_module.f90 \
   $(AMRLIB)/gauges_module.f90 \
   $(AMRLIB)/regions_module.f90 \
 
 SOURCES = \
-  qinit.f \
-  setprob_pflag.f \
-  $(AMRLIB)/flag2refine2.f90 \
-  $(AMRLIB)/valout.f \
+  ../qinit.f \
+  setprob_compare.f \
+  $(ADJLIB)/acoustics/2d/flag2refine2.f90 \
+  $(ADJLIB)/acoustics/2d/valout.f \
   $(CLAW)/riemann/src/rpn2_acoustics.f \
   $(CLAW)/riemann/src/rpt2_acoustics.f \
   $(AMRLIB)/setaux.f90 \

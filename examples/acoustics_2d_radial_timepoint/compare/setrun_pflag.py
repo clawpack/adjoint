@@ -114,8 +114,8 @@ def setrun(claw_pkg='amrclaw'):
     if clawdata.output_style==1:
         # Output ntimes frames at equally spaced times up to tfinal:
         # Can specify num_output_times = 0 for no output
-        clawdata.num_output_times = 20
-        clawdata.tfinal = 6.0
+        clawdata.num_output_times = 30
+        clawdata.tfinal = 1.5
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
     elif clawdata.output_style == 2:
@@ -224,11 +224,11 @@ def setrun(claw_pkg='amrclaw'):
     #   2 or 'periodic' => periodic (must specify this at both boundaries)
     #   3 or 'wall'     => solid wall for systems where q(2) is normal velocity
     
-    clawdata.bc_lower[0] = 'extrap'   # at xlower
+    clawdata.bc_lower[0] = 'wall'   # at xlower
     clawdata.bc_upper[0] = 'wall'   # at xupper
 
     clawdata.bc_lower[1] = 'wall'   # at ylower
-    clawdata.bc_upper[1] = 'extrap'   # at yupper
+    clawdata.bc_upper[1] = 'wall'   # at yupper
                          
 
     # ---------------
@@ -237,7 +237,6 @@ def setrun(claw_pkg='amrclaw'):
     rundata.gaugedata.gauges = []
     # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
     rundata.gaugedata.gauges.append([0, 3.5, 0.5, 1.22, 2.85])
-    #rundata.gaugedata.gauges.append([1, 3.6, 0.5, 2.7, 2.85])
 
     # --------------
     # Checkpointing:
@@ -294,10 +293,8 @@ def setrun(claw_pkg='amrclaw'):
     
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = True      # use this?
-    amrdata.flag2refine_tol = 0.02 # tolerance used in this routine
+    amrdata.flag2refine_tol = 0.1 # tolerance used in this routine
     # User can modify flag2refine to change the criterion for flagging.
-    # Default: check maximum absolute difference of first component of q
-    # between a cell and each of its neighbors.
 
     # steps to take on each level L between regriddings of level L+1:
     amrdata.regrid_interval = 2       
@@ -340,40 +337,6 @@ def setrun(claw_pkg='amrclaw'):
     # end of function setrun
     # ----------------------
 
-<<<<<<< Updated upstream
-#-------------------
-def setadjoint(rundata):
-    #-------------------
-    
-    import os,sys,glob
-    
-    outdir = 'adjoint/_output'
-    outdir2 = 'adjoint/_outputReversed'
-    
-    os.system('mkdir -p %s' % outdir2)
-    
-    files = glob.glob(outdir+'/fort.q0*')
-    files.sort()
-    n = len(files)
-    
-    for k in range(n):
-        fname = files[k]
-        newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
-        cmd = 'cp %s %s' % (fname,newname)
-        #print cmd
-        os.system(cmd)
-        fname = fname.replace('q','t')
-        newname = newname.replace('q','t')
-        cmd = 'cp %s %s' % (fname,newname)
-        #print cmd
-        os.system(cmd)
-    
-    return rundata
-# end of function setadjoint
-# ----------------------
-
-=======
->>>>>>> Stashed changes
 if __name__ == '__main__':
     # Set up run-time parameters and write all data files.
     import sys

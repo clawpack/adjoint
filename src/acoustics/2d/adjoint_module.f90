@@ -16,13 +16,13 @@ module adjoint_module
 
 contains
 
-    subroutine read_adjoint_data
+    subroutine read_adjoint_data(adjointFolder)
 
         implicit none
 
         ! Function Arguments
-        character(len=364) :: fname1
-        character(len=364) :: fname2
+        character(len=364) :: fname1, fname2
+        character(len=*), intent(in) :: adjointFolder
         integer :: iunit, iframe, k, i, j, m
         logical :: fileExists
         double precision :: finalT
@@ -31,7 +31,7 @@ contains
         num_adjoints = -1
         do while (fileExists)
             num_adjoints = num_adjoints + 1
-            fname1 = '../adjoint/_output/fort.q' &
+            fname1 = '../' // adjointFolder // '/_output/fort.q' &
                 // char(ichar('0') + mod(num_adjoints/1000,10)) &
                 // char(ichar('0') + mod(num_adjoints/100,10)) &
                 // char(ichar('0') + mod(num_adjoints/10,10)) &
@@ -49,7 +49,7 @@ contains
 
             iframe = num_adjoints - k + 1
             ! Read initial time in from fort.tXXXX file.
-            fname2 = '../adjoint/_output/fort.t' &
+            fname2 = '../' // adjointFolder // '/_output/fort.t' &
                 // char(ichar('0') + mod(iframe/1000,10)) &
                 // char(ichar('0') + mod(iframe/100,10)) &
                 // char(ichar('0') + mod(iframe/10,10)) &
@@ -60,7 +60,7 @@ contains
             close(iunit)
 
             ! first create the file name and open file
-            fname1 = '../adjoint/_output/fort.q' &
+            fname1 = '../' // adjointFolder // '/_output/fort.q' &
                 // char(ichar('0') + mod(iframe/1000,10)) &
                 // char(ichar('0') + mod(iframe/100,10)) &
                 // char(ichar('0') + mod(iframe/10,10)) &

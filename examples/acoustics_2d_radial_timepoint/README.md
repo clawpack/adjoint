@@ -10,6 +10,11 @@ Contains code to solve the adjoint problem.
 The output times specified in this directory should agree with those for the
 forward code. 
 
+* **compare:**
+
+Contains the code to compare the pressure-flagging and adjoint-flagging methods. This can be used to generate the figures found in the paper, as well as identifying differences in the files used to run each method.
+
+
 ### Running the Code
 
 * Go to the folder **adjoint** and run in a terminal:
@@ -46,9 +51,7 @@ python run_adjoint_flagging.py
 
 * Running the example with pressure flagging:
 
-Open the file **setrun.py**, and modify variable *armdata.flag2refine_tol* to be 0.1. Note: the example will run without this modification, but the modification is needed to generate the exact plots shown in the paper.
-
-Run in the terminal:
+Go to the folder **compare** and run in the terminal:
 
 ```
 make new -f Makefile_pflag
@@ -57,12 +60,12 @@ make .plots -f Makefile_pflag
 
 * To compare the two methods:
 
-Run in the terminal:
+Go to the folder **compare** and run in the terminal:
 
 ```
 python compare_methods.py
 ```
 
-This will run both the pressure flagging and the adjoint flagging methods. The results from both methods will be compages in the resulting gauge plot. See paper for an analysis of the results. 
+This will run both the pressure flagging and the adjoint flagging methods. The results from both methods will be compages in the resulting gauge plot. The plots generated are those appearing in the paper. See paper for an analysis of the results. 
 
 

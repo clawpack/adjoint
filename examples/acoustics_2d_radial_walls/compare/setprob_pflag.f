@@ -25,9 +25,5 @@ c     # Compute sound speed and impendance:
       cc = dsqrt(bulk/rho)
       zz = rho*cc
 
-c     # Setting time range of interest
-      t_rangeStart = 1.0d0
-      t_final = 6.0d0
-
       return
       end
