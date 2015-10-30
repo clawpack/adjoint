@@ -87,7 +87,8 @@ def setplot(plotdata):
     
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    plotitem.outdir = '../../adjoint/_outputReversed'
+    import os
+    plotitem.outdir = os.path.join(os.getcwd(), '../adjoint/_outputReversed')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.blue_yellow_red
     plotitem.add_colorbar = False
@@ -118,7 +119,7 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
     plotitem.plotstyle = 'rs'
-    plotitem.outdir = '../_output_pflag'
+    plotitem.outdir = os.path.join(os.getcwd(), '_output_pflag')
 
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via clawpack.visclaw.frametools.printframes:
