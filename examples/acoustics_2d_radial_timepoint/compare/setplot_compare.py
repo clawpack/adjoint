@@ -1,4 +1,4 @@
-8
+
 """ 
 Set up the plot figures, axes, and items to be done for each frame.
 
@@ -197,36 +197,37 @@ def setadjoint():
     files.sort()
     n = len(files)
     
-    # Find the final time.
-    fname = files[n-1]
-    fname = fname.replace('q','t')
-    f = open(fname,'r')
-    tfinal,meqn,npatches,maux,num_dim = io.ascii.read_t(n-1,path=outdir)
-    
-    for k in range(n):
-        # Creating new files
-        fname = files[k]
-        newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
-        cmd = 'cp %s %s' % (fname,newname)
-        os.system(cmd)
-        
+    if (n >= 1):
+        # Find the final time.
+        fname = files[n-1]
         fname = fname.replace('q','t')
-        newname = newname.replace('q','t')
-        cmd = 'cp %s %s' % (fname,newname)
-        os.system(cmd)
+        f = open(fname,'r')
+        tfinal,meqn,npatches,maux,num_dim = io.ascii.read_t(n-1,path=outdir)
+    
+        for k in range(n):
+            # Creating new files
+            fname = files[k]
+            newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
+            cmd = 'cp %s %s' % (fname,newname)
+            os.system(cmd)
         
-        # Reversing time
-        f = open(newname,'r+')
-        frameno = n-k-1
-        t,meqn,npatches,maux,num_dim = io.ascii.read_t(frameno,path=outdir2)
-        t = tfinal - t
+            fname = fname.replace('q','t')
+            newname = newname.replace('q','t')
+            cmd = 'cp %s %s' % (fname,newname)
+            os.system(cmd)
         
-        # Writting new time out to file
-        f.write('%18.8e     time\n' % t)
-        f.write('%5i                  num_eqn\n' % meqn)
-        f.write('%5i                  nstates\n' % npatches)
-        f.write('%5i                  num_aux\n' % maux)
-        f.write('%5i                  num_dim\n' % num_dim)
-        f.close()
+            # Reversing time
+            f = open(newname,'r+')
+            frameno = n-k-1
+            t,meqn,npatches,maux,num_dim = io.ascii.read_t(frameno,path=outdir2)
+            t = tfinal - t
+        
+            # Writting new time out to file
+            f.write('%18.8e     time\n' % t)
+            f.write('%5i                  num_eqn\n' % meqn)
+            f.write('%5i                  nstates\n' % npatches)
+            f.write('%5i                  num_aux\n' % maux)
+            f.write('%5i                  num_dim\n' % num_dim)
+            f.close()
 # end of function setadjoint
 # ----------------------

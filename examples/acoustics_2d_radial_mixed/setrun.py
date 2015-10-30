@@ -340,40 +340,6 @@ def setrun(claw_pkg='amrclaw'):
     # end of function setrun
     # ----------------------
 
-<<<<<<< Updated upstream
-#-------------------
-def setadjoint(rundata):
-    #-------------------
-    
-    import os,sys,glob
-    
-    outdir = 'adjoint/_output'
-    outdir2 = 'adjoint/_outputReversed'
-    
-    os.system('mkdir -p %s' % outdir2)
-    
-    files = glob.glob(outdir+'/fort.q0*')
-    files.sort()
-    n = len(files)
-    
-    for k in range(n):
-        fname = files[k]
-        newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
-        cmd = 'cp %s %s' % (fname,newname)
-        #print cmd
-        os.system(cmd)
-        fname = fname.replace('q','t')
-        newname = newname.replace('q','t')
-        cmd = 'cp %s %s' % (fname,newname)
-        #print cmd
-        os.system(cmd)
-    
-    return rundata
-# end of function setadjoint
-# ----------------------
-
-=======
->>>>>>> Stashed changes
 if __name__ == '__main__':
     # Set up run-time parameters and write all data files.
     import sys

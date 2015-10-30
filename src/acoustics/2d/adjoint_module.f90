@@ -45,54 +45,60 @@ contains
         iunit = 16
         allocate(adjoints(num_adjoints+1))
 
-        do k = 1,num_adjoints+1
+        if (num_adjoints >= 1) then
+            do k = 1,num_adjoints+1
 
-            iframe = num_adjoints - k + 1
-            ! Read initial time in from fort.tXXXX file.
-            fname2 = '../' // adjointFolder // '/_output/fort.t' &
-                // char(ichar('0') + mod(iframe/1000,10)) &
-                // char(ichar('0') + mod(iframe/100,10)) &
-                // char(ichar('0') + mod(iframe/10,10)) &
-                // char(ichar('0') + mod(iframe,10))
-            open(iunit,file=fname2)
-            read(iunit,*) adjoints(k)%time
-            read(iunit,*) adjoints(k)%meqn
-            close(iunit)
+                iframe = num_adjoints - k + 1
+                ! Read initial time in from fort.tXXXX file.
+                fname2 = '../' // adjointFolder // '/_output/fort.t' &
+                    // char(ichar('0') + mod(iframe/1000,10)) &
+                    // char(ichar('0') + mod(iframe/100,10)) &
+                    // char(ichar('0') + mod(iframe/10,10)) &
+                    // char(ichar('0') + mod(iframe,10))
+                open(iunit,file=fname2)
+                read(iunit,*) adjoints(k)%time
+                read(iunit,*) adjoints(k)%meqn
+                close(iunit)
 
-            ! first create the file name and open file
-            fname1 = '../' // adjointFolder // '/_output/fort.q' &
-                // char(ichar('0') + mod(iframe/1000,10)) &
-                // char(ichar('0') + mod(iframe/100,10)) &
-                // char(ichar('0') + mod(iframe/10,10)) &
-                // char(ichar('0') + mod(iframe,10))
-            open(iunit,file=fname1)
+                ! first create the file name and open file
+                fname1 = '../' // adjointFolder // '/_output/fort.q' &
+                    // char(ichar('0') + mod(iframe/1000,10)) &
+                    // char(ichar('0') + mod(iframe/100,10)) &
+                    // char(ichar('0') + mod(iframe/10,10)) &
+                    // char(ichar('0') + mod(iframe,10))
+                open(iunit,file=fname1)
 
-            ! Read grid parameters.
-            read(iunit,*) adjoints(k)%igrid
-            read(iunit,*) adjoints(k)%level
-            read(iunit,*) adjoints(k)%mx
-            read(iunit,*) adjoints(k)%my
-            read(iunit,*) adjoints(k)%xlow
-            read(iunit,*) adjoints(k)%ylow
-            read(iunit,*) adjoints(k)%dx
-            read(iunit,*) adjoints(k)%dy
-            read(iunit,*)
+                ! Read grid parameters.
+                read(iunit,*) adjoints(k)%igrid
+                read(iunit,*) adjoints(k)%level
+                read(iunit,*) adjoints(k)%mx
+                read(iunit,*) adjoints(k)%my
+                read(iunit,*) adjoints(k)%xlow
+                read(iunit,*) adjoints(k)%ylow
+                read(iunit,*) adjoints(k)%dx
+                read(iunit,*) adjoints(k)%dy
+                read(iunit,*)
 
-            allocate(adjoints(k)%q(adjoints(k)%meqn,adjoints(k)%mx,adjoints(k)%my))
-            ! Read variables in from old fort.qXXXX file.
-            do j = 1,adjoints(k)%my
-                do i = 1,adjoints(k)%mx
-                    read(iunit,*) (adjoints(k)%q(m,i,j),m=1,adjoints(k)%meqn)
-                enddo
+                allocate(adjoints(k)%q(adjoints(k)%meqn,adjoints(k)%mx,adjoints(k)%my))
+                ! Read variables in from old fort.qXXXX file.
+                do j = 1,adjoints(k)%my
+                    do i = 1,adjoints(k)%mx
+                        read(iunit,*) (adjoints(k)%q(m,i,j),m=1,adjoints(k)%meqn)
+                    enddo
+                end do
+                close(iunit)
             end do
-            close(iunit)
-        end do
 
-        ! Reverse time
-        finalT = adjoints(1)%time
-        do k = 1,num_adjoints+1
-            adjoints(k)%time = finalT - adjoints(k)%time
-        end do
+            ! Reverse time
+            finalT = adjoints(1)%time
+            do k = 1,num_adjoints+1
+                adjoints(k)%time = finalT - adjoints(k)%time
+            end do
+        else
+            write(*,*) 'ERROR: no adjoint data found.'
+            write (*,*) 'ABORTING CALCULATION'
+            stop
+        endif
 
     end subroutine read_adjoint_data
 
