@@ -87,7 +87,8 @@ def setplot(plotdata):
     
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    plotitem.outdir = '../adjoint/_outputReversed'
+    import os
+    plotitem.outdir = os.path.join(os.getcwd(), 'adjoint/_outputReversed')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.blue_yellow_red
     plotitem.add_colorbar = False

@@ -82,10 +82,11 @@ def setplot(plotdata):
         else:
             plotaxes.afteraxes = aa_velocity_adjoint
         
+        import os
         plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
         plotitem.plot_var = varid
         plotitem.color = 'b'
-        plotitem.outdir = '../../adjoint/_outputReversed'
+        plotitem.outdir = os.path.join(os.getcwd(), '../adjoint/_outputReversed')
 
     plotdata.printfigs = True          # Whether to output figures
     plotdata.print_format = 'png'      # What type of output format
