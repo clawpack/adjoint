@@ -76,6 +76,10 @@ c
             fwave(1,mw,i)=0.d0
             fwave(2,mw,i)=0.d0
             fwave(3,mw,i)=0.d0
+
+            fw(1,mw)=0.d0
+            fw(2,mw)=0.d0
+            fw(3,mw)=0.d0
         enddo
 
          !set normal direction
