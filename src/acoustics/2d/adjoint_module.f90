@@ -126,7 +126,6 @@ contains
         integer :: y_cell, x_cell, y_adjacent, x_adjacent
         real(kind=8), intent(in) :: xc, yc
         real(kind=8) :: x_main, x_side, y_main, y_side
-        real(kind=8) :: h_current, eta_current, h_adjacent, eta_adjacent
         real(kind=8) :: aux_current, aux_adjacent
         double precision :: q_value(adjoints(k)%meqn)
         double precision :: q_temp1(adjoints(k)%meqn), q_temp2(adjoints(k)%meqn)
@@ -196,14 +195,20 @@ contains
         real(kind=8) :: q_innerprod1, q_innerprod2, q_innerprod, max_innerprod
         double precision, allocatable :: q_interp(:)
         real(kind=8) :: x_c,y_c,q1,q2,q3
-        real(kind=8) :: aux_interp1, aux_interp2, aux1
+        real(kind=8) :: aux_interp1, aux_interp2, aux1, t_nm
 
         max_innerprod = 0.d0
         ! Select adjoint data
         aloop: do r=1,num_adjoints+1
 
+          if (r .ne. 1) then
+              t_nm = adjoints(r-1)%time
+          else
+              t_nm = 0.d0
+          endif
+
           if (t <= adjoints(r)%time .and. &
-              min((t + (tfinal - trange_start)),tfinal) >= adjoints(r-1)%time) then
+              min((t + (tfinal - trange_start)),tfinal) >= t_nm) then
 
             q_interp = interpolate_adjoint(r, x_c, y_c)
             q_innerprod1 = abs( q1 * q_interp(1) &

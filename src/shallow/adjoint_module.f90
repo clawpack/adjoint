@@ -114,19 +114,24 @@ contains
         real(kind=8) :: q_innerprod1, q_innerprod2, q_innerprod, max_innerprod
         double precision, allocatable :: q_interp(:)
         real(kind=8) :: x_c,y_c,q1,q2,q3
-        real(kind=8) :: aux_interp1, aux_interp2, aux1
+        real(kind=8) :: aux_interp1, aux_interp2, aux1, t_nm
 
         max_innerprod = 0.d0
-        allocate(q_interp(nvar))
+        allocate(q_interp(nvar+1))
 
         aloop: do r=1, totnum_adjoints
 
+        if (r .ne. 1) then
+            t_nm = adjoints(r-1)%time
+        else
+            t_nm = 0.d0
+        endif
+
         if (t < adjoints(r)%time .and. &
-            (t +(trange_final - trange_start))>= adjoints(r-1)%time) then
+            (t +(trange_final - trange_start))>= t_nm) then
 
             call interp_adjoint(1, adjoints(r)%lfine, nvar, &
                 naux, x_c,y_c,q_interp, r)
-
             aux_interp1 = q_interp(4) - q_interp(1)
 
             ! If q and q_adjoint aren't in the same wet/dry state 
