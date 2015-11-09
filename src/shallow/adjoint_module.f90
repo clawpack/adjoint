@@ -40,21 +40,22 @@ module adjoint_module
 
 contains
 
-    subroutine read_adjoint_data
+    subroutine read_adjoint_data(adjointFolder)
 
         use amr_reload_module
         implicit none
 
         ! Function Arguments
         character(len=*), parameter :: adjointfile = 'adjoint.data'
+        character(len=*), intent(in) :: adjointFolder
         logical :: fileExists
         integer :: iunit, k, r
         integer :: fileStatus = 0
         real(kind=8) :: finalT
-
+        
         inquire(file=adjointfile, exist=fileExists)
         if (fileExists) then
-            call amr2_reload()
+            call amr2_reload(adjointFolder)
             iunit = 16
             call opendatafile(iunit,adjointfile)
 

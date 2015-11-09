@@ -3,7 +3,7 @@
 ! :::::   Allows for storage of amr parameters from adjoint run.
 ! :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-subroutine amr2_reload(filename)
+subroutine amr2_reload(adjointFolder)
 
     use amr_reload_module
     use adjoint_module, only: nvar, naux
@@ -26,17 +26,22 @@ subroutine amr2_reload(filename)
     real(kind=8) :: tol, possk(maxlv)
 
     character(len=364) :: format_string
-    character(len=*), parameter :: clawfile = '../adjoint/_output/claw.data'
-    character(len=*), parameter :: amrfile = '../adjoint/_output/amr.data'
-    character(len=*), parameter :: outfile = '../adjoint/_output/fort.amr'
-    character(len=*), parameter :: dbugfile = '../adjoint/_output/fort.debug'
-    character(len=*), parameter :: matfile = '../adjoint/_output/fort.nplot'
-    character(len=*), parameter :: parmfile = '../adjoint/_output/fort.parameters'
+    character(len=364) :: clawfile
+    character(len=364) :: amrfile
+    character(len=364) :: outfile
+    character(len=364) :: dbugfile
+    character(len=364) :: matfile
+    character(len=364) :: parmfile
 
     character(len=200) :: rstfile_ignore
-    character(len=*), intent(in) :: filename
+    character(len=*), intent(in) :: adjointFolder
 
-    rstfile = filename
+    clawfile = '../' // adjointFolder // '/_output/claw.data'
+    amrfile = '../' // adjointFolder // '/_output/amr.data'
+    outfile = '../' // adjointFolder // '/_output/fort.amr'
+    dbugfile = '../' // adjointFolder // '/_output/fort.debug'
+    matfile = '../' // adjointFolder // '/_output/fort.nplot'
+    parmfile = '../' // adjointFolder // '/_output/fort.parameters'
 
     ! Read in claw.data and amr.data files to get parameters
     ! that were used in the axisymmetric run.  Many of these
@@ -200,7 +205,7 @@ subroutine amr2_reload(filename)
     !  Restart and Checkpointing
 
     read(inunit,*) rest
-    read(inunit,*) rstfile_ignore  ! since we set rstfile above
+    read(inunit,*) rstfile_ignore  ! since we aren't using a restart file
 
 
     read(inunit,*) checkpt_style

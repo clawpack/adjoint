@@ -20,7 +20,6 @@ os.system('make .plots')
 # Compute solution for forward problem using adjoint-flagging
 #--------------------------------------------------------------
 
-# Run example using adjoint method
 os.chdir(currentdir)
 os.system('make new')
 os.system('python maketopo.py')

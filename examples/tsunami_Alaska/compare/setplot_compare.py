@@ -271,6 +271,19 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 3
     plotitem.plotstyle = 'b-'
+    
+    # Plot q[0] from previous high tol run as red line:
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.plot_var = 3
+    plotitem.plotstyle = 'r-'
+    import os
+    plotitem.outdir = os.path.join(os.getcwd(), '_output_sflag_14')
+    
+    # Plot q[0] from previous low tol run as green line:
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.plot_var = 3
+    plotitem.plotstyle = 'g-'
+    plotitem.outdir = os.path.join(os.getcwd(), '_output_sflag_09')
 
     #-----------------------------------------
     
