@@ -70,9 +70,11 @@ The internal folder: **adjoint**, contains the code for the adjoint problem.
         * If your installation does not work, follow the instruction in the section: Installation Prerequisites
 
 * **Clone this repository to your local machine:**
+    - In a terminal, go the to main Clawpack directory
+    - Create a copy of the adjoint repository by running the code:
 
 ```
-Add link to git repository here.
+git://github.com/BrisaDavis/adjoint.git
 ```
 
 * **Run the code**

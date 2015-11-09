@@ -73,7 +73,7 @@ setrun_sflag_hightol.py. Note that both of these simulations take a long time to
 
 * To compare the two methods:
 
-Go to the folder ** compare** and run in the terminal:
+Go to the folder **compare** and run in the terminal:
 
 ```
 python compare_methods.py
