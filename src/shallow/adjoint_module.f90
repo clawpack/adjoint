@@ -52,9 +52,11 @@ contains
         integer :: iunit, k, r
         integer :: fileStatus = 0
         real(kind=8) :: finalT
-        
+
         inquire(file=adjointfile, exist=fileExists)
         if (fileExists) then
+
+            ! Reload adjoint files
             call amr2_reload(adjointFolder)
             iunit = 16
             call opendatafile(iunit,adjointfile)
@@ -85,6 +87,7 @@ contains
 
                 ! Reverse times
                 adjoints(k)%time = adj_times(k)
+
             50 continue
 
         else
@@ -113,82 +116,73 @@ contains
         real(kind=8), intent(in) :: t
         integer :: r
         real(kind=8) :: q_innerprod1, q_innerprod2, q_innerprod, max_innerprod
-        double precision, allocatable :: q_interp(:)
         real(kind=8) :: x_c,y_c,q1,q2,q3
-        real(kind=8) :: aux_interp1, aux_interp2, aux1, t_nm
+        real(kind=8) :: aux1, t_nm
 
         max_innerprod = 0.d0
-        allocate(q_interp(nvar+1))
 
         aloop: do r=1, totnum_adjoints
 
-        if (r .ne. 1) then
-            t_nm = adjoints(r-1)%time
-        else
-            t_nm = 0.d0
-        endif
-
-        if (t < adjoints(r)%time .and. &
-            (t +(trange_final - trange_start))>= t_nm) then
-
-            call interp_adjoint(1, adjoints(r)%lfine, nvar, &
-                naux, x_c,y_c,q_interp, r)
-            aux_interp1 = q_interp(4) - q_interp(1)
-
-            ! If q and q_adjoint aren't in the same wet/dry state 
-            ! don't compute the inner product
-            if(sign(aux1, aux_interp1) .ne. &
-                sign(aux1, aux1)) then
-                return
-            endif
-
-            if(aux_interp1 > 0.d0) then
-                q_innerprod1 = abs( &
-                  q1 * q_interp(1) &
-                  + q2 * q_interp(2) &
-                  + q3 * q_interp(3))
-            else
-                q_innerprod1 = abs( &
-                  (q1+aux1) * q_interp(4) &
-                  + q2 * q_interp(2) &
-                  + q3 * q_interp(3))
-            endif
-
-            q_innerprod2 = 0.d0
             if (r .ne. 1) then
-                call interp_adjoint(1, adjoints(r-1)%lfine, &
-                    nvar, naux, x_c,y_c, q_interp, r-1)
-
-                aux_interp2 = q_interp(4) - q_interp(1)
-
-                ! If q and q_adjoint aren't in the same wet/dry state
-                ! don't compute the inner product
-                if(sign(aux1, aux_interp2) .ne. &
-                    sign(aux1, aux1)) then
-                    return
-                endif
-
-                if(aux_interp2 > 0.d0) then
-                    q_innerprod2 = abs( &
-                      q1 * q_interp(1) &
-                      + q2 * q_interp(2) &
-                      + q3 * q_interp(3))
-                else
-                    q_innerprod2 = abs( &
-                      (q1+aux1) * q_interp(4) &
-                      + q2 * q_interp(2) &
-                      + q3 * q_interp(3))
-                endif
+                t_nm = adjoints(r-1)%time
+            else
+                t_nm = 0.d0
             endif
 
-            q_innerprod = max(q_innerprod1, q_innerprod2)
-            if (q_innerprod > max_innerprod) then
-                max_innerprod = q_innerprod
+            if (t < adjoints(r)%time .and. &
+                (t +(trange_final - trange_start))>= t_nm) then
+
+                q_innerprod1 = 0.d0
+                q_innerprod2 = 0.d0
+
+                q_innerprod1 = calculate_innerproduct(r,x_c,y_c,q1,q2,q3,aux1)
+                if (r .ne. 1) then
+                    q_innerprod2 = calculate_innerproduct(r-1,x_c,y_c,q1,q2,q3,aux1)
+                endif
+
+                q_innerprod = max(q_innerprod1, q_innerprod2)
+                if (q_innerprod > max_innerprod) then
+                    max_innerprod = q_innerprod
+                endif
             endif
-        endif
 
         enddo aloop
 
     end function calculate_max_innerproduct
+
+    function calculate_innerproduct(r,x_c,y_c,q1,q2,q3,aux1) result(q_innerprod)
+
+        integer :: r
+        real(kind=8) :: q_innerprod
+        double precision, allocatable :: q_interp(:)
+        real(kind=8) :: x_c,y_c,q1,q2,q3
+        real(kind=8) :: aux_interp, aux1
+
+        allocate(q_interp(nvar+1))
+
+        call interp_adjoint(1, adjoints(r)%lfine, nvar, &
+            naux, x_c,y_c,q_interp, r)
+        aux_interp = q_interp(4) - q_interp(1)
+
+        ! If q and q_adjoint aren't in the same wet/dry state
+        ! don't compute the inner product
+        if(sign(aux1, aux_interp) .ne. &
+            sign(aux1, aux1)) then
+            return
+        endif
+
+        if(aux_interp1 > 0.d0) then
+            q_innerprod = abs( &
+                q1 * q_interp(1) &
+                + q2 * q_interp(2) &
+                + q3 * q_interp(3))
+        else
+            q_innerprod = abs( &
+                (q1+aux1) * q_interp(4) &
+                + q2 * q_interp(2) &
+                + q3 * q_interp(3))
+        endif
+
+    end function calculate_innerproduct
 
 end module adjoint_module
