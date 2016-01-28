@@ -108,7 +108,7 @@ contains
 
     end subroutine set_time_window
 
-    function calculate_max_innerproduct(t,x_c,y_c,q1,q2,q3,aux1) result(max_innerprod)
+    function calculate_max_innerproduct(t,x_c,y_c,eta,q2,q3,aux1) result(max_innerprod)
 
         use amr_reload_module
         implicit none
@@ -116,7 +116,7 @@ contains
         real(kind=8), intent(in) :: t
         integer :: r
         real(kind=8) :: q_innerprod1, q_innerprod2, q_innerprod, max_innerprod
-        real(kind=8) :: x_c,y_c,q1,q2,q3
+        real(kind=8) :: x_c,y_c,eta,q2,q3
         real(kind=8) :: aux1, t_nm
 
         max_innerprod = 0.d0
@@ -135,9 +135,11 @@ contains
                 q_innerprod1 = 0.d0
                 q_innerprod2 = 0.d0
 
-                q_innerprod1 = calculate_innerproduct(r,x_c,y_c,q1,q2,q3,aux1)
+                q_innerprod1 = calculate_innerproduct(r,x_c,y_c,eta,q2,q3,aux1)
+                !write(*,*) "q_innerprod1:", q_innerprod1
                 if (r .ne. 1) then
-                    q_innerprod2 = calculate_innerproduct(r-1,x_c,y_c,q1,q2,q3,aux1)
+                    q_innerprod2 = calculate_innerproduct(r-1,x_c,y_c,eta,q2,q3,aux1)
+                    !write(*,*) "q_innerprod2:", q_innerprod2
                 endif
 
                 q_innerprod = max(q_innerprod1, q_innerprod2)
@@ -145,43 +147,47 @@ contains
                     max_innerprod = q_innerprod
                 endif
             endif
+            !write(*,*) max_innerprod
 
         enddo aloop
 
     end function calculate_max_innerproduct
 
-    function calculate_innerproduct(r,x_c,y_c,q1,q2,q3,aux1) result(q_innerprod)
+    function calculate_innerproduct(r,x_c,y_c,eta,q2,q3,aux1) result(q_innerprod)
 
         integer :: r
         real(kind=8) :: q_innerprod
         double precision, allocatable :: q_interp(:)
-        real(kind=8) :: x_c,y_c,q1,q2,q3
+        real(kind=8) :: x_c,y_c,eta,q2,q3
         real(kind=8) :: aux_interp, aux1
 
+        !write(*,*) 'In calculate_innerproduct'
+        !write(*,*) r
+        !write(*,*) ' '
+
         allocate(q_interp(nvar+1))
+
+        ! If q is on land, don't computer the inner product
+        if(aux1 > 0.d0) then
+            q_innerprod = 0.d0
+            return
+        endif
 
         call interp_adjoint(1, adjoints(r)%lfine, nvar, &
             naux, x_c,y_c,q_interp, r)
         aux_interp = q_interp(4) - q_interp(1)
 
-        ! If q and q_adjoint aren't in the same wet/dry state
-        ! don't compute the inner product
-        if(sign(aux1, aux_interp) .ne. &
-            sign(aux1, aux1)) then
+        ! If q_adjoint is on land, don't computer the inner product
+        if(aux_interp > 0.d0) then
+            q_innerprod = 0.d0
             return
         endif
 
-        if(aux_interp1 > 0.d0) then
-            q_innerprod = abs( &
-                q1 * q_interp(1) &
-                + q2 * q_interp(2) &
-                + q3 * q_interp(3))
-        else
-            q_innerprod = abs( &
-                (q1+aux1) * q_interp(4) &
-                + q2 * q_interp(2) &
-                + q3 * q_interp(3))
-        endif
+        q_innerprod = abs( &
+            eta * q_interp(4) &
+            + q2 * q_interp(2) &
+            + q3 * q_interp(3))
+        !write(*,*) q_innerprod
 
     end function calculate_innerproduct
 

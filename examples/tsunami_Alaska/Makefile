@@ -62,6 +62,8 @@ SOURCES = \
   $(ADJLIB)/shallow/reload.f \
   $(ADJLIB)/shallow/valout.f \
   $(ADJLIB)/shallow/flag2refine2.f90 \
+  $(AMRLIB)/errf1.f \
+  $(AMRLIB)/errest.f \
   $(GEOLIB)/qinit.f90 \
   $(GEOLIB)/topo_update.f90 \
   $(GEOLIB)/cellgridintegrate2.f \
@@ -84,7 +86,7 @@ SOURCES = \
   $(AMRLIB)/intfil.f \
   $(GEOLIB)/bc2amr.f \
   $(GEOLIB)/update.f \
-  $(GEOLIB)/setaux.f90 \
+  setaux.f90 \
   $(AMRLIB)/flagregions2.f90  \
   $(GEOLIB)/allowflag.f90  \
   $(GEOLIB)/b4step2.f90 \
@@ -111,13 +113,11 @@ SOURCES = \
   $(AMRLIB)/birect.f \
   $(AMRLIB)/cleanup.f \
   $(AMRLIB)/colate2.f \
-  $(AMRLIB)/errest.f \
   $(AMRLIB)/prepregstep.f \
   $(AMRLIB)/prepbigstep.f \
   $(AMRLIB)/bufnst2.f \
   $(AMRLIB)/flagger.f \
   $(AMRLIB)/flagregions.f \
-  $(AMRLIB)/errf1.f \
   $(AMRLIB)/fixcapaq.f \
   $(AMRLIB)/flglvl2.f \
   $(AMRLIB)/fluxad.f \

@@ -79,8 +79,8 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.upper[1] = 62.0          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 110      # mx
-    clawdata.num_cells[1] = 52      # my
+    clawdata.num_cells[0] = 55 #110      # mx
+    clawdata.num_cells[1] = 26 #52      # my
     
 
     # ---------------
@@ -91,7 +91,7 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.num_eqn = 3
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
-    clawdata.num_aux = 3
+    clawdata.num_aux = 4
     
     # Index of aux array corresponding to capacity function, if there is one:
     clawdata.capa_index = 2
@@ -127,8 +127,8 @@ def setrun(claw_pkg='geoclaw'):
     if clawdata.output_style==1:
         # Output ntimes frames at equally spaced times up to tfinal:
         # Can specify num_output_times = 0 for no output
-        clawdata.num_output_times = 22
-        clawdata.tfinal = 11*3600.
+        clawdata.num_output_times = 2#22
+        clawdata.tfinal = 1*3600.
         clawdata.output_t0 = False # output at initial (or restart) time?
         
     elif clawdata.output_style == 2:
@@ -303,12 +303,12 @@ def setrun(claw_pkg='geoclaw'):
     # Specify type of each aux variable in amrdata.auxtype.
     # This must be a list of length num_aux, each element of which is one of:
     #   'center',  'capacity', 'xleft', or 'yleft'  (see documentation).
-    amrdata.aux_type = ['center', 'capacity', 'yleft']
+    amrdata.aux_type = ['center', 'capacity', 'yleft', 'center']
 
 
     # Flag for refinement based on Richardson error estimater:
     amrdata.flag_richardson = False    # use Richardson?
-    amrdata.flag_richardson_tol = 1.0  # Richardson tolerance
+    amrdata.flag_richardson_tol = 0.004  # Richardson tolerance
     
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = True      # use this?

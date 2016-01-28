@@ -179,7 +179,7 @@ def setplot(plotdata):
     plotitem.plot_var = 4
     plotitem.imshow_cmap = colormaps.white_red
     plotitem.imshow_cmin = 0.0
-    plotitem.imshow_cmax = 0.05
+    plotitem.imshow_cmax = 0.004
     plotitem.add_colorbar = False
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_patchedges_show = [0]

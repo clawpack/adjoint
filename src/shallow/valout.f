@@ -153,8 +153,7 @@ c                 # output in 1d format if ny=1:
                    ! Calculate max inner product
                    x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
                    y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                   innerprod = calculate_max_innerproduct(time,x_c,y_c,
-     &                 h,hu,hv,alloc(iaddaux(1,i,j)))
+                   innerprod = alloc(iaddaux(4,i,j))
 
                    if (abs(innerprod) < 1d-90) then
                        innerprod = 0.d0
@@ -188,8 +187,7 @@ c            # Need to augment q with eta and max innerproduct:
 
                     x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
                     y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                    innerprod = calculate_max_innerproduct(time,x_c,y_c,
-     &                 h,hu,hv,alloc(iaddaux(1,i,j)))
+                    innerprod = alloc(iaddaux(4,i,j))
                     !write (*,*), 'innerprod: ', innerprod
 
                     if (abs(innerprod) < 1d-90) then
