@@ -79,8 +79,8 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.upper[1] = 62.0          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 55 #110      # mx
-    clawdata.num_cells[1] = 26 #52      # my
+    clawdata.num_cells[0] = 110      # mx
+    clawdata.num_cells[1] = 52      # my
     
 
     # ---------------
@@ -127,8 +127,8 @@ def setrun(claw_pkg='geoclaw'):
     if clawdata.output_style==1:
         # Output ntimes frames at equally spaced times up to tfinal:
         # Can specify num_output_times = 0 for no output
-        clawdata.num_output_times = 2#22
-        clawdata.tfinal = 1*3600.
+        clawdata.num_output_times = 22
+        clawdata.tfinal = 11*3600.
         clawdata.output_t0 = False # output at initial (or restart) time?
         
     elif clawdata.output_style == 2:
@@ -308,7 +308,7 @@ def setrun(claw_pkg='geoclaw'):
 
     # Flag for refinement based on Richardson error estimater:
     amrdata.flag_richardson = False    # use Richardson?
-    amrdata.flag_richardson_tol = 0.004  # Richardson tolerance
+    amrdata.flag_richardson_tol = 1.0  # Richardson tolerance
     
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = True      # use this?
@@ -457,7 +457,8 @@ def setadjoint(rundata):
 #-------------------
 
     """
-        Reading in all of the checkpointed Adjoint files
+        Setting up adjoint variables and
+        reading in all of the checkpointed Adjoint files
     """
     
     import glob
@@ -467,6 +468,7 @@ def setadjoint(rundata):
     
     probdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
     probdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
+    probdata.add_param('innerprod_index', 4, 'Index for innerproduct data in aux array.')
     
     counter = 1
     for fname in files:

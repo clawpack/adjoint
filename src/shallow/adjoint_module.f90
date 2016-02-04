@@ -33,10 +33,12 @@ module adjoint_module
     end type adjointData_type
 
     type(adjointData_type), allocatable :: adjoints(:)
-    integer :: totnum_adjoints, nvar, naux, num_adjoints, counter
+    integer :: totnum_adjoints, nvar, naux, num_adjoints, &
+               counter, innerprod_index
     real(kind=8) :: trange_start, trange_final
     real(kind=8), allocatable :: adj_times(:)
     character(len=365), allocatable :: adj_files(:)
+    logical :: adjoint_flagging
 
 contains
 
@@ -53,6 +55,8 @@ contains
         integer :: fileStatus = 0
         real(kind=8) :: finalT
 
+        adjoint_flagging = .true.
+
         inquire(file=adjointfile, exist=fileExists)
         if (fileExists) then
 
@@ -62,6 +66,7 @@ contains
             call opendatafile(iunit,adjointfile)
 
             read(iunit,*) totnum_adjoints
+            read(iunit,*) innerprod_index
             allocate(adj_times(totnum_adjoints))
             allocate(adj_files(totnum_adjoints))
 
@@ -136,10 +141,8 @@ contains
                 q_innerprod2 = 0.d0
 
                 q_innerprod1 = calculate_innerproduct(r,x_c,y_c,eta,q2,q3,aux1)
-                !write(*,*) "q_innerprod1:", q_innerprod1
                 if (r .ne. 1) then
                     q_innerprod2 = calculate_innerproduct(r-1,x_c,y_c,eta,q2,q3,aux1)
-                    !write(*,*) "q_innerprod2:", q_innerprod2
                 endif
 
                 q_innerprod = max(q_innerprod1, q_innerprod2)
@@ -147,7 +150,6 @@ contains
                     max_innerprod = q_innerprod
                 endif
             endif
-            !write(*,*) max_innerprod
 
         enddo aloop
 
@@ -160,10 +162,6 @@ contains
         double precision, allocatable :: q_interp(:)
         real(kind=8) :: x_c,y_c,eta,q2,q3
         real(kind=8) :: aux_interp, aux1
-
-        !write(*,*) 'In calculate_innerproduct'
-        !write(*,*) r
-        !write(*,*) ' '
 
         allocate(q_interp(nvar+1))
 
@@ -190,5 +188,28 @@ contains
         !write(*,*) q_innerprod
 
     end function calculate_innerproduct
+
+    subroutine set_innerproduct_field(maux,mbc,mx,my,xlower, &
+                            ylower,dx,dy,t,aux,q,meqn)
+
+        integer, intent(in) :: mbc,mx,my
+        real(kind=8), intent(in) :: xlower,ylower,dx,dy,t
+        real(kind=8), intent(inout) :: aux(maux,1-mbc:mx+mbc,1-mbc:my+mbc)
+        real(kind=8), intent(in) :: q(meqn,1-mbc:mx+mbc,1-mbc:my+mbc)
+        real(kind=8) :: x,y,eta
+
+        ! Set initial innerproduct field
+        do j=1-mbc,my+mbc
+            y = ylower + (j-0.5d0) * dy
+            do i=1-mbc,mx+mbc
+                x = xlower + (i-0.5d0) * dx
+
+                eta = q(1,i,j) + aux(1,i,j)
+                aux(innerprod_index,i,j) = calculate_max_innerproduct &
+                    (t,x,y,eta,q(2,i,j),q(3,i,j),aux(1,i,j))
+            enddo
+        enddo
+
+    end subroutine set_innerproduct_field
 
 end module adjoint_module

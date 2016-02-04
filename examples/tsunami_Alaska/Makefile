@@ -62,6 +62,8 @@ SOURCES = \
   $(ADJLIB)/shallow/reload.f \
   $(ADJLIB)/shallow/valout.f \
   $(ADJLIB)/shallow/flag2refine2.f90 \
+  $(ADJLIB)/shallow/b4step2.f90 \
+  $(ADJLIB)/shallow/setaux.f90 \
   $(AMRLIB)/errf1.f \
   $(AMRLIB)/errest.f \
   $(GEOLIB)/qinit.f90 \
@@ -86,10 +88,8 @@ SOURCES = \
   $(AMRLIB)/intfil.f \
   $(GEOLIB)/bc2amr.f \
   $(GEOLIB)/update.f \
-  setaux.f90 \
   $(AMRLIB)/flagregions2.f90  \
   $(GEOLIB)/allowflag.f90  \
-  $(GEOLIB)/b4step2.f90 \
   $(GEOLIB)/upbnd.f  \
   $(GEOLIB)/tick.f \
   $(GEOLIB)/setgrd.f \

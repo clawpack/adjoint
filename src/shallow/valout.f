@@ -8,12 +8,13 @@ c
       subroutine valout (lst, lend, time, nvar, naux)
 c
       use amr_module
-      use adjoint_module, only: calculate_max_innerproduct
+      use adjoint_module, only: innerprod_index
       implicit double precision (a-h,o-z)
       character*10  fname1, fname2, fname3, fname4, fname5
 
 c     # Adjoint-flagging GeoClaw specific output....
 c     #      add eta and max_innerproduct to q array before printing
+c     # Note that this assumes the aux array contains 4 variables.
 c
 c     # Write the results to the file fort.q<iframe>
 c     # Use format required by matlab script  plotclaw2.m or Python tools
@@ -153,7 +154,7 @@ c                 # output in 1d format if ny=1:
                    ! Calculate max inner product
                    x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
                    y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                   innerprod = alloc(iaddaux(4,i,j))
+                   innerprod = alloc(iaddaux(innerprod_index,i,j))
 
                    if (abs(innerprod) < 1d-90) then
                        innerprod = 0.d0
@@ -178,7 +179,7 @@ c            # Need to augment q with eta and max innerproduct:
                         qmod(iaddqmod(m,i,j)) = alloc(iadd(m,i,j))
                     enddo
                     eta = alloc(iadd(1,i,j)) + alloc(iaddaux(1,i,j))
-                    qmod(iaddqmod(4,i,j)) = eta
+                    qmod(iaddqmod(innerprod_index,i,j)) = eta
 
                     ! Extract depth and momenta
                     h = alloc(iadd(1,i,j))
@@ -187,7 +188,7 @@ c            # Need to augment q with eta and max innerproduct:
 
                     x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
                     y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                    innerprod = alloc(iaddaux(4,i,j))
+                    innerprod = alloc(iaddaux(innerprod_index,i,j))
                     !write (*,*), 'innerprod: ', innerprod
 
                     if (abs(innerprod) < 1d-90) then
