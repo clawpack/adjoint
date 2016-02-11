@@ -47,7 +47,7 @@ SOURCES = \
   $(ADJLIB)/acoustics/2d/valout.f \
   $(CLAW)/riemann/src/rpn2_acoustics.f \
   $(CLAW)/riemann/src/rpt2_acoustics.f \
-  $(AMRLIB)/setaux.f90 \
+  $(ADJLIB)/acoustics/2d/setaux.f90 \
   $(AMRLIB)/amr2.f90 \
   $(AMRLIB)/bc2amr.f \
   $(AMRLIB)/b4step2.f90 \

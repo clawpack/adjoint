@@ -47,7 +47,7 @@ subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
     real(kind=8), intent(in) :: xlower,ylower,dx,dy,t,tolsp
     
     real(kind=8), intent(in) :: q(meqn,1-mbc:mx+mbc,1-mbc:my+mbc)
-    real(kind=8), intent(in) :: aux(maux,1-mbc:mx+mbc,1-mbc:my+mbc)
+    real(kind=8), intent(inout) :: aux(maux,1-mbc:mx+mbc,1-mbc:my+mbc)
     
     ! Flagging
     real(kind=8),intent(inout) :: amrflags(1-mbuff:mx+mbuff,1-mbuff:my+mbuff)
@@ -78,10 +78,10 @@ subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
         x_low = xlower + (i - 1) * dx
         x_hi = xlower + i * dx
 
-        max_innerprod =  &
+        aux(1,i,j) =  &
            calculate_max_innerproduct(t,x_c,y_c,q(1,i,j),q(2,i,j),q(3,i,j), tolsp)
 
-        if (max_innerprod > tolsp) then
+        if (aux(1,i,j) > tolsp) then
             amrflags(i,j) = DOFLAG
             cycle x_loop
         endif
