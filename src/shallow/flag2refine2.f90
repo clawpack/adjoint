@@ -38,7 +38,7 @@
 
 subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
                             tolsp,q,aux,amrflags,DONTFLAG,DOFLAG)
-    use adjoint_module, only: innerprod_index
+    use adjoint_module, only: innerprod_index, calculate_max_innerproduct
 
     use amr_module, only: mxnest, t0
     use geoclaw_module, only:dry_tolerance, sea_level
@@ -150,6 +150,9 @@ subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
         ! check if there is a reason to flag this point:
         if (allowflag(x_c,y_c,t,level) .and. q(1,i,j) > tolsp) then
             eta = q(1,i,j) + aux(1,i,j)
+
+            aux(innerprod_index,i,j) = calculate_max_innerproduct &
+                             (t,x_c,y_c,eta,q(2,i,j),q(3,i,j),aux(1,i,j))
 
             ! Check wave criteria
             if(abs(eta - sea_level) > wave_tolerance) then

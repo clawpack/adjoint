@@ -9,6 +9,7 @@ c
 c
       use amr_module
       use adjoint_module, only: innerprod_index
+      use adjoint_module, only: calculate_max_innerproduct
       implicit double precision (a-h,o-z)
       character*10  fname1, fname2, fname3, fname4, fname5
 
@@ -151,10 +152,16 @@ c                 # output in 1d format if ny=1:
                       eta = 0.d0
                    end if
 
-                   ! Calculate max inner product
-                   x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
-                   y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                   innerprod = alloc(iaddaux(innerprod_index,i,j))
+                   ! Adding innerproduct
+                   if (alloc(iaddaux(innerprod_index,i,j))
+     &                                 == NEEDS_TO_BE_SET) then
+                       x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
+                       y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
+                       innerprod = calculate_max_innerproduct(time,
+     &                        x_c,y_c,eta,hu,hv,alloc(iaddaux(1,i,j)))
+                   else
+                       innerprod = alloc(iaddaux(innerprod_index,i,j))
+                   endif
 
                    if (abs(innerprod) < 1d-90) then
                        innerprod = 0.d0
@@ -179,17 +186,23 @@ c            # Need to augment q with eta and max innerproduct:
                         qmod(iaddqmod(m,i,j)) = alloc(iadd(m,i,j))
                     enddo
                     eta = alloc(iadd(1,i,j)) + alloc(iaddaux(1,i,j))
-                    qmod(iaddqmod(innerprod_index,i,j)) = eta
+                    qmod(iaddqmod(4,i,j)) = eta
 
                     ! Extract depth and momenta
                     h = alloc(iadd(1,i,j))
                     hu = alloc(iadd(2,i,j))
                     hv = alloc(iadd(3,i,j))
 
-                    x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
-                    y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                    innerprod = alloc(iaddaux(innerprod_index,i,j))
-                    !write (*,*), 'innerprod: ', innerprod
+                    ! Adding innerproduct
+                    if (alloc(iaddaux(innerprod_index,i,j))
+     &                                  == NEEDS_TO_BE_SET) then
+                        x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
+                        y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
+                        innerprod = calculate_max_innerproduct(time,
+     &                         x_c,y_c,eta,hu,hv,alloc(iaddaux(1,i,j)))
+                    else
+                        innerprod = alloc(iaddaux(innerprod_index,i,j))
+                    endif
 
                     if (abs(innerprod) < 1d-90) then
                         innerprod = 0.d0

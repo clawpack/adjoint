@@ -185,31 +185,7 @@ contains
             eta * q_interp(4) &
             + q2 * q_interp(2) &
             + q3 * q_interp(3))
-        !write(*,*) q_innerprod
 
     end function calculate_innerproduct
-
-    subroutine set_innerproduct_field(maux,mbc,mx,my,xlower, &
-                            ylower,dx,dy,t,aux,q,meqn)
-
-        integer, intent(in) :: mbc,mx,my
-        real(kind=8), intent(in) :: xlower,ylower,dx,dy,t
-        real(kind=8), intent(inout) :: aux(maux,1-mbc:mx+mbc,1-mbc:my+mbc)
-        real(kind=8), intent(in) :: q(meqn,1-mbc:mx+mbc,1-mbc:my+mbc)
-        real(kind=8) :: x,y,eta
-
-        ! Set initial innerproduct field
-        do j=1-mbc,my+mbc
-            y = ylower + (j-0.5d0) * dy
-            do i=1-mbc,mx+mbc
-                x = xlower + (i-0.5d0) * dx
-
-                eta = q(1,i,j) + aux(1,i,j)
-                aux(innerprod_index,i,j) = calculate_max_innerproduct &
-                    (t,x,y,eta,q(2,i,j),q(3,i,j),aux(1,i,j))
-            enddo
-        enddo
-
-    end subroutine set_innerproduct_field
 
 end module adjoint_module

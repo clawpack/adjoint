@@ -120,8 +120,8 @@ def setplot(plotdata):
     plotitem.add_colorbar = False
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_patchedges_show = [0]
-    plotaxes.xlimits = [200,210]#[180,240]
-    plotaxes.ylimits = [50,60]#[10,62]
+    plotaxes.xlimits = [180,240]
+    plotaxes.ylimits = [10,62]
 
     # Add contour lines of bathymetry:
     plotitem = plotaxes.new_plotitem(plot_type='2d_contour')
