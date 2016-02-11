@@ -188,9 +188,9 @@ contains
 
     end function interpolate_adjoint
 
-    function calculate_max_innerproduct(t,x_c,y_c,q1,q2,q3,tolsp) result(max_innerprod)
+    function calculate_max_innerproduct(t,x_c,y_c,q1,q2,q3) result(max_innerprod)
 
-        real(kind=8), intent(in) :: t, tolsp
+        real(kind=8), intent(in) :: t
         integer :: r
         real(kind=8) :: q_innerprod1, q_innerprod2, q_innerprod, max_innerprod
         double precision, allocatable :: q_interp(:)
@@ -226,7 +226,7 @@ contains
                 q_innerprod = max(q_innerprod1, q_innerprod2)
             endif
 
-            if (q_innerprod > max_innerprod .and. abs(q1) > tolsp) then
+            if (q_innerprod > max_innerprod) then
                 max_innerprod = q_innerprod
             endif
 

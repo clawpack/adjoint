@@ -140,7 +140,7 @@ c                 # output in 1d format if ny=1:
                        x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
                        y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
                        innerprod = calculate_max_innerproduct(time,
-     &                                    x_c,y_c,p,u,v, tolsp)
+     &                                    x_c,y_c,p,u,v)
                    else
                        innerprod = alloc(iaddaux(1,i,j))
                    endif
@@ -163,7 +163,7 @@ c            # binary output
                  x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
                  y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
                  innerprod = calculate_max_innerproduct(time,
-     &                                    x_c,y_c,p,u,v, tolsp)
+     &                                    x_c,y_c,p,u,v)
              else
                  innerprod = alloc(iaddaux(1,i,j))
              endif
