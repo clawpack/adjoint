@@ -71,7 +71,7 @@ def setplot(plotdata):
     plotitem.pcolor_cmax = 0.12
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
-
+    plotitem.amr_data_show = [1,1,0]
 
     #-----------------------------------------
     # Figures for gauges

@@ -72,6 +72,7 @@ def setplot(plotdata):
     plotitem.pcolor_cmax = 0.25
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
+    plotitem.amr_data_show = [1,1,0]
     
     # Adding adjoint plot
     
@@ -143,7 +144,8 @@ def fixup(current_data):
     import pylab
     size = 34
     addgauges(current_data)
-    pylab.title('Forward Pressure', fontsize=size)
+    #pylab.title(current_data.time, fontsize=size)
+    # pylab.title('Forward Pressure', fontsize=size)
     pylab.xticks([-2, 0, 2, 4, 6], fontsize=size)
     pylab.yticks([0, 2, 4, 6, 8], fontsize=size)
 

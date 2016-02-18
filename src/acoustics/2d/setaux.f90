@@ -13,8 +13,15 @@ subroutine setaux(mbc,mx,my,xlower,ylower,dx,dy,maux,aux)
     integer, intent(in) :: mbc,mx,my,maux
     real(kind=8), intent(in) :: xlower,ylower,dx,dy
     real(kind=8), intent(out) ::  aux(maux,1-mbc:mx+mbc,1-mbc:my+mbc)
-    integer :: j, i 
+    integer :: jj, ii,iint, jint 
 
-    aux(1,:,:) = NEEDS_TO_BE_SET
-
+    ! If a new grid has been created, but hadn't been flagged
+    ! set innerproduct to zero.
+    do jj=1-mbc,my+mbc
+        do ii=1-mbc,mx+mbc
+            if (aux(1,ii,jj) .eq. NEEDS_TO_BE_SET) then
+               aux(1,ii,jj) = 0.d0
+            endif
+        enddo
+    enddo
 end subroutine setaux

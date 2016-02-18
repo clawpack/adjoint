@@ -136,14 +136,7 @@ c                 # output in 1d format if ny=1:
                    v = alloc(iadd(3,i,j))
 
                    ! Adding innerproduct
-                   if (alloc(iaddaux(1,i,j)) == NEEDS_TO_BE_SET) then
-                       x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
-                       y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                       innerprod = calculate_max_innerproduct(time,
-     &                                    x_c,y_c,p,u,v, tolsp)
-                   else
-                       innerprod = alloc(iaddaux(1,i,j))
-                   endif
+                   innerprod = alloc(iaddaux(1,i,j))
 
                    write(matunit1,109)
      &                (alloc(iadd(ivar,i,j)), ivar=1,nvar), innerprod
@@ -159,14 +152,7 @@ c            # binary output
              i2 = iadd(nvar,mitot,mjtot)
 
              ! Adding innerproduct
-             if (alloc(iaddaux(1,i,j)) == NEEDS_TO_BE_SET) then
-                 x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
-                 y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                 innerprod = calculate_max_innerproduct(time,
-     &                                    x_c,y_c,p,u,v, tolsp)
-             else
-                 innerprod = alloc(iaddaux(1,i,j))
-             endif
+             innerprod = alloc(iaddaux(1,i,j))
 
 c            # NOTE: we are writing out ghost cell data also, unlike ascii
              write(matunit4) alloc(i1:i2), innerprod
