@@ -138,6 +138,7 @@ contains
         y_adjacent = floor(((yc-adjoints(k)%ylow)/adjoints(k)%dy) + 0.5d0)
         x_adjacent = floor(((xc-adjoints(k)%xlow)/adjoints(k)%dx) + 0.5d0)
 
+        ! Making sure we aren't off the domain to the left
         if (y_cell == y_adjacent .and. y_adjacent /= 0) then
             y_adjacent = y_adjacent - 1
         endif
@@ -145,11 +146,19 @@ contains
             x_adjacent = x_adjacent - 1
         endif
 
-        if (y_adjacent >= adjoints(k)%my) then
-            y_adjacent = y_adjacent - 1
+        ! Making sure we aren't off the domain to the right
+        if (y_adjacent >= (adjoints(k)%my-1)) then
+            y_adjacent = adjoints(k)%my-1
         endif
-        if (x_adjacent >= adjoints(k)%mx) then
-            x_adjacent = x_adjacent - 1
+        if (x_adjacent >= (adjoints(k)%mx-1)) then
+            x_adjacent = adjoints(k)%mx-1
+        endif
+
+        if (y_cell >= (adjoints(k)%my-1)) then
+            y_cell = adjoints(k)%my-1
+        endif
+        if (x_cell >= (adjoints(k)%mx-1)) then
+            x_cell = adjoints(k)%mx-1
         endif
 
         ! Interpolating in y
