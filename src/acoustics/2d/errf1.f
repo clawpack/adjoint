@@ -2,19 +2,18 @@ c
 c --------------------------------------------------------------
 c
       subroutine errf1(rctfine,nvar,rctcrse,mptr,mi2tot,mj2tot,
-     2                 mitot,mjtot,rctflg,mibuff,mjbuff)
+     2                 mitot,mjtot,rctflg,mibuff,mjbuff,auxfine,
+     2                 naux)
       use amr_module
       use adjoint_module, only : calculate_max_innerproduct
       implicit double precision (a-h,o-z)
 
  
       dimension  rctfine(nvar,mitot,mjtot)
+      dimension  auxfine(naux,mitot,mjtot)
       dimension  rctcrse(nvar,mi2tot,mj2tot)
       dimension  rctflg(mibuff,mjbuff)
       dimension  est(nvar)
-c     # TODO: FIX THIS AUX ARRAY. DOES IT NEED MORE 
-c     # INFORMATION PASSED IN?
-      dimension  auxbgc(naux,nx+2*nghost,ny+2*nghost)
 c
 c
 c ::::::::::::::::::::::::::::: ERRF1 ::::::::::::::::::::::::::::::::
@@ -37,10 +36,6 @@ c
       hy    = hyposs(levm)
       dt    = possk(levm)
       numsp = 0
-
-c     needed for calculating and saving innerproduct
-      locaux = node(storeaux,mptr)
-      aux = alloc(locaux)
  
       errmax = 0.0d0
       err2   = 0.0d0
@@ -86,24 +81,24 @@ c             # divide by (aval*order) for relative error
  50       continue
 
 c         set innerproduct for fine grid
-          aux(1,ifine,jfine) = calculate_max_innerproduct
+          auxfine(1,ifine,jfine) = calculate_max_innerproduct
      .      (time,xofi,yofj,est(1),est(2),est(3))
 
-          aux(1,ifine+1,jfine)  = aux(1,ifine,jfine)
-          aux(1,ifine,jfine+1)  = aux(1,ifine,jfine)
-          aux(1,ifine+1,jfine+1)= aux(1,ifine,jfine)
+          auxfine(1,ifine+1,jfine)  = auxfine(1,ifine,jfine)
+          auxfine(1,ifine,jfine+1)  = auxfine(1,ifine,jfine)
+          auxfine(1,ifine+1,jfine+1)= auxfine(1,ifine,jfine)
 
-          if (aux(1,ifine,jfine) .gt. errmax) 
-     .        errmax = aux(1,ifine,jfine)
-          err2 = err2 + aux(1,ifine,jfine)*
-     .                   aux(1,ifine,jfine)
-c         write(outunit,102) i,j,est,rctcrse(1,i,j)
+          if (auxfine(1,ifine,jfine) .gt. errmax)
+     .        errmax = auxfine(1,ifine,jfine)
+          err2 = err2 + auxfine(1,ifine,jfine)*
+     .                   auxfine(1,ifine,jfine)
+c         write(outunit,102) i,j,auxfine(1,ifine,jfine),rctcrse(1,i,j)
  102      format(' i,j,est ',2i5,2e15.7)
 c          write(outunit,104) term1,term2,term3,term4
  104      format('   ',4e15.7)
-c         rctcrse(2,i,j) = est
+c         rctcrse(2,i,j) = auxfine(1,ifine,jfine)
 c
-          if (aux(1,ifine,jfine) .ge. tol) then
+          if (auxfine(1,ifine,jfine) .ge. tol) then
              rflag  = badpt
           endif 
       rctcrse(1,i,j) = rflag
