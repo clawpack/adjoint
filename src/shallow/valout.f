@@ -153,15 +153,7 @@ c                 # output in 1d format if ny=1:
                    end if
 
                    ! Adding innerproduct
-                   if (alloc(iaddaux(innerprod_index,i,j))
-     &                                 == NEEDS_TO_BE_SET) then
-                       x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
-                       y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                       innerprod = calculate_max_innerproduct(time,
-     &                        x_c,y_c,eta,hu,hv,alloc(iaddaux(1,i,j)))
-                   else
-                       innerprod = alloc(iaddaux(innerprod_index,i,j))
-                   endif
+                   innerprod = alloc(iaddaux(innerprod_index,i,j))
 
                    if (abs(innerprod) < 1d-90) then
                        innerprod = 0.d0
@@ -194,15 +186,7 @@ c            # Need to augment q with eta and max innerproduct:
                     hv = alloc(iadd(3,i,j))
 
                     ! Adding innerproduct
-                    if (alloc(iaddaux(innerprod_index,i,j))
-     &                                  == NEEDS_TO_BE_SET) then
-                        x_c = xlow + (i - nghost - 0.5d0)*hxposs(level)
-                        y_c = ylow + (j - nghost - 0.5d0)*hyposs(level)
-                        innerprod = calculate_max_innerproduct(time,
-     &                         x_c,y_c,eta,hu,hv,alloc(iaddaux(1,i,j)))
-                    else
-                        innerprod = alloc(iaddaux(innerprod_index,i,j))
-                    endif
+                    innerprod = alloc(iaddaux(innerprod_index,i,j))
 
                     if (abs(innerprod) < 1d-90) then
                         innerprod = 0.d0
