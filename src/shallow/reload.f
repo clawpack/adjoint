@@ -6,7 +6,7 @@ c ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 c
 c ---------------------------------------------------------
 c
-      subroutine reload(adjointfile, k)
+      subroutine reload(adjfile, k)
 c
       use amr_reload_module
       use adjoint_module
@@ -15,19 +15,18 @@ c
 
       integer, intent(in) :: k
       integer :: i
-      character(len=*), intent(in) :: adjointfile
+      character(len=*), intent(in) :: adjfile
       logical foundFile, initial
 
 c     ! Checking to see if file exists
       write(6,*) 'Attempting to reload data '
-      write(6,*) '  checkpoint file: ',trim(adjointfile)
-      inquire(file=trim(adjointfile),exist=foundFile)
+      write(6,*) '  checkpoint file: ',trim(adjfile)
+      inquire(file=trim(adjfile),exist=foundFile)
       if (.not. foundFile) then
         write(*,*)" Did not find checkpoint file!"
         stop
       endif
-      open(rstunit,file=trim(adjointfile),
-     .    status='old',form='unformatted')
+      open(rstunit,file=trim(adjfile),status='old',form='unformatted')
       rewind rstunit
 
 c     ! Starting the bulk of the reading
@@ -38,8 +37,7 @@ c     ! Starting the bulk of the reading
 
       memsize = adjoints(k)%isize
 
-      read(rstunit) (adjoints(k)%alloc(i),i=1,
-     .       adjoints(k)%lendim)
+      read(rstunit) (adjoints(k)%alloc(i),i=1,adjoints(k)%lendim)
       read(rstunit) adjoints(k)%hxposs,adjoints(k)%hyposs,
      .       adjoints(k)%possk,adjoints(k)%icheck
       read(rstunit) adjoints(k)%lfree,adjoints(k)%lenf
@@ -47,7 +45,8 @@ c     ! Starting the bulk of the reading
      1       adjoints(k)%lstart,adjoints(k)%newstl,
      1       adjoints(k)%listsp, adjoints(k)%tol,
      1       adjoints(k)%ibuff,adjoints(k)%mstart,
-     1       adjoints(k)%ndfree,adjoints(k)%lfine,
+     1       adjoints(k)%ndfree,adjoints(k)%ndfree_bnd,
+     1       adjoints(k)%lfine,
      1       adjoints(k)%iorder,adjoints(k)%mxnest,
      2       adjoints(k)%intratx,adjoints(k)%intraty,
      2       adjoints(k)%kratio,adjoints(k)%iregsz,

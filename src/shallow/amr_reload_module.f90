@@ -13,7 +13,7 @@ module amr_reload_module
     ! :::::   data structure info.
     ! ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     integer, parameter :: rsize = 5
-    integer, parameter :: nsize = 17
+    integer, parameter :: nsize = 19
 
     !  :::::::   integer part of node descriptor
     integer, parameter :: levelptr  = 1
@@ -33,6 +33,8 @@ module amr_reload_module
     integer, parameter :: numflags  = 15
     integer, parameter :: domflags_base  = 16
     integer, parameter :: domflags2  = 17
+    integer, parameter :: bndListSt  = 18
+    integer, parameter :: bndListNum = 19
 
     ! :::::::  real part of node descriptor
     integer, parameter :: cornxlo  = 1

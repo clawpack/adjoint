@@ -19,7 +19,7 @@ module adjoint_module
         real(kind=8) rnode(rsize, maxgr)
         integer node(nsize, maxgr), lstart(maxlv),newstl(maxlv), &
                 listsp(maxlv)
-        integer ibuff, mstart, ndfree, lfine, iorder, mxnest, &
+        integer ibuff, mstart, ndfree, ndfree_bnd, lfine, iorder, mxnest, &
                 intratx(maxlv),intraty(maxlv), kratio(maxlv), &
                 iregsz(maxlv),jregsz(maxlv), iregst(maxlv),jregst(maxlv), &
                 iregend(maxlv),jregend(maxlv), numgrids(maxlv), kcheck, &
