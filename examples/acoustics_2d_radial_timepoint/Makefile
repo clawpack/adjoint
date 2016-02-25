@@ -25,7 +25,7 @@ RESTART ?= False                    # Should = clawdata.restart in setrun
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS ?=  
+FFLAGS ?= 
 
 # ---------------------------------
 # List of sources for this program:
@@ -45,6 +45,8 @@ SOURCES = \
   setprob.f \
   $(ADJLIB)/acoustics/2d/flag2refine2.f90 \
   $(ADJLIB)/acoustics/2d/valout.f \
+  $(ADJLIB)/acoustics/2d/errest.f \
+  $(ADJLIB)/acoustics/2d/errf1.f \
   $(CLAW)/riemann/src/rpn2_acoustics.f \
   $(CLAW)/riemann/src/rpt2_acoustics.f \
   $(ADJLIB)/acoustics/2d/setaux.f90 \
@@ -71,8 +73,6 @@ SOURCES = \
   $(AMRLIB)/bufnst2.f \
   $(AMRLIB)/spest2.f \
   $(AMRLIB)/flagregions2.f90 \
-  $(AMRLIB)/errest.f \
-  $(AMRLIB)/errf1.f \
   $(AMRLIB)/gfixup.f \
   $(AMRLIB)/filval.f90 \
   $(AMRLIB)/filpatch.f90 \

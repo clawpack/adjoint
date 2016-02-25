@@ -290,14 +290,12 @@ def setrun(claw_pkg='amrclaw'):
 
     # Flag for refinement based on Richardson error estimater:
     amrdata.flag_richardson = False    # use Richardson?
-    amrdata.flag_richardson_tol = 0.001000e+00  # Richardson tolerance
+    amrdata.flag_richardson_tol = 0.00004  # Richardson tolerance
     
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = True      # use this?
     amrdata.flag2refine_tol = 0.02 # tolerance used in this routine
     # User can modify flag2refine to change the criterion for flagging.
-    # Default: check maximum absolute difference of first component of q
-    # between a cell and each of its neighbors.
 
     # steps to take on each level L between regriddings of level L+1:
     amrdata.regrid_interval = 2       
