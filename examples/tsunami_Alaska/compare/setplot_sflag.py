@@ -86,7 +86,7 @@ def setplot(plotdata):
     # Figure for big area
     #-----------------------------------------
     plotfigure = plotdata.new_plotfigure(name='Pacific', figno=0)
-    plotfigure.kwargs = {'figsize': (14,7)}
+    plotfigure.kwargs = {'figsize': (8,7)}
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()

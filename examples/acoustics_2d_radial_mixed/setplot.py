@@ -41,7 +41,7 @@ def setplot(plotdata):
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
-    plotitem.pcolor_cmap = colormaps.blue_yellow_red
+    plotitem.pcolor_cmap = colormaps.blue_white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = -1.5
