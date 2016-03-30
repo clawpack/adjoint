@@ -41,6 +41,11 @@ def setrun(claw_pkg='amrclaw'):
     probdata.add_param('bulk',    4.,  'bulk modulus')
     
     #------------------------------------------------------------------
+    # Adjoint specific data:
+    #------------------------------------------------------------------
+    rundata = setadjoint(rundata)
+    
+    #------------------------------------------------------------------
     # Standard Clawpack parameters to be written to claw.data:
     #   (or to amrclaw.data for AMR)
     #------------------------------------------------------------------
@@ -336,6 +341,37 @@ def setrun(claw_pkg='amrclaw'):
 
     # end of function setrun
     # ----------------------
+
+#-------------------
+def setadjoint(rundata):
+    #-------------------
+    
+    """
+        Setting up adjoint variables and
+        reading in all of the checkpointed Adjoint files
+        """
+    
+    import glob
+    
+    files = glob.glob("adjoint/_output/fort.tck*")
+    files.sort()
+    
+    probdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
+    probdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
+    probdata.add_param('innerprod_index', 1, 'Index for innerproduct data in aux array.')
+    
+    counter = 1
+    for fname in files:
+        f = open(fname)
+        time = f.readline().split()[-1]
+        fname = '../' + fname.replace('tck','chk')
+        probdata.add_param('file' + str(counter), fname, 'Checkpoint file' + str(counter))
+        probdata.add_param('time' + str(counter), float(time), 'Time for file' + str(counter))
+        counter = counter + 1
+    
+    return rundata
+# end of function setadjoint
+# ----------------------
 
 if __name__ == '__main__':
     # Set up run-time parameters and write all data files.

@@ -25,7 +25,7 @@ RESTART ?= False                    # Should = clawdata.restart in setrun
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS ?=  
+FFLAGS = -g -Wall -pedantic -fbounds-check -ffpe-trap=invalid,overflow,zero  
 
 # ---------------------------------
 # List of sources for this program:
@@ -35,10 +35,12 @@ AMRLIB = $(CLAW)/amrclaw/src/2d
 ADJLIB = $(CLAW)/adjoint/src
 
 MODULES = \
-  $(ADJLIB)/acoustics/2d/adjoint_module.f90 \
   $(AMRLIB)/amr_module.f90 \
   $(AMRLIB)/gauges_module.f90 \
   $(AMRLIB)/regions_module.f90 \
+  $(ADJLIB)/2d/amr_reload_module.f90 \
+  $(ADJLIB)/2d/adjoint_module.f90 \
+  $(ADJLIB)/acoustics/2d/innerprod_module.f90
 
 SOURCES = \
   qinit.f \
@@ -47,6 +49,8 @@ SOURCES = \
   $(ADJLIB)/acoustics/2d/valout.f \
   $(ADJLIB)/acoustics/2d/errest.f \
   $(ADJLIB)/acoustics/2d/errf1.f \
+  $(ADJLIB)/2d/amr2_reload.f90 \
+  $(ADJLIB)/2d/reload.f \
   $(CLAW)/riemann/src/rpn2_acoustics.f \
   $(CLAW)/riemann/src/rpt2_acoustics.f \
   $(ADJLIB)/acoustics/2d/setaux.f90 \
