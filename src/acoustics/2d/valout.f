@@ -4,7 +4,6 @@ c
       subroutine valout (lst, lend, time, nvar, naux)
 c
       use amr_module
-      use adjoint_module, only: calculate_max_innerproduct
       implicit double precision (a-h,o-z)
       character*10  fname1, fname2, fname3, fname4, fname5
 

@@ -38,7 +38,8 @@
 
 subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
                             tolsp,q,aux,amrflags,DONTFLAG,DOFLAG)
-    use adjoint_module, only: calculate_max_innerproduct
+    use innerprod_module, only: calculate_max_innerproduct
+    use amr_module, only: intratx
 
     implicit none
 
@@ -58,7 +59,7 @@ subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
     external allowflag
 
     ! Locals
-    integer :: i,j,m
+    integer :: i,j
     real(kind=8) :: max_innerprod
     real(kind=8) :: x_c,y_c,x_low,y_low,x_hi,y_hi
     real(kind=8) :: dqi(meqn), dqj(meqn), dq(meqn),eta
