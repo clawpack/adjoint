@@ -5,7 +5,7 @@ c
      2                 mitot,mjtot,rctflg,mibuff,mjbuff,auxfine,
      2                 naux)
       use amr_module
-      use adjoint_module, only : calculate_max_innerproduct
+      use innerprod_module, only : calculate_max_innerproduct
       implicit double precision (a-h,o-z)
 
  
