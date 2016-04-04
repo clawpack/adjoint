@@ -3,9 +3,10 @@ c --------------------------------------------------------------
 c
       subroutine errf1(rctfine,nvar,rctcrse,mptr,mi2tot,mj2tot,
      2                 mitot,mjtot,rctflg,mibuff,mjbuff,auxfine,
-     2                 naux)
+     2                 naux,auxcrse)
       use amr_module
       use innerprod_module, only : calculate_max_innerproduct
+      use adjoint_module, only: innerprod_index
       implicit double precision (a-h,o-z)
 
  
@@ -81,24 +82,28 @@ c             # divide by (aval*order) for relative error
  50       continue
 
 c         set innerproduct for fine grid
-          auxfine(1,ifine,jfine) = calculate_max_innerproduct
-     .      (time,xofi,yofj,est(1),est(2),est(3))
+          auxfine(innerprod_index,ifine,jfine) =
+     .        calculate_max_innerproduct(time,xofi,yofj,
+     .        est(1),est(2),est(3))
 
-          auxfine(1,ifine+1,jfine)  = auxfine(1,ifine,jfine)
-          auxfine(1,ifine,jfine+1)  = auxfine(1,ifine,jfine)
-          auxfine(1,ifine+1,jfine+1)= auxfine(1,ifine,jfine)
+          auxfine(innerprod_index,ifine+1,jfine)  =
+     .                          auxfine(innerprod_index,ifine,jfine)
+          auxfine(innerprod_index,ifine,jfine+1)  =
+     .                          auxfine(innerprod_index,ifine,jfine)
+          auxfine(innerprod_index,ifine+1,jfine+1)=
+     .                          auxfine(innerprod_index,ifine,jfine)
 
-          if (auxfine(1,ifine,jfine) .gt. errmax)
-     .        errmax = auxfine(1,ifine,jfine)
-          err2 = err2 + auxfine(1,ifine,jfine)*
-     .                   auxfine(1,ifine,jfine)
+          if (auxfine(innerprod_index,ifine,jfine) .gt. errmax)
+     .        errmax = auxfine(innerprod_index,ifine,jfine)
+          err2 = err2 + auxfine(innerprod_index,ifine,jfine)*
+     .                   auxfine(innerprod_index,ifine,jfine)
 c         write(outunit,102) i,j,auxfine(1,ifine,jfine),rctcrse(1,i,j)
  102      format(' i,j,est ',2i5,2e15.7)
 c          write(outunit,104) term1,term2,term3,term4
  104      format('   ',4e15.7)
 c         rctcrse(2,i,j) = auxfine(1,ifine,jfine)
 c
-          if (auxfine(1,ifine,jfine) .ge. tol) then
+          if (auxfine(innerprod_index,ifine,jfine) .ge. tol) then
              rflag  = badpt
           endif 
       rctcrse(1,i,j) = rflag

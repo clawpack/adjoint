@@ -40,6 +40,7 @@ subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
                             tolsp,q,aux,amrflags,DONTFLAG,DOFLAG)
     use innerprod_module, only: calculate_max_innerproduct
     use amr_module, only: intratx
+    use adjoint_module, only: innerprod_index
 
     implicit none
 
@@ -79,10 +80,10 @@ subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
         x_low = xlower + (i - 1) * dx
         x_hi = xlower + i * dx
 
-        aux(1,i,j) =  &
+        aux(innerprod_index,i,j) =  &
            calculate_max_innerproduct(t,x_c,y_c,q(1,i,j),q(2,i,j),q(3,i,j))
 
-        if (aux(1,i,j) > tolsp) then
+        if (aux(innerprod_index,i,j) > tolsp) then
             amrflags(i,j) = DOFLAG
             cycle x_loop
         endif

@@ -4,6 +4,7 @@ c
       subroutine valout (lst, lend, time, nvar, naux)
 c
       use amr_module
+      use adjoint_module, only: innerprod_index
       implicit double precision (a-h,o-z)
       character*10  fname1, fname2, fname3, fname4, fname5
 
@@ -135,7 +136,7 @@ c                 # output in 1d format if ny=1:
                    v = alloc(iadd(3,i,j))
 
                    ! Adding innerproduct
-                   innerprod = alloc(iaddaux(1,i,j))
+                   innerprod = alloc(iaddaux(innerprod_index,i,j))
 
                    write(matunit1,109)
      &                (alloc(iadd(ivar,i,j)), ivar=1,nvar), innerprod
@@ -151,7 +152,7 @@ c            # binary output
              i2 = iadd(nvar,mitot,mjtot)
 
              ! Adding innerproduct
-             innerprod = alloc(iaddaux(1,i,j))
+             innerprod = alloc(iaddaux(innerprod_index,i,j))
 
 c            # NOTE: we are writing out ghost cell data also, unlike ascii
              write(matunit4) alloc(i1:i2), innerprod

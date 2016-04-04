@@ -9,6 +9,7 @@ subroutine setaux(mbc,mx,my,xlower,ylower,dx,dy,maux,aux)
     ! This default version does nothing. 
 
     use amr_module, only : NEEDS_TO_BE_SET
+    use adjoint_module, only: innerprod_index
 
     integer, intent(in) :: mbc,mx,my,maux
     real(kind=8), intent(in) :: xlower,ylower,dx,dy
@@ -19,8 +20,8 @@ subroutine setaux(mbc,mx,my,xlower,ylower,dx,dy,maux,aux)
     ! set innerproduct to zero.
     do jj=1-mbc,my+mbc
         do ii=1-mbc,mx+mbc
-            if (aux(1,ii,jj) .eq. NEEDS_TO_BE_SET) then
-               aux(1,ii,jj) = 0.d0
+            if (aux(innerprod_index,ii,jj) .eq. NEEDS_TO_BE_SET) then
+               aux(innerprod_index,ii,jj) = 0.d0
             endif
         enddo
     enddo
