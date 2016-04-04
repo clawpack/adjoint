@@ -47,13 +47,13 @@ SOURCES = \
   setprob.f \
   $(ADJLIB)/acoustics/2d/flag2refine2.f90 \
   $(ADJLIB)/acoustics/2d/valout.f \
-  $(ADJLIB)/acoustics/2d/errest.f \
   $(ADJLIB)/acoustics/2d/errf1.f \
+  $(ADJLIB)/acoustics/2d/setaux.f90 \
   $(ADJLIB)/2d/amr2_reload.f90 \
   $(ADJLIB)/2d/reload.f \
+  $(ADJLIB)/2d/errest.f \
   $(CLAW)/riemann/src/rpn2_acoustics.f \
   $(CLAW)/riemann/src/rpt2_acoustics.f \
-  $(ADJLIB)/acoustics/2d/setaux.f90 \
   $(AMRLIB)/amr2.f90 \
   $(AMRLIB)/bc2amr.f \
   $(AMRLIB)/b4step2.f90 \
