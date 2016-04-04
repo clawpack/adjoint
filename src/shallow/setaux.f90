@@ -85,7 +85,7 @@ subroutine setaux(mbc,mx,my,xlow,ylow,dx,dy,maux,aux)
 
     ! Innerproduct field if used
     if (adjoint_flagging) then
-        aux(innerprod_index,:,:) = NEEDS_TO_BE_SET
+        aux(innerprod_index,:,:) = 0.d0 !NEEDS_TO_BE_SET
     endif
 
     ! Set analytical bathymetry here if requested

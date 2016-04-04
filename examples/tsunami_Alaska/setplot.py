@@ -183,6 +183,7 @@ def setplot(plotdata):
     plotitem.add_colorbar = False
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_patchedges_show = [0]
+    plotitem.amr_data_show = [1,0,0,0]
     
     # Land
     plotitem = plotaxes.new_plotitem(plot_type='2d_imshow')
