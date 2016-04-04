@@ -26,7 +26,7 @@ GIT_STATUS = True
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS = -O2 -fopenmp
+FFLAGS = -O2 -fopenmp -g -Wall -fbounds-check -ffpe-trap=invalid,overflow,zero
 
 # ---------------------------------
 # List of sources for this program:
@@ -52,14 +52,15 @@ MODULES = \
  $(GEOLIB)/surge/constant_storm_module.f90 \
  $(GEOLIB)/surge/storm_module.f90 \
  $(GEOLIB)/friction_module.f90 \
- $(ADJLIB)/shallow/amr_reload_module.f90 \
- $(ADJLIB)/shallow/adjoint_module.f90 
+ $(ADJLIB)/2d/amr_reload_module.f90 \
+ $(ADJLIB)/2d/adjoint_module.f90 \
+ $(ADJLIB)/shallow/innerprod_module.f90 
 
 SOURCES = \
   setprob.f90 \
-  $(ADJLIB)/shallow/amr2_reload.f90 \
+  $(ADJLIB)/2d/amr2_reload.f90 \
+  $(ADJLIB)/2d/reload.f \
   $(ADJLIB)/shallow/interp_adjoint.f \
-  $(ADJLIB)/shallow/reload.f \
   $(ADJLIB)/shallow/valout.f \
   $(ADJLIB)/shallow/flag2refine2.f90 \
   $(ADJLIB)/shallow/setaux.f90 \

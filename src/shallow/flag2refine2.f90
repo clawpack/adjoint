@@ -38,7 +38,8 @@
 
 subroutine flag2refine2(mx,my,mbc,mbuff,meqn,maux,xlower,ylower,dx,dy,t,level, &
                             tolsp,q,aux,amrflags,DONTFLAG,DOFLAG)
-    use adjoint_module, only: innerprod_index, calculate_max_innerproduct
+    use adjoint_module, only: innerprod_index
+    use innerprod_module, only: calculate_max_innerproduct
 
     use amr_module, only: mxnest, t0
     use geoclaw_module, only:dry_tolerance, sea_level
