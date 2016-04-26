@@ -69,11 +69,7 @@ def setplot(plotdata):
         
     def title(current_data):
         from pylab import title
-        title('Surface Height', fontsize = 28)
-    
-    def title_innerproduct(current_data):
-        from pylab import title
-        title('Inner Product', fontsize = 28)
+        title(' ')
 
     def plotcc(current_data):
         from pylab import plot,text
@@ -85,11 +81,10 @@ def setplot(plotdata):
     # Figure for big area
     #-----------------------------------------
     plotfigure = plotdata.new_plotfigure(name='Pacific', figno=0)
-    plotfigure.kwargs = {'figsize': (11,5)}
+    plotfigure.kwargs = {'figsize': (8,7)}
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.axescmd = 'axes([0.03,0.13,0.45,0.75])'
     plotaxes.title = 'Pacific'
     plotaxes.scaled = True
 
@@ -118,7 +113,7 @@ def setplot(plotdata):
     plotitem.add_colorbar = False
     plotitem.colorbar_shrink = 0.7
     plotitem.amr_celledges_show = [0,0,0]
-    plotitem.amr_patchedges_show = [1]
+    plotitem.amr_patchedges_show = [0]
 
     # Land
     plotitem = plotaxes.new_plotitem(plot_type='2d_imshow')
@@ -156,20 +151,23 @@ def setplot(plotdata):
     plotitem.celledges_show = 0
     plotitem.patchedges_show = 0
 
-    # Adding inner product plot
+    #-----------------------------------------
+    # Figure for inner product
+    #-----------------------------------------
+    plotfigure = plotdata.new_plotfigure(name='Inner Product', figno=1)
+    plotfigure.kwargs = {'figsize': (8,7)}
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.title = 'Inner Product'
-    plotaxes.axescmd = 'axes([0.45,0.13,0.6,0.75])'
     plotaxes.scaled = True
     def aa_innerprod(current_data):
         from pylab import ticklabel_format, xticks, gca, cos, pi, yticks
         plotcc(current_data)
-        title_innerproduct(current_data)
+        title(current_data)
         ticklabel_format(format='plain',useOffset=False)
         xticks([180, 200, 220, 240], rotation=20, fontsize = 28)
-        pylab.tick_params(axis='y', labelleft='off')
+        yticks(fontsize = 28)
         a = gca()
         a.set_aspect(1./cos(41.75*pi/180.))
     plotaxes.afteraxes = aa_innerprod
@@ -179,7 +177,7 @@ def setplot(plotdata):
     plotitem.plot_var = 4
     plotitem.imshow_cmap = colormaps.white_red
     plotitem.imshow_cmin = 0.0
-    plotitem.imshow_cmax = 0.05
+    plotitem.imshow_cmax = 0.04
     plotitem.add_colorbar = False
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_patchedges_show = [0]
@@ -198,48 +196,44 @@ def setplot(plotdata):
 
 
     #-----------------------------------------
-    # Figure for zoom
+    # Figure for levels
     #-----------------------------------------
-    plotfigure = plotdata.new_plotfigure(name='California', figno=10)
-
+    plotfigure = plotdata.new_plotfigure(name='Grid patches', figno=10)
+    plotfigure.kwargs = {'figsize': (8,7)}
+    
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.title = 'California'
+    plotaxes.title = 'Grid patches'
     plotaxes.scaled = True
-    plotaxes.afteraxes = aa
-
+    def aa_patches(current_data):
+        from pylab import ticklabel_format, xticks, gca, cos, pi, yticks
+        plotcc(current_data)
+        title(current_data)
+        ticklabel_format(format='plain',useOffset=False)
+        xticks([180, 200, 220, 240], rotation=20, fontsize = 28)
+        yticks(fontsize = 28)
+        a = gca()
+        a.set_aspect(1./cos(41.75*pi/180.))
+    
     # Water
-    plotitem = plotaxes.new_plotitem(plot_type='2d_imshow')
-    plotitem.plot_var = geoplot.surface_or_depth
-    plotitem.imshow_cmap = my_cmap
-    plotitem.imshow_cmin = cmin_ocean
-    plotitem.imshow_cmax = cmax_ocean
-    plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [0,0,0]
-    plotitem.amr_patchedges_show = [0]
-
+    plotitem = plotaxes.new_plotitem(plot_type='2d_patch')
+    plotitem.amr_patch_bgcolor = [[1,1,1], [.7,.7,1], [1,0.4,0.4]]
+    plotitem.amr_patchedges_color = ['k','b','r']
+    plotitem.amr_celledges_show = [0]
+    plotitem.amr_patchedges_show = [0,1,1,0]
+    
     # Land
-    plotitem = plotaxes.new_plotitem(plot_type='2d_imshow')
+    plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = geoplot.land
-    plotitem.imshow_cmap = geoplot.land_colors
-    plotitem.imshow_cmin = 0.0
-    plotitem.imshow_cmax = 100.0
+    plotitem.pcolor_cmap = geoplot.land_colors
+    plotitem.pcolor_cmin = 0.0
+    plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [0,0,0]
+    plotitem.amr_celledges_show = [0]
     plotitem.amr_patchedges_show = [0]
-    plotaxes.xlimits = [235.5,236]
-    plotaxes.ylimits = [41.6,41.8]
-    plotaxes.afteraxes = addgauges
-
-    # add contour lines of bathy if desired:
-    plotitem = plotaxes.new_plotitem(plot_type='2d_contour')
-    plotitem.plot_var = geoplot.topo
-    plotitem.contour_levels = [0.]
-    plotitem.amr_contour_colors = ['k']  # color on each level
-    plotitem.kwargs = {'linestyles':'solid','linewidths':2}
-    plotitem.amr_contour_show = [0,0,0,0,0,1]
-    plotitem.celledges_show = 0
-    plotitem.patchedges_show = 0
+    plotaxes.afteraxes = aa_patches
+    plotaxes.xlimits = [180,240]
+    plotaxes.ylimits = [10,62]
 
     #-----------------------------------------
     # Figures for gauges
@@ -252,13 +246,18 @@ def setplot(plotdata):
         xticks([18000, 21600, 25200, 28800, 32400, 36000],\
                [str(180/36), str(216/36), str(252/36), str(288/36), \
                 str(324/36), str(360/36)], fontsize=17)
-        yticks(fontsize=17)
+        if (gaugeno == 1):
+            yticks([-0.3, -0.15, 0, 0.15, 0.3],\
+                   ['-0.3', '-0.15', '0', '0.15', '0.3'],fontsize=17)
+        if (gaugeno == 2):
+            yticks([-1.5, -0.75, 0, 0.75, 1.5],\
+                   ['-1.5', '-0.75', '0', '0.75', '1.5'],fontsize=17)
         title('Surface at gauge ' + str(gaugeno), fontsize=17)
         xlabel(' ')
 
     plotfigure = plotdata.new_plotfigure(name='gauge plot', figno=300, \
                     type='each_gauge')
-    plotfigure.kwargs = {'figsize': (10.5,5)}
+    plotfigure.kwargs = {'figsize': (10.5,3)}
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()

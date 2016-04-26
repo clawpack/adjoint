@@ -85,21 +85,22 @@ def setplot(plotdata):
     #-----------------------------------------
     # Figure for big area
     #-----------------------------------------
-    plotfigure = plotdata.new_plotfigure(name='Pacific', figno=0)
+    plotfigure = plotdata.new_plotfigure(name='Solution', figno=0)
     plotfigure.kwargs = {'figsize': (8,7)}
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.title = 'Pacific'
+    plotaxes.title = 'Solution'
     plotaxes.scaled = True
 
     def aa(current_data):
-        from pylab import ticklabel_format, xticks, gca, cos, pi
+        from pylab import ticklabel_format,xticks,gca,cos,pi,yticks,title
         plotcc(current_data)
-        title_hours(current_data)
+        title(' ')
         addgauges(current_data)
         ticklabel_format(format='plain',useOffset=False)
-        xticks(rotation=20)
+        xticks([180, 200, 220, 240], rotation=20, fontsize = 28)
+        yticks(fontsize = 28)
         a = gca()
         a.set_aspect(1./cos(41.75*pi/180.))
     plotaxes.afteraxes = aa
@@ -118,7 +119,7 @@ def setplot(plotdata):
     plotitem.add_colorbar = False
     plotitem.colorbar_shrink = 0.7
     plotitem.amr_celledges_show = [0,0,0]
-    plotitem.amr_patchedges_show = [1]
+    plotitem.amr_patchedges_show = [0]
 
     # Land
     plotitem = plotaxes.new_plotitem(plot_type='2d_imshow')
@@ -128,7 +129,7 @@ def setplot(plotdata):
     plotitem.imshow_cmax = 100.0
     plotitem.add_colorbar = False
     plotitem.amr_celledges_show = [0,0,0]
-    plotitem.amr_patchedges_show = [1]
+    plotitem.amr_patchedges_show = [0]
     plotaxes.xlimits = [180,240] 
     plotaxes.ylimits = [10,62]
 
@@ -156,53 +157,38 @@ def setplot(plotdata):
     plotitem.celledges_show = 0
     plotitem.patchedges_show = 0
 
-
     #-----------------------------------------
-    # Figure for zoom
+    # Figure for levels
     #-----------------------------------------
-    plotfigure = plotdata.new_plotfigure(name='California', figno=10)
-
+    plotfigure = plotdata.new_plotfigure(name='Grid patches', figno=10)
+    plotfigure.kwargs = {'figsize': (8,7)}
+    
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.title = 'California'
+    plotaxes.title = 'Grid patches'
     plotaxes.scaled = True
-    plotaxes.afteraxes = aa
-
+    
     # Water
-    plotitem = plotaxes.new_plotitem(plot_type='2d_imshow')
-    plotitem.plot_var = geoplot.surface_or_depth
-    plotitem.imshow_cmap = my_cmap
-    plotitem.imshow_cmin = cmin_ocean
-    plotitem.imshow_cmax = cmax_ocean
-    plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [0,0,0]
-    plotitem.amr_patchedges_show = [0]
-
+    plotitem = plotaxes.new_plotitem(plot_type='2d_patch')
+    plotitem.amr_patch_bgcolor = [[1,1,1], [.7,.7,1], [1,0.4,0.4]]
+    plotitem.amr_patchedges_color = ['k','b','r']
+    plotitem.amr_celledges_show = [0]
+    plotitem.amr_patchedges_show = [0,1,1,0]
+    
     # Land
-    plotitem = plotaxes.new_plotitem(plot_type='2d_imshow')
+    plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = geoplot.land
-    plotitem.imshow_cmap = geoplot.land_colors
-    plotitem.imshow_cmin = 0.0
-    plotitem.imshow_cmax = 100.0
+    plotitem.pcolor_cmap = geoplot.land_colors
+    plotitem.pcolor_cmin = 0.0
+    plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [0,0,0]
+    plotitem.amr_celledges_show = [0]
     plotitem.amr_patchedges_show = [0]
-    plotaxes.xlimits = [235.5,236]
-    plotaxes.ylimits = [41.5,42]
     plotaxes.afteraxes = aa
-
-    # add contour lines of bathy if desired:
-    plotitem = plotaxes.new_plotitem(plot_type='2d_contour')
-    plotitem.plot_var = geoplot.topo
-    plotitem.contour_levels = [0.]
-    plotitem.amr_contour_colors = ['k']  # color on each level
-    plotitem.kwargs = {'linestyles':'solid','linewidths':2}
-    plotitem.amr_contour_show = [0,0,0,0,0,1]
-    plotitem.celledges_show = 0
-    plotitem.patchedges_show = 0
-
- 
-
+    plotaxes.xlimits = [180,240]
+    plotaxes.ylimits = [10,62]
+    
+    
     #-----------------------------------------
     # Figures for gauges
     #-----------------------------------------
