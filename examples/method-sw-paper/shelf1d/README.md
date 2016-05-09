@@ -32,7 +32,7 @@ other, so it should be run after the adjoint code is run.
 
 ### Running the Code
 
-* ** ** Go to the folder **adjoint** and run in a terminal:
+* Go to the folder **adjoint** and run in a terminal:
 
 ```
 make new
@@ -44,7 +44,7 @@ The first one contains all the output files, while the latter one contains the p
 visualization apps.
 
 
-* ** ** Go to the folder **forward** and run in a terminal:
+* Go to the folder **forward** and run in a terminal:
 
 ```
 make new
@@ -55,7 +55,7 @@ The code will produce two new folders: _output and _plots.
 The first one contains all the output files, while the latter one contains the plots and interactive 
 visualization apps.
 
-* ** ** Go to the main folder **shelf1d**:
+* Go to the main folder **shelf1d**:
 
 Run one of the following in the terminal:
 

@@ -41,6 +41,8 @@ Note: Clawpack 5.0 or higher is required, other versions of gfortran and python 
     * An example with both wall and outflow boundary conditions, and a time range of interest.
 * 2-dimensional shallow water equations 
     * A tsunami propagation example.
+* 1-dimensional shallow water equations
+    * A tsunami propagation example in one dimension with wall boundary conditions.
 
 ### Folder Organization
 * **acoustics_1d_heterogeneous:** contains the code to run the 1-dimensional heterogeneous acoustics example. 
