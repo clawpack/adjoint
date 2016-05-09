@@ -1,11 +1,12 @@
 ## Computational Experiments for Use of the Adjoint Method in Adaptive Mesh Refinement
 
-This is the code to supplement the paper: "Adjoint Methods for Guiding Adaptive Mesh Refinement."
-The paper presents a method for identifying and refining the computational grid only in 
+This code implements a method for identifying and refining the computational grid only in 
 regions that will influence a given target area in a specified time range. 
 
 The goal is to continue adding other examples using the adjoint method to guide adaptive mesh refinement to 
 this repository. 
+
+The code in the repository **method-sw-paper** supplements the paper: "Adjoint Methods for Guiding Adaptive Mesh Refinement in Tsumani Modeling."
 
 The code is designed to work with the Clawpack 5 software. For more information visit 
 [the Clawpack webpage](http://www.clawpack.org/ ). 
@@ -31,7 +32,6 @@ Note: Clawpack 5.0 or higher is required, other versions of gfortran and python 
 * Mac OS X
 
 ### Examples Included
-There are a total of five examples presented in the paper.
 
 * 1-dimensional heterogeneous acoustics 
     * An example with wall boundary conditions, and demonstrates both a time point and time range of interest.
@@ -48,17 +48,19 @@ The internal folders:
     * **forward:** contains the code for the forward problem
     * **adjoint:** contains the code for the adjoint problem
 
-* **acoustics_2d:** contains the code to run the 2-dimensional acoustics examples. The internal folders: 
+* **acoustics_2d:** there are various 2d acoustics examples. They can be found in the following folders: 
     * **radial_timepoint:** contains the code for the example with wall boundary conditions and 
 a time point of interest. The internal folder: **adjoint**, contains the code for the adjoint problem.
     * **radial_walls:** contains the code for the example with wall boundary conditions and 
 a time range of interest. The internal folder: **adjoint**, contains the code for the adjoint problem.
     * **radial_mixed:**  contains the code for the example with mixed boundary conditions and 
 a time range of interest. The internal folder: **adjoint**, contains the code for the adjoint problem.
-    * **src:** contains all of the code that is common between the three 2-dimensional acoustics examples.
 
-* **tsunami_Alaska:** contains the code to run the 2-dimensional shallow water equations example. 
+* **method-sw-paper/tsunami_Alaska:** contains the code to run the 2-dimensional shallow water equations example. 
 The internal folder: **adjoint**, contains the code for the adjoint problem. 
+
+* **method-sw-paper/shelf1d:** contains a one dimensional test problem consisting of a flat ocean floor, a
+flat continental shelf, and solid wall reflecting boundaries.
 
 ### Running the Code
 * **Install Clawpack 5.3.0:**
