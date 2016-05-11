@@ -32,26 +32,26 @@ FFLAGS ?=
 # ---------------------------------
 
 AMRLIB = $(CLAW)/amrclaw/src/2d
-ADJLIB = $(CLAW)/adjoint/src
+ADJLIB = $(CLAW)/adjoint/src/2d
 
 MODULES = \
   $(AMRLIB)/amr_module.f90 \
   $(AMRLIB)/gauges_module.f90 \
   $(AMRLIB)/regions_module.f90 \
-  $(ADJLIB)/2d/amr_reload_module.f90 \
-  $(ADJLIB)/2d/adjoint_module.f90 \
-  $(ADJLIB)/acoustics/2d/innerprod_module.f90
+  $(ADJLIB)/amr_reload_module.f90 \
+  $(ADJLIB)/adjoint_module.f90 \
+  $(ADJLIB)/innerprod_module.f90
 
 SOURCES = \
   qinit.f \
   setprob.f \
-  $(ADJLIB)/acoustics/2d/flag2refine2.f90 \
-  $(ADJLIB)/acoustics/2d/valout.f \
-  $(ADJLIB)/acoustics/2d/errf1.f \
-  $(ADJLIB)/acoustics/2d/setaux.f90 \
-  $(ADJLIB)/2d/amr2_reload.f90 \
-  $(ADJLIB)/2d/reload.f \
-  $(ADJLIB)/2d/errest.f \
+  $(ADJLIB)/flag2refine2.f90 \
+  $(ADJLIB)/valout.f \
+  $(ADJLIB)/errf1.f \
+  $(ADJLIB)/setaux.f90 \
+  $(ADJLIB)/amr2_reload.f90 \
+  $(ADJLIB)/reload.f \
+  $(ADJLIB)/errest.f \
   $(CLAW)/riemann/src/rpn2_acoustics.f \
   $(CLAW)/riemann/src/rpt2_acoustics.f \
   $(AMRLIB)/amr2.f90 \
