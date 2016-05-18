@@ -42,7 +42,7 @@ def setplot(plotdata):
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
-    plotitem.pcolor_cmap = colormaps.blue_yellow_red
+    plotitem.pcolor_cmap = colormaps.blue_white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = -1.0
@@ -69,9 +69,10 @@ def setplot(plotdata):
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = 0.0
-    plotitem.pcolor_cmax = 0.25
+    plotitem.pcolor_cmax = 0.15
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
+    plotitem.amr_data_show = [1,1,0]
     
     # Adding adjoint plot
     
@@ -90,11 +91,11 @@ def setplot(plotdata):
     import os
     plotitem.outdir = os.path.join(os.getcwd(), '../adjoint/_outputReversed')
     plotitem.plot_var = 0
-    plotitem.pcolor_cmap = colormaps.blue_yellow_red
+    plotitem.pcolor_cmap = colormaps.blue_white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = -0.25
-    plotitem.pcolor_cmax = 0.25
+    plotitem.pcolor_cmin = -0.2
+    plotitem.pcolor_cmax = 0.2
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
     
