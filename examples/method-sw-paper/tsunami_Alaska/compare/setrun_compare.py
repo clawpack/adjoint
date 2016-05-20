@@ -91,7 +91,7 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.num_eqn = 3
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
-    clawdata.num_aux = 3
+    clawdata.num_aux = 4
     
     # Index of aux array corresponding to capacity function, if there is one:
     clawdata.capa_index = 2
@@ -303,7 +303,7 @@ def setrun(claw_pkg='geoclaw'):
     # Specify type of each aux variable in amrdata.auxtype.
     # This must be a list of length num_aux, each element of which is one of:
     #   'center',  'capacity', 'xleft', or 'yleft'  (see documentation).
-    amrdata.aux_type = ['center', 'capacity', 'yleft']
+    amrdata.aux_type = ['center', 'capacity', 'yleft', 'center']
 
 
     # Flag for refinement based on Richardson error estimater:
@@ -467,6 +467,7 @@ def setadjoint(rundata):
     
     probdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
     probdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
+    probdata.add_param('innerprod_index', 4, 'Index for innerproduct data in aux array.')
     
     counter = 1
     for fname in files:

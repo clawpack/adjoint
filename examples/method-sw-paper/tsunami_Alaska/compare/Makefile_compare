@@ -47,6 +47,7 @@ SWADJLIB = $(CLAW)/adjoint/src/shallow
 EXCLUDE_MODULES = \
 
 EXCLUDE_SOURCES = \
+  $(AMRLIB)/setprob.f \
 
 # ----------------------------------------
 # List of custom sources for this program:
