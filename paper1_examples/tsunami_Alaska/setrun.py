@@ -10,6 +10,22 @@ import os
 import numpy as np
 
 
+#-----------------------------------------------
+# Set these parameters for adjoint flagging....
+
+# location of output from computing adjoint:
+adjoint_output = os.path.abspath('adjoint/_output')
+print('Will flag using adjoint solution from  %s' % adjoint_output)
+
+# Time period of interest:
+t1 = 3.5*3600.
+t2 = 11*3600.
+
+# tolerance for adjoint flagging:
+adjoint_flag_tolerance = 0.004
+#-----------------------------------------------
+
+
 t_shelf = 3.2*3600   # time approaching continental slope
 t_harbor = 3.5*3600  # time approaching harbor
 
@@ -19,7 +35,7 @@ except:
     raise Exception("*** Must first set CLAW enviornment variable")
 
 # Scratch directory for storing topo and dtopo files:
-scratch_dir = os.path.join(CLAW, 'adjoint', 'scratch')
+scratch_dir = os.path.join(CLAW, 'geoclaw', 'scratch')
 
 #------------------------------
 def setrun(claw_pkg='geoclaw'):
@@ -48,11 +64,6 @@ def setrun(claw_pkg='geoclaw'):
     # GeoClaw specific parameters:
     #------------------------------------------------------------------
     rundata = setgeo(rundata)
-
-    #------------------------------------------------------------------
-    # Adjoint specific data:
-    #------------------------------------------------------------------
-    rundata = setadjoint(rundata)
     
     #------------------------------------------------------------------
     # Standard Clawpack parameters to be written to claw.data:
@@ -91,7 +102,7 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.num_eqn = 3
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
-    clawdata.num_aux = 4
+    # see setadjoint
     
     # Index of aux array corresponding to capacity function, if there is one:
     clawdata.capa_index = 2
@@ -303,7 +314,8 @@ def setrun(claw_pkg='geoclaw'):
     # Specify type of each aux variable in amrdata.auxtype.
     # This must be a list of length num_aux, each element of which is one of:
     #   'center',  'capacity', 'xleft', or 'yleft'  (see documentation).
-    amrdata.aux_type = ['center', 'capacity', 'yleft', 'center']
+    
+    # need 4 values, set in setadjoint
 
 
     # Flag for refinement based on Richardson error estimater:
@@ -312,9 +324,7 @@ def setrun(claw_pkg='geoclaw'):
     
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = True      # use this?
-    amrdata.flag2refine_tol = 0.004  # tolerance used in this routine
-    # Note: this tolerance is not used in the surface-flagging method
-    #       only the wave_tolerance is used (a geoclaw specific parameters)
+    # see setadjoint to set tolerance for adjoint flagging
 
     # steps to take on each level L between regriddings of level L+1:
     amrdata.regrid_interval = 3       
@@ -348,8 +358,15 @@ def setrun(claw_pkg='geoclaw'):
     regions.append([4, 4, t_shelf, 1e9, 235, 236, 41, 42]) 
     regions.append([5, 5, t_shelf, 1e9, 235.5,235.83,41.6,41.8]) #only harbor 
     regions.append([5, 6, t_harbor, 1e9, 235.78,235.84,41.735,41.775]) #only harbor
+    
+    #------------------------------------------------------------------
+    # Adjoint specific data:
+    #------------------------------------------------------------------
+    # Do this last since it resets some parameters such as num_aux
+    # as needed for adjoint flagging.
+    rundata = setadjoint(rundata)
 
-    #  ----- For developers ----- 
+    #  ----- For developers -----
     # Toggle debugging print statements:
     amrdata.dprint = False      # print domain flags
     amrdata.eprint = False      # print err est flags
@@ -406,29 +423,29 @@ def setgeo(rundata):
     refinement_data.max_level_deep = 4
 
     # == settopo.data values ==
-    topofiles = rundata.topo_data.topofiles
+    topo_data = rundata.topo_data
     # for topography, append lines of the form
     #    [topotype, minlevel, maxlevel, t1, t2, fname]
     
-    topofiles.append([3, 1, 1, 0., 1.e10, \
-                             scratch_dir + '/etopo1min170E124W40N61N.asc'])
+    topo_path = os.path.join(scratch_dir, 'etopo1min170E124W40N61N.asc')
+    topo_data.topofiles.append([3, 1, 1, 0., 1.e10, topo_path])
 
-    topofiles.append([3, 1, 1, 0., 1.e10, \
-                             scratch_dir + '/etopo4min120E110W0N62N.asc'])
+    topo_path = os.path.join(scratch_dir, 'etopo4min120E110W0N62N.asc')
+    topo_data.topofiles.append([3, 1, 1, 0., 1.e10, topo_path])
 
-    topofiles.append([-3, 1, 1, 32000, 1.e10, scratch_dir + '/cc-1sec-c.asc'])
-    topofiles.append([3, 1, 1, 32000, 1.e10, scratch_dir + '/cc-1_3sec-c_pierless.asc'])
-
+    topo_path = os.path.join(scratch_dir, 'cc-1sec-c.asc')
+    topo_data.topofiles.append([-3, 1, 1, 32000., 1.e10, topo_path])
+                             
+    topo_path = os.path.join(scratch_dir, 'cc-1_3sec-c_pierless.asc')
+    topo_data.topofiles.append([3, 1, 1, 32000., 1.e10, topo_path])
 
     # == setdtopo.data values ==
-    rundata.dtopo_data.dtopofiles = []
-    dtopofiles = rundata.dtopo_data.dtopofiles
+    dtopo_data = rundata.dtopo_data
     # for moving topography, append lines of the form :  
     #   [topotype, minlevel,maxlevel,fname]
-    dtopodir = scratch_dir + '/'
-    dtopotype  = 3
-    fname = dtopodir + 'AASZ04v2.tt3'
-    dtopofiles.append([dtopotype, 3, 3, fname])
+    dtopo_path = os.path.join(scratch_dir, 'AASZ04v2.tt3')
+    dtopo_data.dtopofiles.append([3,3,3,dtopo_path])
+    dtopo_data.dt_max_dtopo = 0.2
 
 
     # == setqinit.data values ==
@@ -457,26 +474,39 @@ def setadjoint(rundata):
 #-------------------
 
     """
-        Setting up adjoint variables and
-        reading in all of the checkpointed Adjoint files
+    Set parameters used for adjoint flagging.
+    Also reads in all of the checkpointed Adjoint files.
     """
     
     import glob
     
-    files = glob.glob("adjoint/_output/fort.tck*")
+    # Set these parameters at top of this file:
+    # adjoint_flag_tolerance, t1, t2, adjoint_output
+    # Then you don't need to modify this function...
+    
+    rundata.amrdata.flag2refine = True  # for adjoint flagging
+    rundata.amrdata.flag2refine_tol = adjoint_flag_tolerance
+    
+    rundata.clawdata.num_aux = 4
+    rundata.amrdata.aux_type = ['center', 'capacity', 'yleft', 'center']
+    
+    adjointdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
+    adjointdata.add_param('adjoint_output',adjoint_output,'adjoint_output')
+    adjointdata.add_param('t1',t1,'t1, start time of interest')
+    adjointdata.add_param('t2',t2,'t2, final time of interest')
+    
+    files = glob.glob(os.path.join(adjoint_output,"fort.tck*"))
     files.sort()
     
-    probdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
-    probdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
-    probdata.add_param('innerprod_index', 4, 'Index for innerproduct data in aux array.')
+    adjointdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
+    adjointdata.add_param('innerprod_index', 4, 'Index for innerproduct data in aux array.')
     
     counter = 1
     for fname in files:
         f = open(fname)
         time = f.readline().split()[-1]
-        fname = '../' + fname.replace('tck','chk')
-        probdata.add_param('file' + str(counter), fname, 'Checkpoint file' + str(counter))
-        probdata.add_param('time' + str(counter), float(time), 'Time for file' + str(counter))
+        fname = fname.replace('tck','chk')
+        adjointdata.add_param('file' + str(counter), fname, 'Checkpoint file' + str(counter))
         counter = counter + 1
 
     return rundata

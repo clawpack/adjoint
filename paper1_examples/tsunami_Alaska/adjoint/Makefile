@@ -35,8 +35,6 @@ FFLAGS = -O2 -fopenmp
 GEOLIB = $(CLAW)/geoclaw/src/2d/shallow
 include $(GEOLIB)/Makefile.geoclaw
 
-ADJLIB = $(CLAW)/adjoint/src/
-
 # ---------------------------------------
 # package sources specifically to exclude
 # (i.e. if a custom replacement source 
@@ -55,8 +53,8 @@ EXCLUDE_SOURCES = \
 MODULES = \
 
 SOURCES = \
-  $(ADJLIB)/riemann/rpn2_geoclaw_adjoint.f \
-  $(ADJLIB)/riemann/rpt2_geoclaw_adjoint.f \
+  $(CLAW)/riemann/src/rpn2_geoclaw_adjoint.f \
+  $(CLAW)/riemann/src/rpt2_geoclaw_adjoint.f \
   $(CLAW)/riemann/src/geoclaw_riemann_utils.f \
 
 #-------------------------------------------------------------------

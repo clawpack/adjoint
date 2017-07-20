@@ -25,17 +25,14 @@ GIT_STATUS = True
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS = -O2 -fopenmp -g -Wall -fbounds-check -ffpe-trap=invalid,overflow,zero
+FFLAGS = -O2 -fopenmp
 
 # ---------------------------------
 # package sources for this program:
 # ---------------------------------
 
-GEOLIB = $(CLAW)/geoclaw/src/2d/shallow
-include $(GEOLIB)/Makefile.geoclaw
-
-ADJLIB = $(CLAW)/adjoint/src/2d
-SWADJLIB = $(CLAW)/adjoint/src/shallow
+ADJGEOLIB:=$(CLAW)/geoclaw/src/2d_adjoint
+include $(ADJGEOLIB)/Makefile.adjoint_geoclaw
 
 # ---------------------------------------
 # package sources specifically to exclude
@@ -53,18 +50,8 @@ EXCLUDE_SOURCES = \
 
 
 MODULES = \
- $(ADJLIB)/amr_reload_module.f90 \
- $(ADJLIB)/adjoint_module.f90 \
- $(SWADJLIB)/innerprod_module.f90 
 
 SOURCES = \
-  setprob.f90 \
-  $(ADJLIB)/amr2_reload.f90 \
-  $(ADJLIB)/reload.f \
-  $(SWADJLIB)/interp_adjoint.f \
-  $(SWADJLIB)/valout.f \
-  $(SWADJLIB)/flag2refine2.f90 \
-  $(SWADJLIB)/setaux.f90 \
   $(CLAW)/riemann/src/rpn2_geoclaw.f \
   $(CLAW)/riemann/src/rpt2_geoclaw.f \
   $(CLAW)/riemann/src/geoclaw_riemann_utils.f \
