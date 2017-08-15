@@ -7,6 +7,7 @@ import os
 
 currentdir = os.getcwd()
 adjointdir = currentdir + '/../adjoint'
+forwarddir = currentdir + '/..'
 
 #-------------------------------------------
 # Compute solution for adjoint problem
@@ -20,9 +21,10 @@ os.system('make .plots')
 #-------------------------------------------
 # Compute solution for forward problem using surface-flagging
 #-------------------------------------------
-os.chdir(currentdir)
+os.chdir(forwarddir)
 os.system('python maketopo.py')
 
+os.chdir(currentdir)
 # Running the example using the tol = 0.14
 os.system('make new -f Makefile_sflag_hightol')
 os.system('make .plots -f Makefile_sflag_hightol')
