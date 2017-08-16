@@ -41,11 +41,11 @@ def setplot(plotdata):
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
-    plotitem.pcolor_cmap = colormaps.blue_yellow_red
+    plotitem.pcolor_cmap = colormaps.blue_white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = -1.5
-    plotitem.pcolor_cmax = 1.5
+    plotitem.pcolor_cmin = -0.7
+    plotitem.pcolor_cmax = 0.7
     plotitem.amr_patchedges_show = [1,1,1]
     plotitem.amr_celledges_show = [0,0,0]
     
@@ -71,7 +71,7 @@ def setplot(plotdata):
     plotitem.pcolor_cmax = 0.12
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
-
+    plotitem.amr_data_show = [1,1,0]
 
     #-----------------------------------------
     # Figures for gauges
@@ -96,7 +96,8 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
     plotitem.plotstyle = 'rs'
-    plotitem.outdir = '../_output_pflag'
+    import os
+    plotitem.outdir = os.path.join(os.getcwd(), '_output_pflag')
 
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via clawpack.visclaw.frametools.printframes:

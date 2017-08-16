@@ -1,4 +1,4 @@
-8
+
 """ 
 Set up the plot figures, axes, and items to be done for each frame.
 
@@ -42,7 +42,7 @@ def setplot(plotdata):
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
-    plotitem.pcolor_cmap = colormaps.blue_yellow_red
+    plotitem.pcolor_cmap = colormaps.blue_white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = -1.0
@@ -69,9 +69,10 @@ def setplot(plotdata):
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = 0.0
-    plotitem.pcolor_cmax = 0.25
+    plotitem.pcolor_cmax = 0.15
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
+    plotitem.amr_data_show = [1,1,0]
     
     # Adding adjoint plot
     
@@ -87,13 +88,14 @@ def setplot(plotdata):
     
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    plotitem.outdir = '../../adjoint/_outputReversed'
+    import os
+    plotitem.outdir = os.path.join(os.getcwd(), '../adjoint/_outputReversed')
     plotitem.plot_var = 0
-    plotitem.pcolor_cmap = colormaps.blue_yellow_red
+    plotitem.pcolor_cmap = colormaps.blue_white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = -0.25
-    plotitem.pcolor_cmax = 0.25
+    plotitem.pcolor_cmin = -0.2
+    plotitem.pcolor_cmax = 0.2
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
     
@@ -118,7 +120,7 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
     plotitem.plotstyle = 'rs'
-    plotitem.outdir = '../_output_pflag'
+    plotitem.outdir = os.path.join(os.getcwd(), '_output_pflag')
 
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via clawpack.visclaw.frametools.printframes:
@@ -197,36 +199,37 @@ def setadjoint():
     files.sort()
     n = len(files)
     
-    # Find the final time.
-    fname = files[n-1]
-    fname = fname.replace('q','t')
-    f = open(fname,'r')
-    tfinal,meqn,npatches,maux,num_dim = io.ascii.read_t(n-1,path=outdir)
-    
-    for k in range(n):
-        # Creating new files
-        fname = files[k]
-        newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
-        cmd = 'cp %s %s' % (fname,newname)
-        os.system(cmd)
-        
+    if (n >= 1):
+        # Find the final time.
+        fname = files[n-1]
         fname = fname.replace('q','t')
-        newname = newname.replace('q','t')
-        cmd = 'cp %s %s' % (fname,newname)
-        os.system(cmd)
+        f = open(fname,'r')
+        tfinal,meqn,npatches,maux,num_dim = io.ascii.read_t(n-1,path=outdir)
+    
+        for k in range(n):
+            # Creating new files
+            fname = files[k]
+            newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
+            cmd = 'cp %s %s' % (fname,newname)
+            os.system(cmd)
         
-        # Reversing time
-        f = open(newname,'r+')
-        frameno = n-k-1
-        t,meqn,npatches,maux,num_dim = io.ascii.read_t(frameno,path=outdir2)
-        t = tfinal - t
+            fname = fname.replace('q','t')
+            newname = newname.replace('q','t')
+            cmd = 'cp %s %s' % (fname,newname)
+            os.system(cmd)
         
-        # Writting new time out to file
-        f.write('%18.8e     time\n' % t)
-        f.write('%5i                  num_eqn\n' % meqn)
-        f.write('%5i                  nstates\n' % npatches)
-        f.write('%5i                  num_aux\n' % maux)
-        f.write('%5i                  num_dim\n' % num_dim)
-        f.close()
+            # Reversing time
+            f = open(newname,'r+')
+            frameno = n-k-1
+            t,meqn,npatches,maux,num_dim = io.ascii.read_t(frameno,path=outdir2)
+            t = tfinal - t
+        
+            # Writting new time out to file
+            f.write('%18.8e     time\n' % t)
+            f.write('%5i                  num_eqn\n' % meqn)
+            f.write('%5i                  nstates\n' % npatches)
+            f.write('%5i                  num_aux\n' % maux)
+            f.write('%5i                  num_dim\n' % num_dim)
+            f.close()
 # end of function setadjoint
 # ----------------------

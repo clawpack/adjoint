@@ -41,6 +41,11 @@ def setrun(claw_pkg='amrclaw'):
     probdata.add_param('bulk',    4.,  'bulk modulus')
     
     #------------------------------------------------------------------
+    # Adjoint specific data:
+    #------------------------------------------------------------------
+    rundata = setadjoint(rundata)
+    
+    #------------------------------------------------------------------
     # Standard Clawpack parameters to be written to claw.data:
     #   (or to amrclaw.data for AMR)
     #------------------------------------------------------------------
@@ -78,7 +83,7 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.num_eqn = 3
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
-    clawdata.num_aux = 0
+    clawdata.num_aux = 1
     
     # Index of aux array corresponding to capacity function, if there is one:
     clawdata.capa_index = 0
@@ -134,7 +139,7 @@ def setrun(claw_pkg='amrclaw'):
 
     clawdata.output_q_components = 'all'   # could be list such as [True,True]
     clawdata.output_aux_components = 'none'  # could be list
-    clawdata.output_aux_onlyonce = True    # output aux arrays only at t0
+    clawdata.output_aux_onlyonce = False    # output aux arrays only at t0
     
 
     # ---------------------------------------------------
@@ -285,19 +290,17 @@ def setrun(claw_pkg='amrclaw'):
     # Specify type of each aux variable in clawdata.auxtype.
     # This must be a list of length num_aux, each element of which is one of:
     #   'center',  'capacity', 'xleft', or 'yleft'  (see documentation).
-    amrdata.aux_type = []
+    amrdata.aux_type = ['center']
 
 
     # Flag for refinement based on Richardson error estimater:
     amrdata.flag_richardson = False    # use Richardson?
-    amrdata.flag_richardson_tol = 0.001000e+00  # Richardson tolerance
+    amrdata.flag_richardson_tol = 0.00004  # Richardson tolerance
     
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = True      # use this?
     amrdata.flag2refine_tol = 0.02 # tolerance used in this routine
     # User can modify flag2refine to change the criterion for flagging.
-    # Default: check maximum absolute difference of first component of q
-    # between a cell and each of its neighbors.
 
     # steps to take on each level L between regriddings of level L+1:
     amrdata.regrid_interval = 2       
@@ -340,40 +343,37 @@ def setrun(claw_pkg='amrclaw'):
     # end of function setrun
     # ----------------------
 
-<<<<<<< Updated upstream
 #-------------------
 def setadjoint(rundata):
     #-------------------
     
-    import os,sys,glob
+    """
+        Setting up adjoint variables and
+        reading in all of the checkpointed Adjoint files
+        """
     
-    outdir = 'adjoint/_output'
-    outdir2 = 'adjoint/_outputReversed'
+    import glob
     
-    os.system('mkdir -p %s' % outdir2)
-    
-    files = glob.glob(outdir+'/fort.q0*')
+    files = glob.glob("adjoint/_output/fort.tck*")
     files.sort()
-    n = len(files)
     
-    for k in range(n):
-        fname = files[k]
-        newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
-        cmd = 'cp %s %s' % (fname,newname)
-        #print cmd
-        os.system(cmd)
-        fname = fname.replace('q','t')
-        newname = newname.replace('q','t')
-        cmd = 'cp %s %s' % (fname,newname)
-        #print cmd
-        os.system(cmd)
+    probdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
+    probdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
+    probdata.add_param('innerprod_index', 1, 'Index for innerproduct data in aux array.')
+    
+    counter = 1
+    for fname in files:
+        f = open(fname)
+        time = f.readline().split()[-1]
+        fname = '../' + fname.replace('tck','chk')
+        probdata.add_param('file' + str(counter), fname, 'Checkpoint file' + str(counter))
+        probdata.add_param('time' + str(counter), float(time), 'Time for file' + str(counter))
+        counter = counter + 1
     
     return rundata
 # end of function setadjoint
 # ----------------------
 
-=======
->>>>>>> Stashed changes
 if __name__ == '__main__':
     # Set up run-time parameters and write all data files.
     import sys
