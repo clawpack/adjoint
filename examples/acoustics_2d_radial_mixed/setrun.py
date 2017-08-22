@@ -9,6 +9,28 @@ that will be read in by the Fortran code.
 import os
 import numpy as np
 
+#-----------------------------------------------
+# Set these parameters for adjoint flagging....
+
+# location of output from computing adjoint:
+adjoint_output = os.path.abspath('adjoint/_output')
+print('Will flag using adjoint solution from  %s' % adjoint_output)
+
+# Time period of interest:
+t1 = 1.
+t2 = 6.
+
+# Determining type of adjoint flagging:
+
+# taking inner product with forward solution or Richardson error:
+flag_forward_adjoint = True
+flag_richardson_adjoint = False
+
+# tolerance for adjoint flagging:
+adjoint_flag_tolerance = 0.02       # suggested if using forward solution
+#adjoint_flag_tolerance = 0.00004    # suggested if using Richardson error
+#-----------------------------------------------
+
 #------------------------------
 def setrun(claw_pkg='amrclaw'):
 #------------------------------
@@ -39,11 +61,6 @@ def setrun(claw_pkg='amrclaw'):
     probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
     probdata.add_param('rho',     1.,  'density of medium')
     probdata.add_param('bulk',    4.,  'bulk modulus')
-    
-    #------------------------------------------------------------------
-    # Adjoint specific data:
-    #------------------------------------------------------------------
-    rundata = setadjoint(rundata)
     
     #------------------------------------------------------------------
     # Standard Clawpack parameters to be written to claw.data:
@@ -83,7 +100,7 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.num_eqn = 3
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
-    clawdata.num_aux = 1
+    # see setadjoint
     
     # Index of aux array corresponding to capacity function, if there is one:
     clawdata.capa_index = 0
@@ -290,17 +307,17 @@ def setrun(claw_pkg='amrclaw'):
     # Specify type of each aux variable in clawdata.auxtype.
     # This must be a list of length num_aux, each element of which is one of:
     #   'center',  'capacity', 'xleft', or 'yleft'  (see documentation).
-    amrdata.aux_type = ['center']
+    
+    # need 1 value, set in setadjoint
 
 
     # Flag for refinement based on Richardson error estimater:
-    amrdata.flag_richardson = False    # use Richardson?
-    amrdata.flag_richardson_tol = 0.00004  # Richardson tolerance
+    amrdata.flag_richardson = False
     
     # Flag for refinement using routine flag2refine:
-    amrdata.flag2refine = True      # use this?
-    amrdata.flag2refine_tol = 0.02 # tolerance used in this routine
-    # User can modify flag2refine to change the criterion for flagging.
+    amrdata.flag2refine = False
+    
+    # see setadjoint to set tolerance for adjoint flagging
 
     # steps to take on each level L between regriddings of level L+1:
     amrdata.regrid_interval = 2       
@@ -323,9 +340,14 @@ def setrun(claw_pkg='amrclaw'):
     rundata.regiondata.regions = []
     # to specify regions of refinement append lines of the form
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
+    
+    #------------------------------------------------------------------
+    # Adjoint specific data:
+    #------------------------------------------------------------------
+    rundata = setadjoint(rundata)
 
 
-    #  ----- For developers ----- 
+    #  ----- For developers -----
     # Toggle debugging print statements:
     amrdata.dprint = False      # print domain flags
     amrdata.eprint = False      # print err est flags
@@ -354,20 +376,45 @@ def setadjoint(rundata):
     
     import glob
     
-    files = glob.glob("adjoint/_output/fort.tck*")
+    
+    # Set these parameters at top of this file:
+    # adjoint_flag_tolerance, t1, t2, adjoint_output
+    # Then you don't need to modify this function...
+    
+    # flag and tolerance for adjoint flagging:
+    if flag_forward_adjoint == True:
+        # setting up taking inner product with forward solution
+        rundata.amrdata.flag2refine = True
+        rundata.amrdata.flag2refine_tol = adjoint_flag_tolerance
+    elif flag_richardson_adjoint == True:
+        # setting up taking inner product with Richardson error
+        rundata.amrdata.flag_richardson = True
+        rundata.amrdata.flag_richardson_tol = adjoint_flag_tolerance
+    else:
+        print("No refinement flag set!")
+    
+    rundata.clawdata.num_aux = 1   # 1 required for adjoint flagging
+    rundata.amrdata.aux_type = ['center']
+    
+    adjointdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
+    adjointdata.add_param('adjoint_output',adjoint_output,'adjoint_output')
+    adjointdata.add_param('t1',t1,'t1, start time of interest')
+    adjointdata.add_param('t2',t2,'t2, final time of interest')
+    
+    files = glob.glob(os.path.join(adjoint_output,"fort.b*"))
     files.sort()
     
-    probdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
-    probdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
-    probdata.add_param('innerprod_index', 1, 'Index for innerproduct data in aux array.')
+    if (len(files) == 0):
+        print("No binary files found for adjoint output!")
+    
+    adjointdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
+    adjointdata.add_param('innerprod_index', 1, 'Index for innerproduct data in aux array.')
     
     counter = 1
     for fname in files:
         f = open(fname)
         time = f.readline().split()[-1]
-        fname = '../' + fname.replace('tck','chk')
-        probdata.add_param('file' + str(counter), fname, 'Checkpoint file' + str(counter))
-        probdata.add_param('time' + str(counter), float(time), 'Time for file' + str(counter))
+        adjointdata.add_param('file' + str(counter), fname, 'Binary file' + str(counter))
         counter = counter + 1
     
     return rundata

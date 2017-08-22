@@ -34,8 +34,6 @@ FFLAGS ?=
 AMRLIB = $(CLAW)/amrclaw/src/2d
 include $(AMRLIB)/Makefile.amr_2d
 
-ADJLIB = $(CLAW)/adjoint/src
-
 # ---------------------------------------
 # package sources specifically to exclude
 # (i.e. if a custom replacement source 
@@ -55,8 +53,8 @@ MODULES = \
 SOURCES = \
   qinit.f \
   setprob.f \
-  $(ADJLIB)/riemann/rpn2_acoustics_adjoint.f90 \
-  $(ADJLIB)/riemann/rpt2_acoustics_adjoint.f90 \
+  $(CLAW)/riemann/src/rpn2_acoustics_adjoint.f90 \
+  $(CLAW)/riemann/src/rpt2_acoustics_adjoint.f90 \
 
 #-------------------------------------------------------------------
 # Include Makefile containing standard definitions and make options:
