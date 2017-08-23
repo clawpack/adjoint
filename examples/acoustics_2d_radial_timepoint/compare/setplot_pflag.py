@@ -19,6 +19,7 @@ def setplot(plotdata):
     from clawpack.visclaw import colormaps
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
+    plotdata.format = 'binary'
     
 
     # Figure for pressure

@@ -34,8 +34,6 @@ FFLAGS ?=
 AMRLIB = $(CLAW)/amrclaw/src/2d
 include $(AMRLIB)/Makefile.amr_2d
 
-ADJLIB = $(CLAW)/adjoint/src/2d
-
 # ---------------------------------------
 # package sources specifically to exclude
 # (i.e. if a custom replacement source 

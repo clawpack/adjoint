@@ -63,11 +63,6 @@ def setrun(claw_pkg='amrclaw'):
     probdata.add_param('bulk',    4.,  'bulk modulus')
     
     #------------------------------------------------------------------
-    # Adjoint specific data:
-    #------------------------------------------------------------------
-    rundata = setadjoint(rundata)
-    
-    #------------------------------------------------------------------
     # Standard Clawpack parameters to be written to claw.data:
     #   (or to amrclaw.data for AMR)
     #------------------------------------------------------------------

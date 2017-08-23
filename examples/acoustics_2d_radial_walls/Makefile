@@ -31,10 +31,8 @@ FFLAGS ?=
 # package sources for this program:
 # ---------------------------------
 
-AMRLIB = $(CLAW)/amrclaw/src/2d
-include $(AMRLIB)/Makefile.amr_2d
-
-ADJLIB = $(CLAW)/adjoint/src/2d
+ADJLIB = $(CLAW)/amrclaw/src/2d_adjoint
+include $(ADJLIB)/Makefile.adjoint_amr_2d
 
 # ---------------------------------------
 # package sources specifically to exclude
@@ -51,20 +49,10 @@ EXCLUDE_SOURCES = \
 # ----------------------------------------
 
 MODULES = \
-  $(ADJLIB)/amr_reload_module.f90 \
-  $(ADJLIB)/adjoint_module.f90 \
-  $(ADJLIB)/innerprod_module.f90
 
 SOURCES = \
   qinit.f \
   setprob.f \
-  $(ADJLIB)/flag2refine2.f90 \
-  $(ADJLIB)/valout.f \
-  $(ADJLIB)/errf1.f \
-  $(ADJLIB)/setaux.f90 \
-  $(ADJLIB)/amr2_reload.f90 \
-  $(ADJLIB)/reload.f \
-  $(ADJLIB)/errest.f \
   $(CLAW)/riemann/src/rpn2_acoustics.f \
   $(CLAW)/riemann/src/rpt2_acoustics.f \
 
