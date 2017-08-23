@@ -39,10 +39,6 @@ Note: Clawpack 5.0 or higher is required, other versions of gfortran and python 
     * An example with wall boundary conditions, and a time point of interest.
     * An example with wall boundary conditions, and a time range of interest.
     * An example with both wall and outflow boundary conditions, and a time range of interest.
-* 2-dimensional shallow water equations 
-    * A tsunami propagation example.
-* 1-dimensional shallow water equations
-    * A tsunami propagation example in one dimension with wall boundary conditions.
 
 ### Folder Organization
 * **acoustics_1d_heterogeneous:** contains the code to run the 1-dimensional heterogeneous acoustics example. 
@@ -57,12 +53,6 @@ a time point of interest. The internal folder: **adjoint**, contains the code fo
 a time range of interest. The internal folder: **adjoint**, contains the code for the adjoint problem.
     * **radial_mixed:**  contains the code for the example with mixed boundary conditions and 
 a time range of interest. The internal folder: **adjoint**, contains the code for the adjoint problem.
-
-* **method-sw-paper/tsunami_Alaska:** contains the code to run the 2-dimensional shallow water equations example. 
-The internal folder: **adjoint**, contains the code for the adjoint problem. 
-
-* **method-sw-paper/shelf1d:** contains a one dimensional test problem consisting of a flat ocean floor, a
-flat continental shelf, and solid wall reflecting boundaries.
 
 ### Running the Code
 * **Install Clawpack 5.3.0:**
