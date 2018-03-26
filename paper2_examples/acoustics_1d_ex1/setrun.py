@@ -24,12 +24,12 @@ t2 = 34.0
 # Determining type of adjoint flagging:
 
 # taking inner product with forward solution or Richardson error:
-flag_forward_adjoint = False
-flag_richardson_adjoint = True
+flag_forward_adjoint = True
+flag_richardson_adjoint = False
 
 # tolerance for adjoint flagging:
-#adjoint_flag_tolerance = 0.09       # suggested if using forward solution
-adjoint_flag_tolerance = 1e-2       # suggested if using Richardson error
+adjoint_flag_tolerance = 1e-2       # suggested if using forward solution
+#adjoint_flag_tolerance = 1e-7        # suggested if using Richardson error
 #-----------------------------------------------
 
 
@@ -62,7 +62,7 @@ def setrun(claw_pkg='amrclaw'):
 
     probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
     probdata.add_param('betal', 20., 'Gaussian hump width parameter')
-    probdata.add_param('betar', 2., 'for width of Gaussian data')
+    probdata.add_param('betar', 5., 'for width of Gaussian data')
     probdata.add_param('freqrl',   20, 'frequency in wave packet')
     probdata.add_param('freqr',   3., 'frequency in wave packet')
     probdata.add_param('rhol', 1., 'Density left of interface')

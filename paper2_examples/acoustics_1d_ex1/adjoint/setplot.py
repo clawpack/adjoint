@@ -19,8 +19,10 @@ def setplot(plotdata=None):
     Input:  plotdata, an instance of clawpack.visclaw.data.ClawPlotData.
     Output: a modified version of plotdata.
     
-    """ 
-
+    """
+    
+    # Reversing time in adjoint output
+    setadjoint()
 
     if plotdata is None:
         from clawpack.visclaw.data import ClawPlotData
@@ -29,82 +31,32 @@ def setplot(plotdata=None):
     plotdata.clearfigures()  # clear any old figures,axes,items data
     plotdata.format = 'binary'      # 'ascii', 'binary', 'netcdf'
 
-    def draw_interface_add_legend(current_data):
+    def fix_plot(current_data):
         from pylab import plot
+        from pylab import xticks,yticks,xlabel,ylabel,savefig,ylim,title
+        t = current_data.t
         plot([0., 0.], [-1000., 1000.], 'k--')
-        try:
-            from clawpack.visclaw import legend_tools
-            labels = ['Level 1','Level 2', 'Level 3']
-            legend_tools.add_legend(labels, colors=['g','b','r'],
-                        markers=['^','s','o'], linestyles=['','',''],
-                        loc='upper left')
-        except:
-            pass
-
+        title('Adjoint at t = %5.3f seconds' % t, fontsize=26)
+        yticks(fontsize=23)
+        xticks(fontsize=23)
 
     # Figure for q[0]
-    plotfigure = plotdata.new_plotfigure(name='Adjoint and Velocity', figno=1)
-    plotfigure.kwargs = {'figsize': (8,8)}
+    plotfigure = plotdata.new_plotfigure(name='Adjoint', figno=1)
+    plotfigure.kwargs = {'figsize': (10,3.5)}
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.axescmd = 'subplot(2,1,1)'   # top figure
     plotaxes.xlimits = [-12,12]
-    plotaxes.ylimits = [-0.5,4.1]
+    plotaxes.ylimits = [-0.5,4.3]
     plotaxes.title = 'Adjoint'
-    plotaxes.afteraxes = draw_interface_add_legend
+    plotaxes.afteraxes = fix_plot
 
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
-    plotitem.amr_color = ['g','b','r']
-    plotitem.amr_plotstyle = ['^-','s-','o-']
-    plotitem.amr_data_show = [1,1,1]
-    plotitem.amr_kwargs = [{'markersize':5},{'markersize':4},{'markersize':3}]
-
-    # Figure for q[1]
-
-    # Set up for axes in this figure:
-    plotaxes = plotfigure.new_plotaxes()
-    plotaxes.axescmd = 'subplot(2,1,2)'   # bottom figure
-    plotaxes.xlimits = [-12,12]
-    plotaxes.ylimits = [-1.5,4.1]
-    plotaxes.title = 'Velocity'
-    plotaxes.afteraxes = draw_interface_add_legend
-
-    # Set up for item on these axes:
-    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
-    plotitem.plot_var = 1
-    plotitem.amr_color = ['g','b','r']
-    plotitem.amr_plotstyle = ['^-','s-','o-']
-    plotitem.amr_data_show = [1,1,1]
-    plotitem.amr_kwargs = [{'markersize':5},{'markersize':4},{'markersize':3}]
-
-    
-    #-----------------------------------------
-    # Figures for gauges
-    #-----------------------------------------
-    plotfigure = plotdata.new_plotfigure(name='q', figno=300, \
-                                         type='each_gauge')
-    plotfigure.clf_each_gauge = True
-
-                                         
-    plotaxes = plotfigure.new_plotaxes()
-    plotaxes.axescmd = 'subplot(211)'
-    plotaxes.xlimits = 'auto'
-    plotaxes.ylimits = 'auto'
-    plotaxes.title = 'Pressure'
-    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
-    plotitem.plot_var = 0
-    plotitem.plotstyle = 'b-'
-
-    plotaxes = plotfigure.new_plotaxes()
-    plotaxes.axescmd = 'subplot(212)'
-    plotaxes.xlimits = 'auto'
-    plotaxes.ylimits = 'auto'
-    plotaxes.title = 'Velocity'
-    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
-    plotitem.plot_var = 1
-    plotitem.plotstyle = 'b-'
+    plotitem.amr_color = 'b'
+    plotitem.amr_plotstyle = 'o'
+    plotitem.amr_kwargs = [{'linewidth':5}]
+    plotitem.outdir = '../../adjoint/_outputReversed'
 
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via clawpack.visclaw.frametools.printframes:
@@ -121,5 +73,68 @@ def setplot(plotdata=None):
     plotdata.latex_makepdf = False           # also run pdflatex?
 
     return plotdata
+
+#-------------------
+def setadjoint():
+    #-------------------
+    
+    """
+        Reverse order of adjoint images, for plotting
+        adjacent to forward plots.
+        """
+    
+    import os,sys,glob
+    from clawpack.pyclaw import io
+    
+    outdir = '../adjoint/_output'
+    outdir2 = '../adjoint/_outputReversed'
+    
+    os.system('mkdir -p %s' % outdir2)
+    
+    files = glob.glob(outdir+'/fort.b0*')
+    n = len(files)
+    
+    # Find the final time.
+    fname = files[n-1]
+    fname = fname.replace('b','t')
+    f = open(fname,'r')
+    print(f)
+    tfinal,meqn,npatches,maux,num_dim = io.ascii.read_t(n-1,path=outdir)
+    
+    for k in range(n):
+        # Creating new files
+        fname = files[k]
+        newname = outdir2 + '/fort.b%s' % str(n-k-1).zfill(4)
+        cmd = 'cp %s %s' % (fname,newname)
+        os.system(cmd)
+        
+        fname = fname.replace('b','q')
+        newname = newname.replace('b','q')
+        cmd = 'cp %s %s' % (fname,newname)
+        os.system(cmd)
+        
+        fname = fname.replace('q','t')
+        newname = newname.replace('q','t')
+        cmd = 'cp %s %s' % (fname,newname)
+        os.system(cmd)
+        
+        # Reversing time
+        f = open(newname,'r+')
+        frameno = n-k-1
+        t,meqn,npatches,maux,num_dim = io.ascii.read_t(frameno,path=outdir2)
+        t = tfinal - t
+        
+        # Writting new time out to file
+        f.write('%18.8e     time\n' % t)
+        f.write('%5i                  meqn\n' % meqn)
+        f.write('%5i                  ngrids\n' % npatches)
+        f.write('%5i                  naux\n' % maux)
+        f.write('%5i                  ndim\n' % num_dim)
+        #f.write('%5i                  nghost\n' % nghost)
+        f.close()
+# end of function setadjoint
+# ----------------------
+
+
 
     

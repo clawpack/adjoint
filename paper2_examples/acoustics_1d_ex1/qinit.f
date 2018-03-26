@@ -26,14 +26,9 @@ c
       do 150 i=1,mx
          xcell = xlower + (i-0.5d0)*dx
 
-c     # wave packet with smooth left-going wave:
-         if (xcell.gt.2d0 .and. xcell.lt.4d0) then
-             q(1,i) = dexp(-betar*(xcell-3.0d0)**2) * dsin(freqr*xcell)
-         else if (xcell.gt.-3.5d0 .and. xcell.lt.-1.5d0) then
-             q(1,i) = dexp(-betal*(xcell+2.5d0)**2) * dsin(freql*xcell)
-         else
-             q(1,i) = 0.d0
-         endif
+c     # wave packet with left-going and right-going wave packets:
+         q(1,i) = dexp(-betar*(xcell-3.0d0)**2) * dsin(freqr*xcell)
+     .            + dexp(-betal*(xcell+2.5d0)**2) * dsin(freql*xcell)
          q(2,i) = 0.d0
          go to 150
 
