@@ -1,4 +1,4 @@
-This code produces Example 1, the first one-dimensional variable coefficient acoustics example, presented in ''Analysis and Performance Evaluation of Adjoint-Guided Adaptive Mesh Refinement Using Clawpack''.
+This code produces Example 2, the second one-dimensional variable coefficient acoustics example, presented in ''Analysis and Performance Evaluation of Adjoint-Guided Adaptive Mesh Refinement Using Clawpack''.
 
 ### Folder Organization
 * **adjoint:**
@@ -20,7 +20,7 @@ The code will produce two new folders: _output and _plots.
 The first one contains all the output files, while the latter one contains the plots and interactive 
 visualization apps.
 
-* Go to the main folder **acoustics_1d_ex1** and run in the terminal:
+* Go to the main folder **acoustics_1d_ex2** and run in the terminal:
 
 ```
 make new
@@ -30,10 +30,5 @@ make .plots
 The code will produce two new folders: _output and _plots. 
 The first one contains all the output files, while the latter one contains the plots and interactive 
 visualization apps.
-
-### Extra Python Scripts
-
-If you run the script generate_tolplots.py in the terminal you will generate 
-the tolerance, error, and CPU timing plots that appear in the paper. 
 
 
