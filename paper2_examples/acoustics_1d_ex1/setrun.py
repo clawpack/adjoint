@@ -28,8 +28,8 @@ flag_forward_adjoint = True
 flag_richardson_adjoint = False
 
 # tolerance for adjoint flagging:
-adjoint_flag_tolerance = 1e-2       # suggested if using forward solution
-#adjoint_flag_tolerance = 1e-7        # suggested if using Richardson error
+adjoint_flag_tolerance = 1e-5         # suggested if using forward solution
+#adjoint_flag_tolerance = 1e-4        # suggested if using Richardson error
 #-----------------------------------------------
 
 
