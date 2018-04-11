@@ -1,11 +1,6 @@
-from clawpack.visclaw.data import ClawPlotData
-from clawpack.visclaw.frametools import plotframe
-import setplot
 from numpy import *
 from matplotlib.pyplot import *
 from pylab import *
-from clawpack.visclaw import colormaps
-import gridtools
 
 # Setting up local variables
 tols1 = ['1e-1','5e-2','1e-2','5e-3','1e-3','5e-4','1e-4','5e-5','1e-5','5e-6','1e-6','5e-7','1e-7','5e-8','1e-8']
