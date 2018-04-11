@@ -63,7 +63,7 @@ def setplot(plotdata=None):
     plotitem.amr_color = 'b'
     plotitem.amr_plotstyle = 'o'
     plotitem.amr_kwargs = [{'linewidth':2}]
-    plotitem.amr_kwargs = [{'markersize':5}]
+    plotitem.amr_kwargs = [{'markersize':4}]
 
     # Figure for inner product, q[2]
     

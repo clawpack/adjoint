@@ -55,7 +55,8 @@ def setplot(plotdata=None):
     plotitem.plot_var = 0
     plotitem.amr_color = 'b'
     plotitem.amr_plotstyle = 'o'
-    plotitem.amr_kwargs = [{'linewidth':5}]
+    plotitem.amr_kwargs = [{'linewidth':2}]
+    plotitem.amr_kwargs = [{'markersize':4}]
     plotitem.outdir = '../../adjoint/_outputReversed'
 
     # Parameters used only when creating html and/or latex hardcopy
