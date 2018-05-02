@@ -24,7 +24,7 @@ OVERWRITE ?= True                   # False ==> make a copy of OUTDIR first
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS ?=  
+FFLAGS ?= -O2 -fopenmp
 
 # ---------------------------------
 # package sources for this program:

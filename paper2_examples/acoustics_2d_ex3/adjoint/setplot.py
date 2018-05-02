@@ -45,8 +45,8 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.blue_white_red
-    plotitem.pcolor_cmin = -0.02
-    plotitem.pcolor_cmax = 0.02
+    plotitem.pcolor_cmin = -0.005
+    plotitem.pcolor_cmax = 0.005
     plotitem.add_colorbar = False
     
 
@@ -71,7 +71,7 @@ def fixup_adjoint(current_data):
     from pylab import plot
     size = 28
     # Uncomment this line if you want to generate plots without a title for the paper
-    pylab.title(' ')
+    #pylab.title(' ')
     pylab.xticks([-8, -4, 0, 4, 8], fontsize=size)
     pylab.yticks([0, 5, 10], fontsize=size)
     plot([0., 0.], [-1000., 1000.], 'k--')

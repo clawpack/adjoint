@@ -45,8 +45,8 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.blue_white_red
-    plotitem.pcolor_cmin = -0.02
-    plotitem.pcolor_cmax = 0.02
+    plotitem.pcolor_cmin = -0.005
+    plotitem.pcolor_cmax = 0.005
     plotitem.add_colorbar = False
     
 
