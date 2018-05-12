@@ -70,10 +70,10 @@ def setplot(plotdata):
     plotitem.pcolor_cmap = colormaps.white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = 0.01     # use when plotting inner product with q
-    #plotitem.pcolor_cmin = 0.0      # use when plotting inner product with error
-    plotitem.pcolor_cmax = 0.12    # use when plotting inner product with q
-    #plotitem.pcolor_cmax = 0.005    # use when plotting inner product with error
+    #plotitem.pcolor_cmin = 0.0     # use when plotting inner product with q
+    plotitem.pcolor_cmin = 0.0      # use when plotting inner product with error
+    #plotitem.pcolor_cmax = 0.01    # use when plotting inner product with q
+    plotitem.pcolor_cmax = 0.00001    # use when plotting inner product with error
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_data_show = [1,1,1,1,0]
@@ -146,7 +146,7 @@ def fixup(current_data):
     import pylab
     from pylab import plot
     size = 28
-    addgauges(current_data)
+    plot_rectangle(current_data)
     # Uncomment this line if you want to generate plots without a title for the paper
     #pylab.title(' ')
     pylab.xticks([-8, -4, 0, 4, 8], fontsize=size)
@@ -157,7 +157,7 @@ def fixup_innerprod(current_data):
     import pylab
     from pylab import plot
     size = 28
-    addgauges(current_data)
+    plot_rectangle(current_data)
     pylab.xticks([-8, -4, 0, 4, 8], fontsize=size)
     pylab.yticks([0, 5, 10], fontsize=size)
     plot([0., 0.], [-1000., 1000.], 'k--')
@@ -166,5 +166,11 @@ def fixup_gauge(current_data):
     import pylab
     size = 34
     pylab.title('Pressure at Gauge 0', fontsize=size)
-    pylab.xticks([1.0, 1.5, 2.0, 2.5, 3.0], fontsize=size)
+    pylab.xticks([0.0, 1.5, 2.0, 2.5, 3.0], fontsize=size)
     pylab.yticks([-0.3, -0.1, 0.1, 0.3, 0.5], fontsize=size)
+
+def plot_rectangle(current_data):
+    from clawpack.visclaw.plottools import plotbox
+    x1 = 0.68; x2 = 1.32; y1 = 5.26; y2 = 5.74
+    xy = [x1, x2, y1, y2]
+    plotbox(xy, kwargs={'color': 'k', 'linewidth': 2})

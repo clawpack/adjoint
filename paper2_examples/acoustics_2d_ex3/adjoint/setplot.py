@@ -70,8 +70,15 @@ def fixup_adjoint(current_data):
     import pylab
     from pylab import plot
     size = 28
+    plot_rectangle(current_data)
     # Uncomment this line if you want to generate plots without a title for the paper
     #pylab.title(' ')
     pylab.xticks([-8, -4, 0, 4, 8], fontsize=size)
     pylab.yticks([0, 5, 10], fontsize=size)
     plot([0., 0.], [-1000., 1000.], 'k--')
+
+def plot_rectangle(current_data):
+    from clawpack.visclaw.plottools import plotbox
+    x1 = 0.68; x2 = 1.32; y1 = 5.26; y2 = 5.74
+    xy = [x1, x2, y1, y2]
+    plotbox(xy, kwargs={'color': 'k', 'linewidth': 2})

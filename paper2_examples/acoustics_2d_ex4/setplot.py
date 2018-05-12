@@ -146,7 +146,7 @@ def fixup(current_data):
     import pylab
     from pylab import plot
     size = 28
-    addgauges(current_data)
+    plot_rectangle(current_data)
     # Uncomment this line if you want to generate plots without a title for the paper
     #pylab.title(' ')
     pylab.xticks([-8, -4, 0, 4, 8], fontsize=size)
@@ -157,10 +157,16 @@ def fixup_innerprod(current_data):
     import pylab
     from pylab import plot
     size = 28
-    addgauges(current_data)
+    plot_rectangle(current_data)
     pylab.xticks([-8, -4, 0, 4, 8], fontsize=size)
     pylab.yticks([0, 5, 10], fontsize=size)
     plot([0., 0.], [-1000., 1000.], 'k--')
+
+def plot_rectangle(current_data):
+    from clawpack.visclaw.plottools import plotbox
+    x1 = 3.18; x2 = 3.82; y1 = 0.26; y2 = 0.74
+    xy = [x1, x2, y1, y2]
+    plotbox(xy, kwargs={'color': 'k', 'linewidth': 2})
 
 def fixup_gauge(current_data):
     import pylab
