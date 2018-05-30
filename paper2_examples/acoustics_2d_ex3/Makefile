@@ -24,13 +24,13 @@ OVERWRITE ?= True                   # False ==> make a copy of OUTDIR first
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS ?= -O2 -fopenmp
+FFLAGS ?= -O2 -fopenmp 
 
 # ---------------------------------
 # package sources for this program:
 # ---------------------------------
 
-ADJLIB = $(CLAW)/amrclaw/src/2d_adjoint
+ADJLIB = $(CLAW)/amrclaw/src/2d/adjoint
 include $(ADJLIB)/Makefile.adjoint_amr_2d
 
 # ---------------------------------------
@@ -47,9 +47,9 @@ EXCLUDE_SOURCES = \
 # List of custom sources for this program:
 # ----------------------------------------
 
-MODULES = \
+MODULES += \
 
-SOURCES = \
+SOURCES += \
   qinit.f \
   setprob.f \
   setaux.f \

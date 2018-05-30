@@ -23,12 +23,12 @@ t2 = 21.
 # Determining type of adjoint flagging:
 
 # taking inner product with forward solution or Richardson error:
-flag_forward_adjoint = True
-flag_richardson_adjoint = False
+flag_forward_adjoint = False
+flag_richardson_adjoint = True
 
 # tolerance for adjoint flagging:
-adjoint_flag_tolerance = 3e-4       # suggested if using forward solution
-#adjoint_flag_tolerance = 3e-3        # suggested if using Richardson error
+#adjoint_flag_tolerance = 3e-4       # suggested if using forward solution
+adjoint_flag_tolerance = 3e-3        # suggested if using Richardson error
 #-----------------------------------------------
 
 #------------------------------
@@ -152,10 +152,10 @@ def setrun(claw_pkg='amrclaw'):
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
 
-    clawdata.output_format = 'ascii'       # 'ascii', 'binary', 'netcdf'
+    clawdata.output_format = 'binary'       # 'ascii', 'binary', 'netcdf'
 
     clawdata.output_q_components = 'all'   # could be list such as [True,True]
-    clawdata.output_aux_components = 'none'  # could be list
+    clawdata.output_aux_components = 'all'  # could be list
     clawdata.output_aux_onlyonce = False    # output aux arrays only at t0
     
 

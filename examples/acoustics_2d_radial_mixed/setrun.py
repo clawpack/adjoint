@@ -17,7 +17,7 @@ adjoint_output = os.path.abspath('adjoint/_output')
 print('Will flag using adjoint solution from  %s' % adjoint_output)
 
 # Time period of interest:
-t1 = 1.
+t1 = 5.5
 t2 = 6.
 
 # Determining type of adjoint flagging:
@@ -27,8 +27,8 @@ flag_forward_adjoint = True
 flag_richardson_adjoint = False
 
 # tolerance for adjoint flagging:
-adjoint_flag_tolerance = 0.02       # suggested if using forward solution
-#adjoint_flag_tolerance = 0.00004    # suggested if using Richardson error
+adjoint_flag_tolerance = 0.002       # suggested if using forward solution
+#adjoint_flag_tolerance = 1e-3    # suggested if using Richardson error
 #-----------------------------------------------
 
 #------------------------------
@@ -153,7 +153,7 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.output_format = 'ascii'       # 'ascii', 'binary', 'netcdf'
 
     clawdata.output_q_components = 'all'   # could be list such as [True,True]
-    clawdata.output_aux_components = 'none'  # could be list
+    clawdata.output_aux_components = 'all'  # could be list
     clawdata.output_aux_onlyonce = False    # output aux arrays only at t0
     
 
@@ -178,7 +178,7 @@ def setrun(claw_pkg='amrclaw'):
     
     # Initial time step for variable dt.  
     # (If dt_variable==0 then dt=dt_initial for all steps)
-    clawdata.dt_initial = 1.00000e-02
+    clawdata.dt_initial = 1.00000e-03
     
     # Max time step to be allowed if variable dt used:
     clawdata.dt_max = 1.000000e+99
@@ -294,12 +294,12 @@ def setrun(claw_pkg='amrclaw'):
     amrdata = rundata.amrdata
 
     # max number of refinement levels:
-    amrdata.amr_levels_max = 3
+    amrdata.amr_levels_max = 4
 
     # List of refinement ratios at each level (length at least amr_level_max-1)
-    amrdata.refinement_ratios_x = [2, 2]
-    amrdata.refinement_ratios_y = [2, 2]
-    amrdata.refinement_ratios_t = [2, 2]
+    amrdata.refinement_ratios_x = [2,2,2,2,2,2,2,2,2]
+    amrdata.refinement_ratios_y = [2,2,2,2,2,2,2,2,2]
+    amrdata.refinement_ratios_t = [2,2,2,2,2,2,2,2,2]
 
 
     # Specify type of each aux variable in clawdata.auxtype.

@@ -26,7 +26,5 @@ c     # Compute sound speed and impendance:
       cc = dsqrt(bulk/rho)
       zz = rho*cc
 
-      call read_adjoint_data()
-
       return
       end

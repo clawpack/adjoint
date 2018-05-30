@@ -66,8 +66,8 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.upper[1] = 11.000000e+00          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 50      # mx
-    clawdata.num_cells[1] = 50      # my
+    clawdata.num_cells[0] = 300      # mx
+    clawdata.num_cells[1] = 300      # my
     
 
     # ---------------

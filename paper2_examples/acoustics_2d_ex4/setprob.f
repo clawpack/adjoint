@@ -23,7 +23,5 @@ c     # comment lines starting with #:
       read(7,*) p2
       read(7,*) c2
 
-      call read_adjoint_data()    !# Read adjoint info and solution
-
       return
       end

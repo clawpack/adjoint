@@ -65,7 +65,7 @@ def setplot(plotdata):
     
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    plotitem.plot_var = 3
+    plotitem.plot_var = plot_innerprod
     plotitem.pcolor_cmap = colormaps.white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
@@ -139,6 +139,9 @@ def setplot(plotdata):
     plotdata.latex_makepdf = False           # also run pdflatex?
 
     return plotdata
+
+def plot_innerprod(current_data):
+    return current_data.aux[0,:,:]
 
 # Afteraxis functions:
 

@@ -63,14 +63,16 @@ def setplot(plotdata):
     
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    plotitem.plot_var = 3
+    plotitem.plot_var = plot_innerprod
     plotitem.pcolor_cmap = colormaps.white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = 0.01     # use when plotting inner product with q
-    #plotitem.pcolor_cmin = 0.0      # use when plotting inner product with error
-    plotitem.pcolor_cmax = 0.12    # use when plotting inner product with q
-    #plotitem.pcolor_cmax = 0.0005    # use when plotting inner product with error
+    #plotitem.pcolor_cmin = 0.01     # use when plotting inner product with q
+    plotitem.pcolor_cmin = 0.0      # use when plotting inner product with error
+    #plotitem.pcolor_cmax = 0.12    # use when plotting inner product with q
+    plotitem.pcolor_cmax = 0.005    # use when plotting inner product with error
+    #plotitem.pcolor_cmin = -1.5
+    #plotitem.pcolor_cmax = 1.5
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_data_show = [1,1,0]
@@ -111,6 +113,9 @@ def setplot(plotdata):
 
     return plotdata
 
+def plot_innerprod(current_data):
+    return current_data.aux[0,:,:]
+
 # Afteraxis functions:
 
 def addgauges(current_data):
@@ -122,7 +127,7 @@ def fixup(current_data):
     import pylab
     size = 28
     addgauges(current_data)
-    pylab.title('Forward Pressure', fontsize=size)
+    #pylab.title('Forward Pressure', fontsize=size)
     pylab.xticks(fontsize=size)
     pylab.yticks(fontsize=size)
 
@@ -130,7 +135,7 @@ def fixup_innerprod(current_data):
     import pylab
     size = 28
     addgauges(current_data)
-    pylab.title('Inner Product', fontsize=size)
+    #pylab.title('Inner Product', fontsize=size)
     pylab.xticks(fontsize=size)
     pylab.tick_params(axis='y', labelleft='off')
 
