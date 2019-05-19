@@ -20,7 +20,6 @@ SETPLOT_FILE = setplot.py           # File containing function to set plots
 PLOTDIR = _plots                    # Directory for plots
 
 OVERWRITE ?= True                   # False ==> make a copy of OUTDIR first
-RESTART ?= False                    # Should = clawdata.restart in setrun
 
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
@@ -39,7 +38,7 @@ SOURCES = \
   qinit.f \
   setprob.f \
   setaux.f \
-  $(ADJLIB)/riemann/rp1_acoustics_variable_adjoint.f90 \
+  $(CLAW)/riemann/src/rp1_acoustics_variable_adjoint.f90 \
   $(CLAW)/classic/src/1d/b4step1.f \
   $(CLAW)/classic/src/1d/bc1.f \
   $(CLAW)/classic/src/1d/claw1ez.f \

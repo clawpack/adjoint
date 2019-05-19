@@ -20,7 +20,6 @@ SETPLOT_FILE = setplot.py           # File containing function to set plots
 PLOTDIR = _plots                    # Directory for plots
 
 OVERWRITE ?= True                   # False ==> make a copy of OUTDIR first
-RESTART ?= False                    # Should = clawdata.restart in setrun
 
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
@@ -31,10 +30,8 @@ FFLAGS ?=
 # package sources for this program:
 # ---------------------------------
 
-AMRLIB = $(CLAW)/amrclaw/src/2d
-include $(AMRLIB)/Makefile.amr_2d
-
-ADJLIB = $(CLAW)/adjoint/src/2d
+ADJLIB = $(CLAW)/amrclaw/src/2d/adjoint
+include $(ADJLIB)/Makefile.adjoint_amr_2d
 
 # ---------------------------------------
 # package sources specifically to exclude
@@ -50,21 +47,11 @@ EXCLUDE_SOURCES = \
 # List of custom sources for this program:
 # ----------------------------------------
 
-MODULES = \
-  $(ADJLIB)/amr_reload_module.f90 \
-  $(ADJLIB)/adjoint_module.f90 \
-  $(ADJLIB)/innerprod_module.f90
+MODULES += \
 
-SOURCES = \
+SOURCES += \
   qinit.f \
   setprob.f \
-  $(ADJLIB)/flag2refine2.f90 \
-  $(ADJLIB)/valout.f \
-  $(ADJLIB)/errf1.f \
-  $(ADJLIB)/setaux.f90 \
-  $(ADJLIB)/amr2_reload.f90 \
-  $(ADJLIB)/reload.f \
-  $(ADJLIB)/errest.f \
   $(CLAW)/riemann/src/rpn2_acoustics.f \
   $(CLAW)/riemann/src/rpt2_acoustics.f \
 

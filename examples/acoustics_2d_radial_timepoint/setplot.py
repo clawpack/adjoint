@@ -1,4 +1,4 @@
-8
+
 """ 
 Set up the plot figures, axes, and items to be done for each frame.
 
@@ -22,6 +22,7 @@ def setplot(plotdata):
     setadjoint()
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
+    plotdata.format = 'binary'
     
 
     # Figure for pressure
@@ -64,12 +65,14 @@ def setplot(plotdata):
     
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    plotitem.plot_var = 3
+    plotitem.plot_var = plot_innerprod
     plotitem.pcolor_cmap = colormaps.white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = 0.0
-    plotitem.pcolor_cmax = 0.15
+    plotitem.pcolor_cmin = 0.0     # use when plotting inner product with q
+    #plotitem.pcolor_cmin = 0.0      # use when plotting inner product with error
+    plotitem.pcolor_cmax = 0.15    # use when plotting inner product with q
+    #plotitem.pcolor_cmax = 0.0005    # use when plotting inner product with error
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_data_show = [1,1,0]
@@ -133,6 +136,9 @@ def setplot(plotdata):
 
     return plotdata
 
+def plot_innerprod(current_data):
+    return current_data.aux[0,:,:]
+
 # Afteraxis functions:
 
 def addgauges(current_data):
@@ -183,27 +189,33 @@ def setadjoint():
     
     import os,sys,glob
     from clawpack.pyclaw import io
+    from clawpack.pyclaw.util import read_data_line
     
     outdir = 'adjoint/_output'
     outdir2 = 'adjoint/_outputReversed'
     
     os.system('mkdir -p %s' % outdir2)
     
-    files = glob.glob(outdir+'/fort.q0*')
+    files = glob.glob(outdir+'/fort.b*')
     files.sort()
     n = len(files)
     
     if (n >= 1):
         # Find the final time.
         fname = files[n-1]
-        fname = fname.replace('q','t')
+        fname = fname.replace('b','t')
         f = open(fname,'r')
         tfinal,meqn,npatches,maux,num_dim = io.ascii.read_t(n-1,path=outdir)
     
         for k in range(n):
             # Creating new files
             fname = files[k]
-            newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
+            newname = outdir2 + '/fort.b%s' % str(n-k-1).zfill(4)
+            cmd = 'cp %s %s' % (fname,newname)
+            os.system(cmd)
+            
+            fname = fname.replace('b','q')
+            newname = newname.replace('b','q')
             cmd = 'cp %s %s' % (fname,newname)
             os.system(cmd)
         
@@ -215,15 +227,14 @@ def setadjoint():
             # Reversing time
             f = open(newname,'r+')
             frameno = n-k-1
-            t,meqn,npatches,maux,num_dim = io.ascii.read_t(frameno,path=outdir2)
+            
+            t = read_data_line(f)
+            
             t = tfinal - t
         
             # Writting new time out to file
+            f.seek(0)
             f.write('%18.8e     time\n' % t)
-            f.write('%5i                  num_eqn\n' % meqn)
-            f.write('%5i                  nstates\n' % npatches)
-            f.write('%5i                  num_aux\n' % maux)
-            f.write('%5i                  num_dim\n' % num_dim)
             f.close()
 # end of function setadjoint
 # ----------------------

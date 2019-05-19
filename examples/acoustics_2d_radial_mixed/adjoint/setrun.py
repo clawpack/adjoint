@@ -66,8 +66,8 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.upper[1] = 11.000000e+00          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 50      # mx
-    clawdata.num_cells[1] = 50      # my
+    clawdata.num_cells[0] = 300      # mx
+    clawdata.num_cells[1] = 300      # my
     
 
     # ---------------
@@ -92,8 +92,6 @@ def setrun(claw_pkg='amrclaw'):
     
 
     # Restart from checkpoint file of a previous run?
-    # Note: If restarting, you must also change the Makefile to set:
-    #    RESTART = True
     # If restarting, t0 above should be from original run, and the
     # restart_file 'fort.chkNNNNN' specified below should be in 
     # the OUTDIR indicated in Makefile.
@@ -130,7 +128,7 @@ def setrun(claw_pkg='amrclaw'):
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
 
-    clawdata.output_format = 'ascii'       # 'ascii', 'binary', 'netcdf'
+    clawdata.output_format = 'binary'       # 'ascii', 'binary', 'netcdf'
 
 
     # ---------------------------------------------------
@@ -245,7 +243,7 @@ def setrun(claw_pkg='amrclaw'):
     # Specify when checkpoint files should be created that can be
     # used to restart a computation.
     
-    clawdata.checkpt_style = 3
+    clawdata.checkpt_style = 0
     
     if clawdata.checkpt_style == 0:
         # Do not checkpoint at all

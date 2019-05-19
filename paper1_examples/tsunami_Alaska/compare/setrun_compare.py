@@ -493,18 +493,20 @@ def setadjoint(rundata):
     adjointdata.add_param('t1',t1,'t1, start time of interest')
     adjointdata.add_param('t2',t2,'t2, final time of interest')
     
-    files = glob.glob(os.path.join(adjoint_output,"fort.tck*"))
+    files = glob.glob(os.path.join(adjoint_output,"fort.b*"))
     files.sort()
     
-    adjointdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
+    if (len(files) == 0):
+        print("No binary files found for adjoint output!")
+    
+    adjointdata.add_param('numadjoints', len(files), 'Number of adjoint output files.')
     adjointdata.add_param('innerprod_index', 4, 'Index for innerproduct data in aux array.')
     
     counter = 1
     for fname in files:
         f = open(fname)
         time = f.readline().split()[-1]
-        fname = fname.replace('tck','chk')
-        adjointdata.add_param('file' + str(counter), fname, 'Checkpoint file' + str(counter))
+        adjointdata.add_param('file' + str(counter), fname, 'Binary file' + str(counter))
         counter = counter + 1
 
     return rundata

@@ -20,7 +20,6 @@ SETPLOT_FILE = setplot_pflag.py      # File containing function to set plots
 PLOTDIR = _plots                     # Directory for plots
 
 OVERWRITE ?= True                    # False ==> make a copy of OUTDIR first
-RESTART ?= False                     # Should = clawdata.restart in setrun
 
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
@@ -33,8 +32,6 @@ FFLAGS ?=
 
 AMRLIB = $(CLAW)/amrclaw/src/2d
 include $(AMRLIB)/Makefile.amr_2d
-
-ADJLIB = $(CLAW)/adjoint/src/2d
 
 # ---------------------------------------
 # package sources specifically to exclude

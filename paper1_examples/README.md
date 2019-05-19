@@ -27,10 +27,10 @@ Note: Clawpack 5.0 or higher is required, other versions of gfortran and python 
 
 ### Examples Included and Folder Organization
 
-* **method-sw-paper/tsunami_Alaska:** contains the code to run the 2-dimensional shallow water equations example. 
+* **tsunami_Alaska:** contains the code to run the 2-dimensional shallow water equations example. 
 The internal folder: **adjoint**, contains the code for the adjoint problem. 
 
-* **method-sw-paper/shelf1d:** contains a one dimensional test problem consisting of a flat ocean floor, a
+* **shelf1d:** contains a one dimensional test problem consisting of a flat ocean floor, a
 flat continental shelf, and solid wall reflecting boundaries.
 
 ### Running the Code

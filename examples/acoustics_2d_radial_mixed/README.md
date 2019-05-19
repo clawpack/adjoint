@@ -65,7 +65,8 @@ Go to the folder **compare** and run in the terminal:
 python compare_methods.py
 ```
 
-This will run both the pressure flagging and the adjoint flagging methods. The results from both methods will be compared in the resulting gauge plot. The plots generated are those appearing in the paper. See paper for an analysis of the results. 
+This will run both the pressure flagging and the adjoint flagging methods. The results from both methods will be compared in the resulting gauge plot. 
+The output from using pressure flagging will be in the folder _output_pflag, and the plots will be in the corresponding folder _plots_pflag. The output from using the adjoint flagging will be in the folder _output, and the plots with be in the corresponding folder _plots. The _plots folder will also contain the gauge plot with both outputs to compare the results at the gauge for both methods.
 
 
 

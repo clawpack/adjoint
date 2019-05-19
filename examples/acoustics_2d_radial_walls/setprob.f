@@ -1,9 +1,8 @@
       subroutine setprob
 
-      use adjoint_module, only: read_adjoint_data, set_time_window
+      use adjoint_module, only: read_adjoint_data
       implicit double precision (a-h,o-z)
       character*25 fname
-      character*7 adjointFolder
       common /cparam/ rho,bulk,cc,zz
 
 c
@@ -26,16 +25,6 @@ c     # Compute sound speed and impendance:
 
       cc = dsqrt(bulk/rho)
       zz = rho*cc
-
-c     # Setting time range of interest
-      t_rangeStart = 1.0d0
-      t_final = 6.0d0
-
-c     # Setting up folder to read adjoint data from
-      adjointFolder = 'adjoint'
-
-      call read_adjoint_data(adjointFolder)
-      call set_time_window(t_rangeStart, t_final)
 
       return
       end

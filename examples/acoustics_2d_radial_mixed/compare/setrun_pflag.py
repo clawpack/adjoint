@@ -31,8 +31,6 @@ def setrun(claw_pkg='amrclaw'):
 
     num_dim = 2
     rundata = data.ClawRunData(claw_pkg, num_dim)
-    
-    rundata = setadjoint(rundata)
 
     #------------------------------------------------------------------
     # Problem-specific parameters to be written to setprob.data:
@@ -94,8 +92,6 @@ def setrun(claw_pkg='amrclaw'):
     
 
     # Restart from checkpoint file of a previous run?
-    # Note: If restarting, you must also change the Makefile to set:
-    #    RESTART = True
     # If restarting, t0 above should be from original run, and the
     # restart_file 'fort.chkNNNNN' specified below should be in 
     # the OUTDIR indicated in Makefile.
@@ -341,36 +337,6 @@ def setrun(claw_pkg='amrclaw'):
 
     # end of function setrun
     # ----------------------
-
-#-------------------
-def setadjoint(rundata):
-    #-------------------
-    
-    import os,sys,glob
-    
-    outdir = '../adjoint/_output'
-    outdir2 = 'adjoint/_outputReversed'
-    
-    os.system('mkdir -p %s' % outdir2)
-    
-    files = glob.glob(outdir+'/fort.q0*')
-    n = len(files)
-    
-    for k in range(n):
-        fname = files[k]
-        newname = outdir2 + '/fort.q%s' % str(n-k-1).zfill(4)
-        cmd = 'cp %s %s' % (fname,newname)
-        #print cmd
-        os.system(cmd)
-        fname = fname.replace('q','t')
-        newname = newname.replace('q','t')
-        cmd = 'cp %s %s' % (fname,newname)
-        #print cmd
-        os.system(cmd)
-    
-    return rundata
-# end of function setadjoint
-# ----------------------
 
 if __name__ == '__main__':
     # Set up run-time parameters and write all data files.
