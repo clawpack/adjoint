@@ -25,14 +25,14 @@ RESTART ?= False                    # Should = clawdata.restart in setrun
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS ?= -O2 -fopenmp
+FFLAGS ?=  
 
 # ---------------------------------
 # package sources for this program:
 # ---------------------------------
 
-AMRLIB = $(CLAW)/amrclaw/src/1d_adjoint
-include $(AMRLIB)/Makefile.adjoint_amr_1d
+AMRLIB = $(CLAW)/amrclaw/src/1d
+include $(AMRLIB)/Makefile.amr_1d
 
 # ---------------------------------------
 # package sources specifically to exclude
