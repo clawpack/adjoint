@@ -66,7 +66,7 @@ def setplot(plotdata=None):
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.axescmd = 'subplot(2,1,1)'   # top figure
-    plotaxes.xlimits = 'auto'
+    plotaxes.xlimits = [-12,12]
     plotaxes.ylimits = [-.5,1.1]
     plotaxes.title = 'Pressure'
     plotaxes.afteraxes = draw_interface_add_legend
@@ -84,7 +84,7 @@ def setplot(plotdata=None):
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.axescmd = 'subplot(2,1,2)'   # bottom figure
-    plotaxes.xlimits = 'auto'
+    plotaxes.xlimits = [-12,12]
     plotaxes.ylimits = [-.5,1.1]
     plotaxes.title = 'Velocity'
     plotaxes.afteraxes = draw_interface_add_legend
@@ -103,7 +103,7 @@ def setplot(plotdata=None):
     
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.xlimits = 'auto'
+    plotaxes.xlimits = [-12,12]
     plotaxes.ylimits = [-0.1,1]         # use when taking inner product with forward solution
     #plotaxes.ylimits = [-0.01,0.02]    # use when taking inner product with Richardson error
     plotaxes.title = 'Inner Product'

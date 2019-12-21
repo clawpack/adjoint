@@ -10,6 +10,13 @@ function setplot is called to set the plot parameters.
 from __future__ import absolute_import
 from __future__ import print_function
 
+amr_color = ['g','b','r','c','k']
+amr_marker = ['x','s','o','^','.']
+amr_linestyle = ['-','-','-','-','-']
+amr_plotstyle = [ma+li for ma,li in zip(amr_marker,amr_linestyle)]
+print('amr_plotstyle = ',amr_plotstyle)
+#amr_plotstyle = ['x-','s-','o-','^-','.-']
+
 #--------------------------
 def setplot(plotdata=None):
 #--------------------------
@@ -28,63 +35,114 @@ def setplot(plotdata=None):
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
 
-    def fix_plot(current_data):
+    def draw_interface_add_legend(current_data):
         from pylab import plot
-        from pylab import xticks,yticks,xlabel,ylabel,savefig,ylim,title
-        t = current_data.t
         plot([0., 0.], [-1000., 1000.], 'k--')
-        title('Pressure at t = %5.3f seconds' % t, fontsize=26)
-        yticks(fontsize=23)
-        xticks(fontsize=23)
+        try:
+            from clawpack.visclaw import legend_tools
+            labels = ['Level 1','Level 2', 'Level 3', 'Level 4', 'Level 5']
+            legend_tools.add_legend(labels, colors=amr_color,
+                        markers=amr_marker, linestyles=amr_linestyle,
+                        loc='upper left')
+        except:
+            pass
 
-    def fix_plot_innerprod(current_data):
+    def draw_interface_add_legend_innerprod(current_data):
         from pylab import plot
-        from pylab import xticks,yticks,xlabel,ylabel,savefig,ylim,title
-        t = current_data.t
         plot([0., 0.], [-1000., 1000.], 'k--')
-        title('Inner Product at t = %5.3f seconds' % t, fontsize=26)
-        yticks(fontsize=23)
-        xticks(fontsize=23)
+        try:
+            from clawpack.visclaw import legend_tools
+            labels = ['Level 3','Level 4']
+            legend_tools.add_legend(labels, colors=['r','c'],
+                                    markers=['o','^'], linestyles=['',''],
+                                    loc='upper left')
+        except:
+            pass
 
 
     # Figure for q[0]
-    plotfigure = plotdata.new_plotfigure(name='Pressure', figno=1)
-    plotfigure.kwargs = {'figsize': (10,3.5)}
+    plotfigure = plotdata.new_plotfigure(name='Pressure and Velocity', figno=1)
+    plotfigure.kwargs = {'figsize': (8,8)}
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
+    plotaxes.axescmd = 'subplot(2,1,1)'   # top figure
     plotaxes.xlimits = [-12,12]
-    plotaxes.ylimits = [-1.1,1.1]
+    plotaxes.ylimits = [-.5,1.1]
     plotaxes.title = 'Pressure'
-    plotaxes.afteraxes = fix_plot
+    plotaxes.afteraxes = draw_interface_add_legend
 
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
-    plotitem.amr_color = 'b'
-    plotitem.amr_plotstyle = 'o'
-    plotitem.amr_kwargs = [{'linewidth':2}]
-    plotitem.amr_kwargs = [{'markersize':4}]
+    plotitem.amr_color = amr_color
+    plotitem.amr_plotstyle = amr_plotstyle
+    plotitem.amr_data_show = [1,1,1]
+    plotitem.amr_kwargs = [{'markersize':5},{'markersize':4},{'markersize':3}]
 
+    # Figure for q[1]
+
+    # Set up for axes in this figure:
+    plotaxes = plotfigure.new_plotaxes()
+    plotaxes.axescmd = 'subplot(2,1,2)'   # bottom figure
+    plotaxes.xlimits = [-12,12]
+    plotaxes.ylimits = [-.5,1.1]
+    plotaxes.title = 'Velocity'
+    plotaxes.afteraxes = draw_interface_add_legend
+
+    # Set up for item on these axes:
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.plot_var = 1
+    plotitem.amr_color = amr_color
+    plotitem.amr_plotstyle = amr_plotstyle
+    plotitem.amr_data_show = [1,1,1]
+    plotitem.amr_kwargs = [{'markersize':5},{'markersize':4},{'markersize':3}]
+    
     # Figure for inner product, q[2]
     
     plotfigure = plotdata.new_plotfigure(name='Inner Product', figno=10)
     
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.xlimits = 'auto'
-    #plotaxes.ylimits = [-.5,1.1]      # use when taking inner product with forward solution
-    plotaxes.ylimits = [-0.01,0.02]    # use when taking inner product with Richardson error
+    plotaxes.xlimits = [-12,12]
+    plotaxes.ylimits = [-0.1,1]         # use when taking inner product with forward solution
+    #plotaxes.ylimits = [-0.01,0.02]    # use when taking inner product with Richardson error
     plotaxes.title = 'Inner Product'
-    plotaxes.afteraxes = fix_plot_innerprod
+    plotaxes.afteraxes = draw_interface_add_legend_innerprod
     
     # Set up for item on these axes:
     plotitem = plotaxes.new_plotitem(plot_type='1d')
-    plotitem.plot_var = 2
-    plotitem.amr_color = 'b'
-    plotitem.amr_plotstyle = 'o'
-    plotitem.amr_kwargs = [{'linewidth':2}]
-    plotitem.amr_kwargs = [{'markersize':4}]
+    plotitem.plot_var = plot_innerprod
+    plotitem.amr_color = amr_color
+    plotitem.amr_plotstyle = amr_plotstyle
+    plotitem.amr_data_show = [0,0,1,1,0]
     plotitem.show = True       # show on plot?
+
+    
+    #-----------------------------------------
+    # Figures for gauges
+    #-----------------------------------------
+    plotfigure = plotdata.new_plotfigure(name='q', figno=300, \
+                                         type='each_gauge')
+    plotfigure.clf_each_gauge = True
+    plotfigure.kwargs = {'figsize': (10,10)}
+                                         
+    plotaxes = plotfigure.new_plotaxes()
+    plotaxes.axescmd = 'subplot(211)'
+    plotaxes.xlimits = 'auto'
+    plotaxes.ylimits = 'auto'
+    plotaxes.title = 'Pressure'
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.plot_var = 0
+    plotitem.plotstyle = 'b-'
+
+    plotaxes = plotfigure.new_plotaxes()
+    plotaxes.axescmd = 'subplot(212)'
+    plotaxes.xlimits = 'auto'
+    plotaxes.ylimits = 'auto'
+    plotaxes.title = 'Velocity'
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.plot_var = 1
+    plotitem.plotstyle = 'b-'
 
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via clawpack.visclaw.frametools.printframes:
@@ -102,4 +160,6 @@ def setplot(plotdata=None):
 
     return plotdata
 
+def plot_innerprod(current_data):
+    return current_data.aux[2,:]
     
