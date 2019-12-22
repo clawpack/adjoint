@@ -5,7 +5,7 @@
 
 by Brisa N. Davis and Randall J. LeVeque
 
-This version goes with the preprint version available at https://arxiv.org/abs/1810.00927
+This version goes (in github branch `paper2v1`) goes with the preprint version available at https://arxiv.org/abs/1810.00927
 
 This paper has since been revised.  Check out the `paper2v2` branch for the version of the code that accompanies that paper, which has been updated to Clawpack v5.6.1 and in which one example has been dropped.
 
@@ -42,11 +42,11 @@ The internal folder: **adjoint**, contains the code for the adjoint problem.
 linear acoustics equations example. 
 The internal folder: **adjoint**, contains the code for the adjoint problem. 
 
-* **acoustics_2d_ex1:** contains the code to run the first two-dimensional variable coefficients 
+* **acoustics_2d_ex3:** contains the code to run the first two-dimensional variable coefficients 
 linear acoustics equations example. 
 The internal folder: **adjoint**, contains the code for the adjoint problem. 
 
-* **acoustics_2d_ex2:** contains the code to run the second two-dimensional variable coefficients 
+* **acoustics_2d_ex4:** contains the code to run the second two-dimensional variable coefficients 
 linear acoustics equations example. 
 The internal folder: **adjoint**, contains the code for the adjoint problem. 
 
@@ -64,9 +64,11 @@ The internal folder: **adjoint**, contains the code for the adjoint problem.
 - Create a copy of the adjoint repository by running the code:
 
 ```
-git://github.com/BrisaDavis/adjoint.git
+    git clone https://github.com/clawpack/adjoint.git
+    cd adjoint
+    git checkout paper2v1
 ```
 
 * **Run the code**
 
-* Go any of the folders and follow the instructions in the README.md in that folder.
+* Go any of the folders in `paper2_examples` and follow the instructions in the README.md in that folder.
