@@ -7,6 +7,8 @@ function setplot is called to set the plot parameters.
     
 """
 
+
+
 #--------------------------
 def setplot(plotdata):
 #--------------------------
@@ -19,6 +21,11 @@ def setplot(plotdata):
     """ 
 
     from clawpack.visclaw import colormaps
+
+    from clawpack.clawutil.data import ClawData
+    adjoint_data = ClawData()
+    adjoint_data.read('adjoint.data', force=True)
+    print('use_adjoint = ', adjoint_data.use_adjoint)
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
     plotdata.format = 'ascii'      # 'ascii', 'binary', 'netcdf'
@@ -54,7 +61,7 @@ def setplot(plotdata):
     #-----------------------------------------
     plotfigure = plotdata.new_plotfigure(name='Inner Product', figno=1)
     plotfigure.kwargs = {'figsize': (5.5,4)}
-    #plotfigure.show = False
+    plotfigure.show = adjoint_data.use_adjoint
     
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
@@ -74,7 +81,8 @@ def setplot(plotdata):
     plotitem.pcolor_cmin = 0.0      # use when plotting inner product with q
     #plotitem.pcolor_cmin = 0.0     # use when plotting inner product with error
     #plotitem.pcolor_cmax = 0.12    # use when plotting inner product with q
-    plotitem.pcolor_cmax = 0.000001    # use when plotting inner product with error
+    #plotitem.pcolor_cmax = 0.000001    # for adjoint-error
+    plotitem.pcolor_cmax = 0.0001    # for adjoint-mag
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_data_show = [1,1,1,1,0]
@@ -110,8 +118,8 @@ def setplot(plotdata):
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.xlimits = 'auto'
     plotaxes.ylimits = 'auto'
-    plotaxes.xlimits = [1,3]
-    plotaxes.ylimits = [-0.4,0.5]
+    plotaxes.xlimits = [0,21]
+    plotaxes.ylimits = [-0.4,0.6]
     plotaxes.title = 'Pressure'
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
@@ -176,7 +184,8 @@ def plot_rectangle(current_data):
 
 def fixup_gauge(current_data):
     import pylab
-    size = 34
+    size = 15
+    pylab.grid(True)
     pylab.title('Pressure at Gauge 0', fontsize=size)
-    pylab.xticks([1.0, 1.5, 2.0, 2.5, 3.0], fontsize=size)
-    pylab.yticks([-0.3, -0.1, 0.1, 0.3, 0.5], fontsize=size)
+    #pylab.xticks([1.0, 1.5, 2.0, 2.5, 3.0], fontsize=size)
+    #pylab.yticks([-0.3, -0.1, 0.1, 0.3, 0.5], fontsize=size)

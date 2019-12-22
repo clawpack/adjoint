@@ -7,6 +7,8 @@ function setplot is called to set the plot parameters.
     
 """
 
+
+
 #--------------------------
 def setplot(plotdata):
 #--------------------------
@@ -19,6 +21,11 @@ def setplot(plotdata):
     """ 
 
     from clawpack.visclaw import colormaps
+
+    from clawpack.clawutil.data import ClawData
+    adjoint_data = ClawData()
+    adjoint_data.read('adjoint.data', force=True)
+    print('use_adjoint = ', adjoint_data.use_adjoint)
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
     plotdata.format = 'ascii'      # 'ascii', 'binary', 'netcdf'
@@ -54,7 +61,7 @@ def setplot(plotdata):
     #-----------------------------------------
     plotfigure = plotdata.new_plotfigure(name='Inner Product', figno=1)
     plotfigure.kwargs = {'figsize': (5.5,4)}
-    #plotfigure.show = False
+    plotfigure.show = adjoint_data.use_adjoint
     
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
@@ -110,8 +117,8 @@ def setplot(plotdata):
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.xlimits = 'auto'
     plotaxes.ylimits = 'auto'
-    plotaxes.xlimits = [1,3]
-    plotaxes.ylimits = [-0.4,0.5]
+    plotaxes.xlimits = [0,21]
+    plotaxes.ylimits = [-0.4,0.6]
     plotaxes.title = 'Pressure'
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0

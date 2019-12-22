@@ -243,7 +243,7 @@ def setrun(claw_pkg='amrclaw'):
     # ---------------
     rundata.gaugedata.gauges = []
     # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
-    rundata.gaugedata.gauges.append([0, 3.5, 0.5, 18., 21.])
+    rundata.gaugedata.gauges.append([0, 3.5, 0.5, 0., 21.])
 
     # --------------
     # Checkpointing:
@@ -295,18 +295,8 @@ def setrun(claw_pkg='amrclaw'):
     rundata.amrdata.aux_type = ['center','center']
     # Note: as required for original problem - modified below for adjoint
     
-    # set tolerances appropriate for adjoint flagging:
+    # set tolerances for flagging in adjoint section below
     
-    # need 1 value, set in setadjoint
-
-
-    # Flag for refinement based on Richardson error estimater:
-    amrdata.flag_richardson = True
-    amrdata.flag_richardson_tol = 3e-3 # suggested if using adjoint error flag
-
-    # Flag for refinement using routine flag2refine:
-    amrdata.flag2refine = False
-    rundata.amrdata.flag2refine_tol = 3e-4 # suggested if using adj mag flag
     
     # steps to take on each level L between regriddings of level L+1:
     amrdata.regrid_interval = 2       
@@ -335,8 +325,22 @@ def setrun(claw_pkg='amrclaw'):
     #------------------------------------------------------------------
     # Also need to set flagging method and appropriate tolerances above
 
+    flag_method = 'forward-diff'
+
+    assert flag_method in ['forward-diff','forward-error',\
+           'adjoint-mag','adjoint-error'], '*** Unsupported flag_method'
+
     adjointdata = rundata.adjointdata
-    adjointdata.use_adjoint = True
+    adjointdata.use_adjoint = (flag_method in ['adjoint-mag','adjoint-error'])
+
+    # Flag for refinement based on Richardson error estimater:
+    amrdata.flag_richardson = (flag_method in ['adjoint-error','forward-error'])
+    amrdata.flag_richardson_tol = 3e-3 # suggested if using adjoint-error flag
+
+    # Flag for refinement using routine flag2refine:
+    amrdata.flag2refine = (flag_method in ['adjoint-mag','forward-diff'])
+    #amrdata.flag2refine_tol = 3e-4 # suggested if using adjoint-mag flag
+    amrdata.flag2refine_tol =  0.05 # suggested if using forward-diff
 
     # location of adjoint solution, must first be created:
     adjointdata.adjoint_outdir = os.path.abspath('adjoint/_output')
