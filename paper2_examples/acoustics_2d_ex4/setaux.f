@@ -11,7 +11,7 @@ c     #  aux(i,j,2) = sound speed c in (i,j) cell
 c
 c
       use amr_module, only : NEEDS_TO_BE_SET
-      use adjoint_module, only: innerprod_index
+      use adjoint_module, only: innerprod_index, adjoint_flagging
 
       implicit double precision (a-h,o-z)
       double precision aux(maux,1-mbc:mx+mbc,1-mbc:my+mbc)
@@ -22,7 +22,8 @@ c
         do i = 1-mbc,mx+mbc
             xcell = xlower + (i-0.5d0)*dx
 
-            if (aux(1,i,j) .eq. NEEDS_TO_BE_SET) then
+            if (adjoint_flagging .and. 
+     &             (aux(1,i,j) .eq. NEEDS_TO_BE_SET)) then
                 aux(innerprod_index,i,j) = 0.d0
             endif
 
