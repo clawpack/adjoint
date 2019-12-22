@@ -1,9 +1,13 @@
-The code in this repository supplements a paper that is currently in production.
 
+# Computational Experiments to accompany the paper
 
-## Computational Experiments for the paper Analysis and Performance Evaluation of Adjoint-Guided Adaptive Mesh Refinement Using Clawpack
+###  "Analysis and Performance Evaluation of Adjoint-Guided Adaptive Mesh Refinement Using Clawpack" 
 
-The code in this repository supplements the paper (currently in production): "Analysis and Performance Evaluation of Adjoint-Guided Adaptive Mesh Refinement Using Clawpack."
+by Brisa N. Davis and Randall J. LeVeque
+
+This version goes with the preprint version available at https://arxiv.org/abs/1810.00927
+
+This paper has since been revised.  Check out the `paper2v2` branch for the version of the code that accompanies that paper, which has been updated to Clawpack v5.6.1 and in which one example has been dropped.
 
 The code is designed to work with the Clawpack 5 software. For more information visit 
 [the Clawpack webpage](http://www.clawpack.org/ ). 
