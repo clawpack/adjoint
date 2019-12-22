@@ -9,32 +9,16 @@ that will be read in by the Fortran code.
 import os
 import numpy as np
 
+
+# This version is set up for adjoint flagging
 #-----------------------------------------------
-# Set these parameters for adjoint flagging....
 
-# location of output from computing adjoint:
-adjoint_output = os.path.abspath('adjoint/_output')
-print('Will flag using adjoint solution from  %s' % adjoint_output)
 
-# Time period of interest:
-t1 = 20.5
-t2 = 21.
-
-# Determining type of adjoint flagging:
-
-# taking inner product with forward solution or Richardson error:
-flag_forward_adjoint = True
-flag_richardson_adjoint = False
-
-# tolerance for adjoint flagging:
-adjoint_flag_tolerance = 3e-4       # suggested if using forward solution
-#adjoint_flag_tolerance = 3e-3        # suggested if using Richardson error
-#-----------------------------------------------
 
 #------------------------------
 def setrun(claw_pkg='amrclaw'):
 #------------------------------
-    
+
     """ 
     Define the parameters used for running Clawpack.
 
@@ -102,7 +86,8 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.num_eqn = 3
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
-    # see setadjoint
+    rundata.clawdata.num_aux = 2   
+    # Note: as required for original problem - modified below for adjoint
     
     # Index of aux array corresponding to capacity function, if there is one:
     clawdata.capa_index = 0
@@ -147,12 +132,12 @@ def setrun(claw_pkg='amrclaw'):
  
     elif clawdata.output_style == 3:
         # Output every step_interval timesteps over total_steps timesteps:
-        clawdata.output_step_interval = 2
-        clawdata.total_steps = 4
+        clawdata.output_step_interval = 1
+        clawdata.total_steps = 10
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
 
-    clawdata.output_format = 'binary'       # 'ascii', 'binary', 'netcdf'
+    clawdata.output_format = 'ascii'       # 'ascii', 'binary', 'netcdf'
 
     clawdata.output_q_components = 'all'   # could be list such as [True,True]
     clawdata.output_aux_components = 'all'  # could be list
@@ -308,17 +293,22 @@ def setrun(claw_pkg='amrclaw'):
     # This must be a list of length num_aux, each element of which is one of:
     #   'center',  'capacity', 'xleft', or 'yleft'  (see documentation).
     
+    rundata.amrdata.aux_type = ['center','center']
+    # Note: as required for original problem - modified below for adjoint
+    
+    # set tolerances appropriate for adjoint flagging:
+    
     # need 1 value, set in setadjoint
 
 
     # Flag for refinement based on Richardson error estimater:
-    amrdata.flag_richardson = False
-    
+    amrdata.flag_richardson = True
+    amrdata.flag_richardson_tol = 3e-3 # suggested if using adjoint error flag
+
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = False
+    rundata.amrdata.flag2refine_tol = 3e-4 # suggested if using adj mag flag
     
-    # see setadjoint to set tolerance for adjoint flagging
-
     # steps to take on each level L between regriddings of level L+1:
     amrdata.regrid_interval = 2       
 
@@ -340,13 +330,29 @@ def setrun(claw_pkg='amrclaw'):
     rundata.regiondata.regions = []
     # to specify regions of refinement append lines of the form
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
-    
+
     #------------------------------------------------------------------
     # Adjoint specific data:
     #------------------------------------------------------------------
-    rundata = setadjoint(rundata)
+    # Also need to set flagging method and appropriate tolerances above
 
+    adjointdata = rundata.adjointdata
+    adjointdata.use_adjoint = True
 
+    # location of adjoint solution, must first be created:
+    adjointdata.adjoint_outdir = os.path.abspath('adjoint/_output')
+
+    # time period of interest:
+    adjointdata.t1 = 20.5
+    adjointdata.t2 = 21.
+
+    if adjointdata.use_adjoint:
+        # need an additional aux variable for inner product:
+        rundata.amrdata.aux_type.append('center')
+        rundata.clawdata.num_aux = len(rundata.amrdata.aux_type)
+        adjointdata.innerprod_index = len(rundata.amrdata.aux_type)
+    
+    
     #  ----- For developers -----
     # Toggle debugging print statements:
     amrdata.dprint = False      # print domain flags
@@ -365,60 +371,6 @@ def setrun(claw_pkg='amrclaw'):
     # end of function setrun
     # ----------------------
 
-#-------------------
-def setadjoint(rundata):
-    #-------------------
-    
-    """
-        Setting up adjoint variables and
-        reading in all of the checkpointed Adjoint files
-        """
-    
-    import glob
-    
-    
-    # Set these parameters at top of this file:
-    # adjoint_flag_tolerance, t1, t2, adjoint_output
-    # Then you don't need to modify this function...
-    
-    # flag and tolerance for adjoint flagging:
-    if flag_forward_adjoint == True:
-        # setting up taking inner product with forward solution
-        rundata.amrdata.flag2refine = True
-        rundata.amrdata.flag2refine_tol = adjoint_flag_tolerance
-    elif flag_richardson_adjoint == True:
-        # setting up taking inner product with Richardson error
-        rundata.amrdata.flag_richardson = True
-        rundata.amrdata.flag_richardson_tol = adjoint_flag_tolerance
-    else:
-        print("No refinement flag set!")
-    
-    rundata.clawdata.num_aux = 3   # 3 required for adjoint flagging
-    rundata.amrdata.aux_type = ['center','center','center']
-    
-    adjointdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
-    adjointdata.add_param('adjoint_output',adjoint_output,'adjoint_output')
-    adjointdata.add_param('t1',t1,'t1, start time of interest')
-    adjointdata.add_param('t2',t2,'t2, final time of interest')
-    
-    files = glob.glob(os.path.join(adjoint_output,"fort.b*"))
-    files.sort()
-    
-    if (len(files) == 0):
-        print("No binary files found for adjoint output!")
-    
-    adjointdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
-    adjointdata.add_param('innerprod_index', 3, 'Index for innerproduct data in aux array.')
-    
-    counter = 1
-    for fname in files:
-        f = open(fname)
-        adjointdata.add_param('file' + str(counter), fname, 'Binary file' + str(counter))
-        counter = counter + 1
-    
-    return rundata
-# end of function setadjoint
-# ----------------------
 
 if __name__ == '__main__':
     # Set up run-time parameters and write all data files.

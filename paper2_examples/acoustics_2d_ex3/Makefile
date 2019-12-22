@@ -24,14 +24,14 @@ OVERWRITE ?= True                   # False ==> make a copy of OUTDIR first
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS ?= -O2 -fopenmp 
+FFLAGS ?= 
 
 # ---------------------------------
 # package sources for this program:
 # ---------------------------------
 
-ADJLIB = $(CLAW)/amrclaw/src/2d/adjoint
-include $(ADJLIB)/Makefile.adjoint_amr_2d
+AMRLIB = $(CLAW)/amrclaw/src/2d
+include $(AMRLIB)/Makefile.amr_2d
 
 # ---------------------------------------
 # package sources specifically to exclude
@@ -53,8 +53,8 @@ SOURCES += \
   qinit.f \
   setprob.f \
   setaux.f \
-  $(CLAW)/riemann/src/rpn2_vc_acoustics.f \
-  $(CLAW)/riemann/src/rpt2_vc_acoustics.f \
+  rpn2_vc_acoustics.f90 \
+  $(CLAW)/riemann/src/rpt2_vc_acoustics.f90 \
 
 #-------------------------------------------------------------------
 # Include Makefile containing standard definitions and make options:

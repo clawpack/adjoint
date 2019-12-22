@@ -53,7 +53,7 @@ SOURCES = \
   qinit.f \
   setprob.f \
   setaux.f \
-  $(CLAW)/riemann/src/rpn2_vc_acoustics_adjoint.f90 \
+  rpn2_vc_acoustics_adjoint.f90 \
   $(CLAW)/riemann/src/rpt2_vc_acoustics_adjoint.f90 \
 
 #-------------------------------------------------------------------

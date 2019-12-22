@@ -21,7 +21,7 @@ def setplot(plotdata):
     from clawpack.visclaw import colormaps
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
-    plotdata.format = 'binary'      # 'ascii', 'binary', 'netcdf'
+    plotdata.format = 'ascii'      # 'ascii', 'binary', 'netcdf'
     
 
     # Figure for pressure
@@ -42,7 +42,7 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.blue_white_red
-    plotitem.add_colorbar = False
+    plotitem.add_colorbar = True
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = -0.3
     plotitem.pcolor_cmax = 0.3
@@ -54,6 +54,7 @@ def setplot(plotdata):
     #-----------------------------------------
     plotfigure = plotdata.new_plotfigure(name='Inner Product', figno=1)
     plotfigure.kwargs = {'figsize': (5.5,4)}
+    #plotfigure.show = False
     
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
@@ -72,7 +73,7 @@ def setplot(plotdata):
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = 0.0     # use when plotting inner product with q
     #plotitem.pcolor_cmin = 0.0      # use when plotting inner product with error
-    plotitem.pcolor_cmax = 0.01    # use when plotting inner product with q
+    plotitem.pcolor_cmax = 0.0001    # use when plotting inner product with q
     #plotitem.pcolor_cmax = 0.00001    # use when plotting inner product with error
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
@@ -132,6 +133,7 @@ def setplot(plotdata):
     plotdata.latex_figsperline = 2           # layout of plots
     plotdata.latex_framesperline = 1         # layout of plots
     plotdata.latex_makepdf = False           # also run pdflatex?
+    plotdata.parallel = True                 # make frames in parallel with omp?
 
     return plotdata
 
