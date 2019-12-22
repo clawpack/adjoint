@@ -7,6 +7,8 @@ function setplot is called to set the plot parameters.
     
 """
 
+
+
 #--------------------------
 def setplot(plotdata):
 #--------------------------
@@ -20,8 +22,13 @@ def setplot(plotdata):
 
     from clawpack.visclaw import colormaps
 
+    from clawpack.clawutil.data import ClawData
+    adjoint_data = ClawData()
+    adjoint_data.read('adjoint.data', force=True)
+    print('use_adjoint = ', adjoint_data.use_adjoint)
+
     plotdata.clearfigures()  # clear any old figures,axes,items data
-    plotdata.format = 'binary'      # 'ascii', 'binary', 'netcdf'
+    plotdata.format = 'ascii'      # 'ascii', 'binary', 'netcdf'
     
 
     # Figure for pressure
@@ -42,7 +49,7 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.blue_white_red
-    plotitem.add_colorbar = False
+    plotitem.add_colorbar = True
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = -0.3
     plotitem.pcolor_cmax = 0.3
@@ -54,6 +61,7 @@ def setplot(plotdata):
     #-----------------------------------------
     plotfigure = plotdata.new_plotfigure(name='Inner Product', figno=1)
     plotfigure.kwargs = {'figsize': (5.5,4)}
+    plotfigure.show = adjoint_data.use_adjoint
     
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
@@ -70,10 +78,11 @@ def setplot(plotdata):
     plotitem.pcolor_cmap = colormaps.white_red
     plotitem.add_colorbar = False
     plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = 0.0     # use when plotting inner product with q
-    #plotitem.pcolor_cmin = 0.0      # use when plotting inner product with error
-    plotitem.pcolor_cmax = 0.01    # use when plotting inner product with q
-    #plotitem.pcolor_cmax = 0.00001    # use when plotting inner product with error
+    plotitem.pcolor_cmin = 0.0      # use when plotting inner product with q
+    #plotitem.pcolor_cmin = 0.0     # use when plotting inner product with error
+    #plotitem.pcolor_cmax = 0.12    # use when plotting inner product with q
+    #plotitem.pcolor_cmax = 0.000001    # for adjoint-error
+    plotitem.pcolor_cmax = 0.0001    # for adjoint-mag
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_data_show = [1,1,1,1,0]
@@ -109,8 +118,8 @@ def setplot(plotdata):
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.xlimits = 'auto'
     plotaxes.ylimits = 'auto'
-    plotaxes.xlimits = [1,3]
-    plotaxes.ylimits = [-0.4,0.5]
+    plotaxes.xlimits = [0,21]
+    plotaxes.ylimits = [-0.4,0.6]
     plotaxes.title = 'Pressure'
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
@@ -132,6 +141,7 @@ def setplot(plotdata):
     plotdata.latex_figsperline = 2           # layout of plots
     plotdata.latex_framesperline = 1         # layout of plots
     plotdata.latex_makepdf = False           # also run pdflatex?
+    plotdata.parallel = True                 # make frames in parallel with omp?
 
     return plotdata
 
@@ -165,15 +175,17 @@ def fixup_innerprod(current_data):
     pylab.yticks([0, 5, 10], fontsize=size)
     plot([0., 0.], [-1000., 1000.], 'k--')
 
-def fixup_gauge(current_data):
-    import pylab
-    size = 34
-    pylab.title('Pressure at Gauge 0', fontsize=size)
-    pylab.xticks([0.0, 1.5, 2.0, 2.5, 3.0], fontsize=size)
-    pylab.yticks([-0.3, -0.1, 0.1, 0.3, 0.5], fontsize=size)
 
 def plot_rectangle(current_data):
     from clawpack.visclaw.plottools import plotbox
-    x1 = 0.68; x2 = 1.32; y1 = 5.26; y2 = 5.74
+    x1 = 3.18; x2 = 3.82; y1 = 0.26; y2 = 0.74
     xy = [x1, x2, y1, y2]
     plotbox(xy, kwargs={'color': 'k', 'linewidth': 2})
+
+def fixup_gauge(current_data):
+    import pylab
+    size = 15
+    pylab.grid(True)
+    pylab.title('Pressure at Gauge 0', fontsize=size)
+    #pylab.xticks([1.0, 1.5, 2.0, 2.5, 3.0], fontsize=size)
+    #pylab.yticks([-0.3, -0.1, 0.1, 0.3, 0.5], fontsize=size)

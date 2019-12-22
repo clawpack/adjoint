@@ -13,7 +13,7 @@ CLAWMAKE = $(CLAW)/clawutil/src/Makefile.common
 # ----------------------------------
 
 CLAW_PKG = amrclaw                  # Clawpack package to use
-EXE = xclaw                         # Executable to create
+EXE = xamr                          # Executable to create
 SETRUN_FILE = setrun.py             # File containing function to make data
 OUTDIR = _output                    # Directory for output
 SETPLOT_FILE = setplot.py           # File containing function to set plots
@@ -24,7 +24,7 @@ OVERWRITE ?= True                   # False ==> make a copy of OUTDIR first
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS ?=  
+FFLAGS ?= 
 
 # ---------------------------------
 # package sources for this program:
@@ -47,14 +47,14 @@ EXCLUDE_SOURCES = \
 # List of custom sources for this program:
 # ----------------------------------------
 
-MODULES = \
+MODULES += \
 
-SOURCES = \
+SOURCES += \
   qinit.f \
   setprob.f \
   setaux.f \
-  $(CLAW)/riemann/src/rpn2_vc_acoustics_adjoint.f90 \
-  $(CLAW)/riemann/src/rpt2_vc_acoustics_adjoint.f90 \
+  rpn2_vc_acoustics.f90 \
+  $(CLAW)/riemann/src/rpt2_vc_acoustics.f90 \
 
 #-------------------------------------------------------------------
 # Include Makefile containing standard definitions and make options:

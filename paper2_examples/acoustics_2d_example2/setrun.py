@@ -1,35 +1,16 @@
-"""
-Module to set up run time parameters for Clawpack -- amr code.
+""" 
+Module to set up run time parameters for Clawpack.
 
 The values set in the function setrun are then written out to data files
 that will be read in by the Fortran code.
     
-""" 
+"""
 
 import os
 import numpy as np
 
 
-#-----------------------------------------------
-# Set these parameters for adjoint flagging....
-
-# location of output from computing adjoint:
-adjoint_output = os.path.abspath('adjoint/_output')
-print('Will flag using adjoint solution from  %s' % adjoint_output)
-
-# Time period of interest:
-t1 = 51.5
-t2 = 52.0
-
-# Determining type of adjoint flagging:
-
-# taking inner product with forward solution or Richardson error:
-flag_forward_adjoint = True
-flag_richardson_adjoint = False
-
-# tolerance for adjoint flagging:
-adjoint_flag_tolerance = 1e-3       # suggested if using forward solution
-#adjoint_flag_tolerance = 1e-5        # suggested if using Richardson error
+# This version is set up for adjoint flagging
 #-----------------------------------------------
 
 
@@ -37,7 +18,7 @@ adjoint_flag_tolerance = 1e-3       # suggested if using forward solution
 #------------------------------
 def setrun(claw_pkg='amrclaw'):
 #------------------------------
-    
+
     """ 
     Define the parameters used for running Clawpack.
 
@@ -48,12 +29,13 @@ def setrun(claw_pkg='amrclaw'):
         rundata - object of class ClawRunData 
     
     """ 
-    
-    from clawpack.clawutil import data 
 
+    from clawpack.clawutil import data
+    
+ 
     assert claw_pkg.lower() == 'amrclaw',  "Expected claw_pkg = 'amrclaw'"
 
-    num_dim = 1
+    num_dim = 2
     rundata = data.ClawRunData(claw_pkg, num_dim)
 
     #------------------------------------------------------------------
@@ -61,20 +43,21 @@ def setrun(claw_pkg='amrclaw'):
     #------------------------------------------------------------------
 
     probdata = rundata.new_UserData(name='probdata',fname='setprob.data')
-    probdata.add_param('betal', 20., 'Gaussian hump width parameter')
-    probdata.add_param('betar', 5., 'for width of Gaussian data')
-    probdata.add_param('freqrl',   20, 'frequency in wave packet')
-    probdata.add_param('freqr',   3., 'frequency in wave packet')
-    probdata.add_param('rhol', 1., 'Density left of interface')
-    probdata.add_param('cl',   2., 'Sound speed left of interface')
-    probdata.add_param('rhor', 2., 'Density right of interface')
-    probdata.add_param('cr',  0.5, 'Sound speed right of interface')
+    probdata.add_param('p1',    2.,  'density on left')
+    probdata.add_param('c1',    2.,  'sound speed on left')
+    probdata.add_param('p2',    2.,  'density on right')
+    probdata.add_param('c2',    1.,  'sound speed on right')
     
     #------------------------------------------------------------------
     # Standard Clawpack parameters to be written to claw.data:
+    #   (or to amrclaw.data for AMR)
     #------------------------------------------------------------------
 
     clawdata = rundata.clawdata  # initialized when rundata instantiated
+
+
+    # Set single grid parameters first.
+    # See below for AMR parameters.
 
 
     # ---------------
@@ -85,11 +68,14 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.num_dim = num_dim
     
     # Lower and upper edge of computational domain:
-    clawdata.lower[0] = -12.          # xlower
-    clawdata.upper[0] = 12.           # xupper
+    clawdata.lower[0] = -8.000000e+00          # xlower
+    clawdata.upper[0] = 8.000000e+00          # xupper
+    clawdata.lower[1] = -1.000000e+00          # ylower
+    clawdata.upper[1] = 11.000000e+00          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 40      # mx
+    clawdata.num_cells[0] = 50      # mx
+    clawdata.num_cells[1] = 50      # my
     
 
     # ---------------
@@ -97,10 +83,11 @@ def setrun(claw_pkg='amrclaw'):
     # ---------------
 
     # Number of equations in the system:
-    clawdata.num_eqn = 2
+    clawdata.num_eqn = 3
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
-    # see setadjoint
+    rundata.clawdata.num_aux = 2   
+    # Note: as required for original problem - modified below for adjoint
     
     # Index of aux array corresponding to capacity function, if there is one:
     clawdata.capa_index = 0
@@ -110,18 +97,16 @@ def setrun(claw_pkg='amrclaw'):
     # Initial time:
     # -------------
 
-    clawdata.t0 = 0.
+    clawdata.t0 = 0.000000
     
 
     # Restart from checkpoint file of a previous run?
-    # Note: If restarting, you must also change the Makefile to set:
-    #    RESTART = True
     # If restarting, t0 above should be from original run, and the
-    # restart_file 'fort.qNNNN' specified below should be in 
+    # restart_file 'fort.chkNNNNN' specified below should be in 
     # the OUTDIR indicated in Makefile.
 
     clawdata.restart = False               # True to restart from prior results
-    clawdata.restart_file = 'fort.q0006'   # File to use for restart data
+    clawdata.restart_file = 'fort.chk00006'  # File to use for restart data
     
     
     # -------------
@@ -136,8 +121,8 @@ def setrun(claw_pkg='amrclaw'):
     if clawdata.output_style==1:
         # Output ntimes frames at equally spaced times up to tfinal:
         # Can specify num_output_times = 0 for no output
-        clawdata.num_output_times = 52*2
-        clawdata.tfinal = 52.0
+        clawdata.num_output_times = 42
+        clawdata.tfinal = 21.0
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
     elif clawdata.output_style == 2:
@@ -152,11 +137,11 @@ def setrun(claw_pkg='amrclaw'):
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
 
-    clawdata.output_format = 'ascii'      # 'ascii', 'binary', 'netcdf'
+    clawdata.output_format = 'ascii'       # 'ascii', 'binary', 'netcdf'
 
     clawdata.output_q_components = 'all'   # could be list such as [True,True]
-    clawdata.output_aux_components = 'none'  # could be list
-    clawdata.output_aux_onlyonce = True    # output aux arrays only at t0
+    clawdata.output_aux_components = 'all'  # could be list
+    clawdata.output_aux_onlyonce = False    # output aux arrays only at t0
     
 
     # ---------------------------------------------------
@@ -180,15 +165,15 @@ def setrun(claw_pkg='amrclaw'):
     
     # Initial time step for variable dt.  
     # (If dt_variable==0 then dt=dt_initial for all steps)
-    clawdata.dt_initial = 0.1e-1
+    clawdata.dt_initial = 1.00000e-03
     
     # Max time step to be allowed if variable dt used:
-    clawdata.dt_max = 1.e9
+    clawdata.dt_max = 1.000000e+99
     
     # Desired Courant number if variable dt used 
-    clawdata.cfl_desired = 0.9
+    clawdata.cfl_desired = 0.900000
     # max Courant number to allow without retaking step with a smaller dt:
-    clawdata.cfl_max = 1.0
+    clawdata.cfl_max = 1.000000
     
     # Maximum number of time steps to allow between output times:
     clawdata.steps_max = 50000
@@ -200,6 +185,15 @@ def setrun(claw_pkg='amrclaw'):
 
     # Order of accuracy:  1 => Godunov,  2 => Lax-Wendroff plus limiters
     clawdata.order = 2
+    
+    # Use dimensional splitting? (not yet available for AMR)
+    clawdata.dimensional_split = 'unsplit'
+    
+    # For unsplit method, transverse_waves can be 
+    #  0 or 'none'      ==> donor cell (only normal solver used)
+    #  1 or 'increment' ==> corner transport of waves
+    #  2 or 'all'       ==> corner transport of 2nd order corrections too
+    clawdata.transverse_waves = 2
     
     
     # Number of waves in the Riemann solution:
@@ -213,7 +207,7 @@ def setrun(claw_pkg='amrclaw'):
     #   2 or 'superbee' ==> superbee
     #   3 or 'vanleer'  ==> van Leer
     #   4 or 'mc'       ==> MC limiter
-    clawdata.limiter = ['mc','mc']
+    clawdata.limiter = ['vanleer','vanleer']
     
     clawdata.use_fwaves = False    # True ==> use f-wave version of algorithms
     
@@ -221,7 +215,7 @@ def setrun(claw_pkg='amrclaw'):
     #   src_split == 0 or 'none'    ==> no source term (src routine never called)
     #   src_split == 1 or 'godunov' ==> Godunov (1st order) splitting used, 
     #   src_split == 2 or 'strang'  ==> Strang (2nd order) splitting used,  not recommended.
-    clawdata.source_split = 'none'
+    clawdata.source_split = 0
     
     
     # --------------------
@@ -239,96 +233,127 @@ def setrun(claw_pkg='amrclaw'):
     
     clawdata.bc_lower[0] = 'wall'   # at xlower
     clawdata.bc_upper[0] = 'wall'   # at xupper
-    
+
+    clawdata.bc_lower[1] = 'extrap'   # at ylower
+    clawdata.bc_upper[1] = 'wall'   # at yupper
+                         
+
     # ---------------
     # Gauges:
     # ---------------
     rundata.gaugedata.gauges = []
-    # for gauges append lines of the form  [gaugeno, x, t1, t2]
-    rundata.gaugedata.gauges.append([0, -1.0, 0., 1e9])
-    rundata.gaugedata.gauges.append([1,  1.0, 0., 1e9])
-    
+    # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
+    rundata.gaugedata.gauges.append([0, 1.0, 5.5, 0., 21.])
+
     # --------------
     # Checkpointing:
     # --------------
-    
+
     # Specify when checkpoint files should be created that can be
     # used to restart a computation.
-    
+
     clawdata.checkpt_style = 0
-    
+
     if clawdata.checkpt_style == 0:
         # Do not checkpoint at all
         pass
-    
+
     elif clawdata.checkpt_style == 1:
         # Checkpoint only at tfinal.
         pass
-    
+
     elif clawdata.checkpt_style == 2:
-        # Specify a list of checkpoint times.
+        # Specify a list of checkpoint times.  
         clawdata.checkpt_times = [0.1,0.15]
-    
+
     elif clawdata.checkpt_style == 3:
         # Checkpoint every checkpt_interval timesteps (on Level 1)
         # and at the final time.
         clawdata.checkpt_interval = 5
+
     
+
     # ---------------
     # AMR parameters:
     # ---------------
-    
+
     amrdata = rundata.amrdata
 
     # max number of refinement levels:
     amrdata.amr_levels_max = 5
-    
+
     # List of refinement ratios at each level (length at least amr_level_max-1)
-    amrdata.refinement_ratios_x = [6,6,6,6,6]
-    amrdata.refinement_ratios_t = [6,6,6,6,6]
-    
-    
+    amrdata.refinement_ratios_x = [2,2,2,2,2,2,2,2,2]
+    amrdata.refinement_ratios_y = [2,2,2,2,2,2,2,2,2]
+    amrdata.refinement_ratios_t = [2,2,2,2,2,2,2,2,2]
+
+
     # Specify type of each aux variable in clawdata.auxtype.
     # This must be a list of length num_aux, each element of which is one of:
-    #   'center',  'capacity', or 'xleft'  (see documentation).
+    #   'center',  'capacity', 'xleft', or 'yleft'  (see documentation).
     
-    # need 3 values, set in setadjoint
+    rundata.amrdata.aux_type = ['center','center']
+    # Note: as required for original problem - modified below for adjoint
     
+    # set tolerances for flagging in adjoint section below
     
-    # Flag for refinement based on Richardson error estimater:
-    amrdata.flag_richardson = False
-    
-    # Flag for refinement using routine flag2refine:
-    amrdata.flag2refine = False
-    
-    # see setadjoint to set tolerance and flag for adjoint flagging
     
     # steps to take on each level L between regriddings of level L+1:
-    amrdata.regrid_interval = 2
-    
+    amrdata.regrid_interval = 2       
+
     # width of buffer zone around flagged points:
     # (typically the same as regrid_interval so waves don't escape):
     amrdata.regrid_buffer_width  = 2
-    
+
     # clustering alg. cutoff for (# flagged pts) / (total # of cells refined)
     # (closer to 1.0 => more small grids may be needed to cover flagged cells)
     amrdata.clustering_cutoff = 0.7
-    
+
     # print info about each regridding up to this level:
-    amrdata.verbosity_regrid = 0
-    
-    
+    amrdata.verbosity_regrid = 0      
+
+
     # ---------------
     # Regions:
     # ---------------
     rundata.regiondata.regions = []
     # to specify regions of refinement append lines of the form
-    #  [minlevel,maxlevel,t1,t2,x1,x2]
-    
+    #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
+
     #------------------------------------------------------------------
     # Adjoint specific data:
     #------------------------------------------------------------------
-    rundata = setadjoint(rundata)
+    # Also need to set flagging method and appropriate tolerances above
+
+    flag_method = 'forward-diff'
+
+    assert flag_method in ['forward-diff','forward-error',\
+           'adjoint-mag','adjoint-error'], '*** Unsupported flag_method'
+
+    adjointdata = rundata.adjointdata
+    adjointdata.use_adjoint = (flag_method in ['adjoint-mag','adjoint-error'])
+
+    # Flag for refinement based on Richardson error estimater:
+    amrdata.flag_richardson = (flag_method in ['adjoint-error','forward-error'])
+    amrdata.flag_richardson_tol = 3e-3 # suggested if using adjoint-error flag
+
+    # Flag for refinement using routine flag2refine:
+    amrdata.flag2refine = (flag_method in ['adjoint-mag','forward-diff'])
+    #amrdata.flag2refine_tol = 3e-4 # suggested if using adjoint-mag flag
+    amrdata.flag2refine_tol =  0.05 # suggested if using forward-diff
+
+    # location of adjoint solution, must first be created:
+    adjointdata.adjoint_outdir = os.path.abspath('adjoint/_output')
+
+    # time period of interest:
+    adjointdata.t1 = 20.5
+    adjointdata.t2 = 21.
+
+    if adjointdata.use_adjoint:
+        # need an additional aux variable for inner product:
+        rundata.amrdata.aux_type.append('center')
+        rundata.clawdata.num_aux = len(rundata.amrdata.aux_type)
+        adjointdata.innerprod_index = len(rundata.amrdata.aux_type)
     
     
     #  ----- For developers -----
@@ -343,67 +368,11 @@ def setrun(claw_pkg='amrclaw'):
     amrdata.sprint = False      # space/memory output
     amrdata.tprint = False      # time step reporting each level
     amrdata.uprint = False      # update/upbnd reporting
-
-                  
+    
     return rundata
 
     # end of function setrun
     # ----------------------
-
-#-------------------
-def setadjoint(rundata):
-    #-------------------
-    
-    """
-        Setting up adjoint variables and
-        reading in all of the checkpointed Adjoint files
-        """
-    
-    import glob
-    import os
-    
-    # Set these parameters at top of this file:
-    # adjoint_flag_tolerance, t1, t2, adjoint_output
-    # Then you don't need to modify this function...
-    
-    # flag and tolerance for adjoint flagging:
-    if flag_forward_adjoint == True:
-        # setting up taking inner product with forward solution
-        rundata.amrdata.flag2refine = True
-        rundata.amrdata.flag2refine_tol = adjoint_flag_tolerance
-    elif flag_richardson_adjoint == True:
-        # setting up taking inner product with Richardson error
-        rundata.amrdata.flag_richardson = True
-        rundata.amrdata.flag_richardson_tol = adjoint_flag_tolerance
-    else:
-        print("No refinement flag set!")
-    
-    rundata.clawdata.num_aux = 3   # 3 required for adjoint flagging
-    rundata.amrdata.aux_type = ['center','center','center']
-
-    adjointdata = rundata.new_UserData(name='adjointdata',fname='adjoint.data')
-    adjointdata.add_param('adjoint_output',adjoint_output,'adjoint_output')
-    adjointdata.add_param('t1',t1,'t1, start time of interest')
-    adjointdata.add_param('t2',t2,'t2, final time of interest')
-    
-    files = glob.glob(os.path.join(adjoint_output,"fort.b*"))
-    files.sort()
-    
-    if (len(files) == 0):
-        print("No binary files found for adjoint output!")
-    
-    adjointdata.add_param('numadjoints', len(files), 'Number of adjoint checkpoint files.')
-    adjointdata.add_param('innerprod_index', 3, 'Index for innerproduct data in aux array.')
-    
-    counter = 1
-    for fname in files:
-        f = open(fname)
-        adjointdata.add_param('file' + str(counter), fname, 'Binary file' + str(counter))
-        counter = counter + 1
-    
-    return rundata
-# end of function setadjoint
-# ----------------------
 
 
 if __name__ == '__main__':

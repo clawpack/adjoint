@@ -20,18 +20,19 @@ SETPLOT_FILE = setplot.py           # File containing function to set plots
 PLOTDIR = _plots                    # Directory for plots
 
 OVERWRITE ?= True                   # False ==> make a copy of OUTDIR first
+RESTART ?= False                    # Should = clawdata.restart in setrun
 
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 
 # Compiler flags can be specified here or set as an environment variable
-FFLAGS ?= -O2 -fopenmp 
+FFLAGS ?=  
 
 # ---------------------------------
 # package sources for this program:
 # ---------------------------------
 
-ADJLIB = $(CLAW)/amrclaw/src/2d/adjoint
-include $(ADJLIB)/Makefile.adjoint_amr_2d
+AMRLIB = $(CLAW)/amrclaw/src/1d
+include $(AMRLIB)/Makefile.amr_1d
 
 # ---------------------------------------
 # package sources specifically to exclude
@@ -47,14 +48,13 @@ EXCLUDE_SOURCES = \
 # List of custom sources for this program:
 # ----------------------------------------
 
-MODULES += \
+MODULES = \
 
-SOURCES += \
+SOURCES = \
   qinit.f \
   setprob.f \
   setaux.f \
-  $(CLAW)/riemann/src/rpn2_vc_acoustics.f \
-  $(CLAW)/riemann/src/rpt2_vc_acoustics.f \
+  $(CLAW)/riemann/src/rp1_acoustics_variable.f90 \
 
 #-------------------------------------------------------------------
 # Include Makefile containing standard definitions and make options:
