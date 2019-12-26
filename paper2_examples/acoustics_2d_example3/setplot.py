@@ -28,7 +28,7 @@ def setplot(plotdata):
     print('use_adjoint = ', adjoint_data.use_adjoint)
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
-    plotdata.format = 'ascii'      # 'ascii', 'binary', 'netcdf'
+    plotdata.format = 'binary'      # 'ascii', 'binary'
     
 
     # Figure for pressure
