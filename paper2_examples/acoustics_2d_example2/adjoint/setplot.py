@@ -27,10 +27,10 @@ def setplot(plotdata):
     plotdata.format = 'binary'      # 'ascii', 'binary', 'netcdf'
     
 
-    # Figure for pressure
+    # Figure for adjoint
     # -------------------
 
-    plotfigure = plotdata.new_plotfigure(name='Pressure', figno=0)
+    plotfigure = plotdata.new_plotfigure(name='Adjoint', figno=0)
     plotfigure.kwargs = {'figsize': (5.5,4)}
 
     # Set up for axes in this figure:
@@ -45,8 +45,8 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.blue_white_red
-    plotitem.pcolor_cmin = -0.5
-    plotitem.pcolor_cmax = 0.5
+    plotitem.pcolor_cmin = -0.005
+    plotitem.pcolor_cmax = 0.005
     plotitem.add_colorbar = False
     
 
@@ -79,6 +79,7 @@ def fixup_adjoint(current_data):
 
 def plot_rectangle(current_data):
     from clawpack.visclaw.plottools import plotbox
-    x1 = 0.68; x2 = 1.32; y1 = 5.26; y2 = 5.74
+    #x1 = 0.68; x2 = 1.32; y1 = 5.26; y2 = 5.74
+    x1 = 0.9; x2 = 1.1; y1 = 5.4; y2 = 5.6
     xy = [x1, x2, y1, y2]
     plotbox(xy, kwargs={'color': 'k', 'linewidth': 2})

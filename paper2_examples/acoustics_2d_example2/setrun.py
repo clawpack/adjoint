@@ -335,7 +335,7 @@ def setrun(claw_pkg='amrclaw'):
 
     # Flag for refinement based on Richardson error estimater:
     amrdata.flag_richardson = (flag_method in ['adjoint-error','forward-error'])
-    amrdata.flag_richardson_tol = 0.0025 #0.00005 # suggested if using adjoint-error flag
+    amrdata.flag_richardson_tol = 0.01 #0.00005 # suggested if using adjoint-error flag
 
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = (flag_method in ['adjoint-mag','forward-diff'])

@@ -192,9 +192,10 @@ def fixup_gauge(current_data):
 
 def plot_rectangle(current_data):
     from clawpack.visclaw.plottools import plotbox
-    x1 = 0.68; x2 = 1.32; y1 = 5.26; y2 = 5.74
+    #x1 = 0.68; x2 = 1.32; y1 = 5.26; y2 = 5.74
+    x1 = 0.9; x2 = 1.1; y1 = 5.4; y2 = 5.6
     xy = [x1, x2, y1, y2]
-    plotbox(xy, kwargs={'color': 'k', 'linewidth': 2})
+    plotbox(xy, kwargs={'color': 'k', 'linewidth': 1})
 
 def fixup_gauge(current_data):
     import pylab
