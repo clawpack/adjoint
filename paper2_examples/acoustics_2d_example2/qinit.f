@@ -10,7 +10,8 @@ c
        dimension q(meqn, 1-mbc:mx+mbc, 1-mbc:my+mbc)
 c
        pi = 4.d0*datan(1.d0)
-       width = 0.15d0
+       !width = 0.15d0
+       width = 0.4d0
 
        do 20 i=1,mx
           xcell = xlower - 0.5d0 + (i-0.5d0)*dx
@@ -19,8 +20,10 @@ c
              ycell = ylower - 1.0d0+ (j-0.5d0)*dy
              r = dsqrt((xcell)**2 + (ycell)**2)
 
-             if (dabs(r-0.3d0) .le. width) then
-                 pressure = 3.d0 + dcos(pi*(r-0.5d0)/width)
+             !if (dabs(r-0.3d0) .le. width) then
+             if (r .le. width) then
+                 !pressure = 3.d0 + dcos(pi*(r-0.5d0)/width)
+                 pressure = 2.d0*(1.d0 + dcos(pi*r/width))
                else
                  pressure = 0.d0
                endif

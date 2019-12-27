@@ -55,6 +55,7 @@ SOURCES += \
   setaux.f \
   rpn2_vc_acoustics.f90 \
   $(CLAW)/riemann/src/rpt2_vc_acoustics.f90 \
+  errf1.f \
 
 #-------------------------------------------------------------------
 # Include Makefile containing standard definitions and make options:

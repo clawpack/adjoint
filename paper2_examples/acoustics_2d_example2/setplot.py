@@ -7,6 +7,7 @@ function setplot is called to set the plot parameters.
     
 """
 
+outdir_fine = '_output_1600x1200'
 
 
 #--------------------------
@@ -28,7 +29,7 @@ def setplot(plotdata):
     print('use_adjoint = ', adjoint_data.use_adjoint)
 
     plotdata.clearfigures()  # clear any old figures,axes,items data
-    plotdata.format = 'ascii'      # 'ascii', 'binary', 'netcdf'
+    plotdata.format = 'binary'      # 'ascii', 'binary'
     
 
     # Figure for pressure
@@ -51,8 +52,8 @@ def setplot(plotdata):
     plotitem.pcolor_cmap = colormaps.blue_white_red
     plotitem.add_colorbar = True
     plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = -0.3
-    plotitem.pcolor_cmax = 0.3
+    plotitem.pcolor_cmin = -0.2
+    plotitem.pcolor_cmax = 0.2
     plotitem.amr_patchedges_show = [0,0,0,0,0]
     plotitem.amr_celledges_show = [0,0,0,0,0]
     
@@ -80,7 +81,7 @@ def setplot(plotdata):
     plotitem.show = True       # show on plot?
     plotitem.pcolor_cmin = 0.0     # use when plotting inner product with q
     #plotitem.pcolor_cmin = 0.0      # use when plotting inner product with error
-    plotitem.pcolor_cmax = 0.0001    # use when plotting inner product with q
+    plotitem.pcolor_cmax = 0.00001    # use when plotting inner product with q
     #plotitem.pcolor_cmax = 0.00001    # use when plotting inner product with error
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
@@ -102,8 +103,8 @@ def setplot(plotdata):
     
     # Water
     plotitem = plotaxes.new_plotitem(plot_type='2d_patch')
-    plotitem.amr_patch_bgcolor = [[1,1,1], [0.8,0.8,0.8], [0.8,1,0.8], [1,.7,.7],[0.6,0.6,1]]
-    plotitem.amr_patchedges_color = ['k','k','g','r','b']
+    plotitem.amr_patch_bgcolor = [[1,1,1], [0.8,0.8,0.8], [0.8,1,0.8], [1,.7,.7],[0.6,0.6,1],[0.9,0.9,0]]
+    plotitem.amr_patchedges_color = ['k','k','g','r','b','yellow']
     plotitem.amr_celledges_show = [0]
     plotitem.amr_patchedges_show = [0,1,1,1,1]
 
@@ -117,13 +118,21 @@ def setplot(plotdata):
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.xlimits = 'auto'
     plotaxes.ylimits = 'auto'
-    plotaxes.xlimits = [0,21]
-    plotaxes.ylimits = [-0.4,0.6]
+    plotaxes.xlimits = [0,22]
+    plotaxes.ylimits = [-0.5,0.5]
     plotaxes.title = 'Pressure'
+    plotaxes.afteraxes = fixup_gauge
+    
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
     plotitem.plotstyle = 'b-'
-    plotitem.kwargs = {'linewidth': 3}
+    plotitem.kwargs = {'linewidth': 2}
+    
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.outdir = outdir_fine
+    plotitem.plot_var = 0
+    plotitem.plotstyle = 'r-'
+    plotitem.kwargs = {'linewidth': 1}
     plotaxes.afteraxes = fixup_gauge
 
     # Parameters used only when creating html and/or latex hardcopy
@@ -131,7 +140,7 @@ def setplot(plotdata):
 
     plotdata.printfigs = True                # print figures
     plotdata.print_format = 'png'            # file format
-    plotdata.print_framenos = 'all'          # list of frames to print
+    plotdata.print_framenos = [0,1]          # list of frames to print
     plotdata.print_fignos = 'all'            # list of figures to print
     plotdata.html = True                     # create html files of plots?
     plotdata.html_homelink = '../README.html'   # pointer for top of index
@@ -186,3 +195,11 @@ def plot_rectangle(current_data):
     x1 = 0.68; x2 = 1.32; y1 = 5.26; y2 = 5.74
     xy = [x1, x2, y1, y2]
     plotbox(xy, kwargs={'color': 'k', 'linewidth': 2})
+
+def fixup_gauge(current_data):
+    import pylab
+    size = 15
+    pylab.grid(True)
+    pylab.title('Pressure at Gauge 0', fontsize=size)
+    #pylab.xticks([1.0, 1.5, 2.0, 2.5, 3.0], fontsize=size)
+    #pylab.yticks([-0.3, -0.1, 0.1, 0.3, 0.5], fontsize=size)

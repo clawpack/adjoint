@@ -68,8 +68,8 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.upper[1] = 11.000000e+00          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 200      # mx
-    clawdata.num_cells[1] = 200      # my
+    clawdata.num_cells[0] = 160      # mx
+    clawdata.num_cells[1] = 120      # my
     
 
     # ---------------
@@ -114,8 +114,8 @@ def setrun(claw_pkg='amrclaw'):
     if clawdata.output_style==1:
         # Output ntimes frames at equally spaced times up to tfinal:
         # Can specify num_output_times = 0 for no output
-        clawdata.num_output_times = 21*8
-        clawdata.tfinal = 21.0
+        clawdata.num_output_times = 22*8
+        clawdata.tfinal = 22.0
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
     elif clawdata.output_style == 2:

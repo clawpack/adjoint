@@ -74,8 +74,8 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.upper[1] = 11.000000e+00          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 50      # mx
-    clawdata.num_cells[1] = 50      # my
+    clawdata.num_cells[0] = 50 #1600 #50      # mx
+    clawdata.num_cells[1] = 40 #1200 #50      # my
     
 
     # ---------------
@@ -116,19 +116,19 @@ def setrun(claw_pkg='amrclaw'):
     # Specify at what times the results should be written to fort.q files.
     # Note that the time integration stops after the final output time.
  
-    clawdata.output_style = 1
+    clawdata.output_style = 2
  
     if clawdata.output_style==1:
         # Output ntimes frames at equally spaced times up to tfinal:
         # Can specify num_output_times = 0 for no output
-        clawdata.num_output_times = 42
-        clawdata.tfinal = 21.0
+        clawdata.num_output_times = 44
+        clawdata.tfinal = 22.0
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
     elif clawdata.output_style == 2:
         # Specify a list or numpy array of output times:
         # Include t0 if you want output at the initial time.
-        clawdata.output_times =  [0., 0.1]
+        clawdata.output_times =  [0., 2.5, 6., 15., 21., 22.]
  
     elif clawdata.output_style == 3:
         # Output every step_interval timesteps over total_steps timesteps:
@@ -137,7 +137,7 @@ def setrun(claw_pkg='amrclaw'):
         clawdata.output_t0 = True  # output at initial (or restart) time?
         
 
-    clawdata.output_format = 'ascii'       # 'ascii', 'binary', 'netcdf'
+    clawdata.output_format = 'binary'       # 'ascii', 'binary', 'netcdf'
 
     clawdata.output_q_components = 'all'   # could be list such as [True,True]
     clawdata.output_aux_components = 'all'  # could be list
@@ -165,7 +165,7 @@ def setrun(claw_pkg='amrclaw'):
     
     # Initial time step for variable dt.  
     # (If dt_variable==0 then dt=dt_initial for all steps)
-    clawdata.dt_initial = 1.00000e-03
+    clawdata.dt_initial = 0.13
     
     # Max time step to be allowed if variable dt used:
     clawdata.dt_max = 1.000000e+99
@@ -243,7 +243,7 @@ def setrun(claw_pkg='amrclaw'):
     # ---------------
     rundata.gaugedata.gauges = []
     # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
-    rundata.gaugedata.gauges.append([0, 1.0, 5.5, 0., 21.])
+    rundata.gaugedata.gauges.append([0, 1.0, 5.5, 0., 1e9])
 
     # --------------
     # Checkpointing:
@@ -252,7 +252,7 @@ def setrun(claw_pkg='amrclaw'):
     # Specify when checkpoint files should be created that can be
     # used to restart a computation.
 
-    clawdata.checkpt_style = 0
+    clawdata.checkpt_style = 1
 
     if clawdata.checkpt_style == 0:
         # Do not checkpoint at all
@@ -280,7 +280,7 @@ def setrun(claw_pkg='amrclaw'):
     amrdata = rundata.amrdata
 
     # max number of refinement levels:
-    amrdata.amr_levels_max = 5
+    amrdata.amr_levels_max = 6
 
     # List of refinement ratios at each level (length at least amr_level_max-1)
     amrdata.refinement_ratios_x = [2,2,2,2,2,2,2,2,2]
@@ -325,7 +325,7 @@ def setrun(claw_pkg='amrclaw'):
     #------------------------------------------------------------------
     # Also need to set flagging method and appropriate tolerances above
 
-    flag_method = 'forward-diff'
+    flag_method = 'forward-error'
 
     assert flag_method in ['forward-diff','forward-error',\
            'adjoint-mag','adjoint-error'], '*** Unsupported flag_method'
@@ -335,19 +335,19 @@ def setrun(claw_pkg='amrclaw'):
 
     # Flag for refinement based on Richardson error estimater:
     amrdata.flag_richardson = (flag_method in ['adjoint-error','forward-error'])
-    amrdata.flag_richardson_tol = 3e-3 # suggested if using adjoint-error flag
+    amrdata.flag_richardson_tol = 0.0025 #0.00005 # suggested if using adjoint-error flag
 
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = (flag_method in ['adjoint-mag','forward-diff'])
-    #amrdata.flag2refine_tol = 3e-4 # suggested if using adjoint-mag flag
-    amrdata.flag2refine_tol =  0.05 # suggested if using forward-diff
+    amrdata.flag2refine_tol = 0.001 # suggested if using adjoint-mag flag
+    #amrdata.flag2refine_tol =  0.05 # suggested if using forward-diff
 
     # location of adjoint solution, must first be created:
     adjointdata.adjoint_outdir = os.path.abspath('adjoint/_output')
 
     # time period of interest:
     adjointdata.t1 = 20.5
-    adjointdata.t2 = 21.
+    adjointdata.t2 = 21.5
 
     if adjointdata.use_adjoint:
         # need an additional aux variable for inner product:
