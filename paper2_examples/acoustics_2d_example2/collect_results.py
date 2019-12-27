@@ -3,6 +3,8 @@ from pylab import *
 import clawpack.pyclaw.gauges as gauges
 from scipy.interpolate import interp1d
 
+fs = 15 # fontsize
+
 gaugeno=0
 t1 = 20.5
 t2 = 21.5
@@ -55,9 +57,10 @@ loglog(tol,err_a,'rs-',label='adjoint error flagging')
 axis('scaled'); grid(True)
 axis([1e-3,1e-1,1e-3,1e-1])
 loglog([1e-3,0.1],[1e-3,0.1],'k--')
-xlabel('tolerance specified')
-ylabel('max diff in p over [t1,t2]')
-legend(loc='lower right',framealpha=1)
+tick_params(axis='both', which='major', labelsize=fs)
+xlabel('tolerance specified',fontsize=fs)
+ylabel('max diff in p over [t1,t2]',fontsize=fs)
+legend(loc='lower right',framealpha=1,fontsize=10)
 if 1:
     fname = 'error_plot.png'
     savefig(fname, bbox_inches='tight')
@@ -65,14 +68,16 @@ if 1:
 
 figure(22, figsize=(8,5))
 clf()
+semilogx(tol,cpu_fine*ones(len(tol)),'g--',lw=3,label='uniform fine grid')
 semilogx(tol,cpu_lte,'bo-',label='forward error flagging')
 semilogx(tol,cpu_a,'rs-',label='adjoint error flagging')
-semilogx(tol,cpu_fine*ones(len(tol)),'k--')
+
 axis([1e-3,0.1,0,3000])
-text(tol[0],cpu_fine+20, 'uniform fine grid')
+tick_params(axis='both', which='major', labelsize=fs)
+#text(tol[0],cpu_fine+20, 'uniform fine grid',fontsize=fs)
 grid(True)
-xlabel('tolerance specified')
-ylabel('CPU time (seconds)')
+xlabel('tolerance specified',fontsize=fs)
+ylabel('CPU time (seconds)',fontsize=fs)
 legend(loc='lower right',framealpha=1)
 if 1:
     fname = 'cpu_plot.png'
