@@ -9,6 +9,9 @@ c
        implicit double precision (a-h,o-z)
        dimension q(meqn, 1-mbc:mx+mbc, 1-mbc:my+mbc)
 
+       area = dx*dy
+       write(6,*) 'dx,dy,phi: ',dx,dy,1.d0/area
+
        do 20 i=1,mx
           xcell = xlower + (i-0.5d0)*dx
 
@@ -17,7 +20,7 @@ c
 
              if (dabs(xcell-3.5d0) .le. dx
      &            .and. dabs(ycell-0.5d0) .le. dy) then
-                 pressure = 1.d0
+                 pressure = 1.d0 / area
              else
                  pressure = 0.d0
              endif

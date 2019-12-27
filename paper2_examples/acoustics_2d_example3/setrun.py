@@ -74,8 +74,8 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.upper[1] = 11.000000e+00          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 800 #50      # mx
-    clawdata.num_cells[1] = 600 #50      # my
+    clawdata.num_cells[0] = 50 #1600 #50      # mx
+    clawdata.num_cells[1] = 40 #1200 #50      # my
     
 
     # ---------------
@@ -280,7 +280,7 @@ def setrun(claw_pkg='amrclaw'):
     amrdata = rundata.amrdata
 
     # max number of refinement levels:
-    amrdata.amr_levels_max = 1
+    amrdata.amr_levels_max = 5
 
     # List of refinement ratios at each level (length at least amr_level_max-1)
     amrdata.refinement_ratios_x = [2,2,2,2,2,2,2,2,2]
@@ -325,7 +325,7 @@ def setrun(claw_pkg='amrclaw'):
     #------------------------------------------------------------------
     # Also need to set flagging method and appropriate tolerances above
 
-    flag_method = 'forward-diff'
+    flag_method = 'adjoint-error'
 
     assert flag_method in ['forward-diff','forward-error',\
            'adjoint-mag','adjoint-error'], '*** Unsupported flag_method'
@@ -335,7 +335,7 @@ def setrun(claw_pkg='amrclaw'):
 
     # Flag for refinement based on Richardson error estimater:
     amrdata.flag_richardson = (flag_method in ['adjoint-error','forward-error'])
-    amrdata.flag_richardson_tol = 3e-3 # suggested if using adjoint-error flag
+    amrdata.flag_richardson_tol = 5. # suggested if using adjoint-error flag
 
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = (flag_method in ['adjoint-mag','forward-diff'])
@@ -346,7 +346,7 @@ def setrun(claw_pkg='amrclaw'):
     adjointdata.adjoint_outdir = os.path.abspath('adjoint/_output')
 
     # time period of interest:
-    adjointdata.t1 = 20.5
+    adjointdata.t1 = 20.
     adjointdata.t2 = 21.
 
     if adjointdata.use_adjoint:

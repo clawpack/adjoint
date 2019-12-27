@@ -7,6 +7,7 @@ function setplot is called to set the plot parameters.
     
 """
 
+outdir_fine = '_output_1600x1200'
 
 
 #--------------------------
@@ -81,11 +82,31 @@ def setplot(plotdata):
     plotitem.pcolor_cmin = 0.0      # use when plotting inner product with q
     #plotitem.pcolor_cmin = 0.0     # use when plotting inner product with error
     #plotitem.pcolor_cmax = 0.12    # use when plotting inner product with q
-    #plotitem.pcolor_cmax = 0.000001    # for adjoint-error
-    plotitem.pcolor_cmax = 0.0001    # for adjoint-mag
+    plotitem.pcolor_cmax = 0.001    # for adjoint-error
+    #plotitem.pcolor_cmax = 0.0001    # for adjoint-mag
     plotitem.amr_patchedges_show = [0,0,0]
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_data_show = [1,1,1,1,0]
+    
+    
+    
+    #-----------------------------------------
+    # Figure for innerproduct vs x
+    #-----------------------------------------
+    plotfigure = plotdata.new_plotfigure(name='Inner Product slice', figno=20)
+    #plotfigure.kwargs = {'figsize': (5.5,4)}
+    plotfigure.show = adjoint_data.use_adjoint
+    
+    # Set up for axes in this figure:
+    plotaxes = plotfigure.new_plotaxes()
+    plotaxes.title = 'Inner Product vs x'
+    plotaxes.xlimits = [-8,8]
+    #plotaxes.ylimits = [-1,11]
+    
+    # Set up for item on these axes:
+    plotitem = plotaxes.new_plotitem(plot_type='1d_from_2d_data')
+    plotitem.map_2d_to_1d = plot_innerprod_x
+    plotitem.plotstyle = 'kx'  
     
     #-----------------------------------------
     # Figure for levels
@@ -103,8 +124,8 @@ def setplot(plotdata):
     
     # Water
     plotitem = plotaxes.new_plotitem(plot_type='2d_patch')
-    plotitem.amr_patch_bgcolor = [[1,1,1], [0.8,0.8,0.8], [0.8,1,0.8], [1,.7,.7],[0.6,0.6,1]]
-    plotitem.amr_patchedges_color = ['k','k','g','r','b']
+    plotitem.amr_patch_bgcolor = [[1,1,1], [0.8,0.8,0.8], [0.8,1,0.8], [1,.7,.7],[0.6,0.6,1],[0.9,0.9,0]]
+    plotitem.amr_patchedges_color = ['k','k','g','r','b','yellow']
     plotitem.amr_celledges_show = [0]
     plotitem.amr_patchedges_show = [0,1,1,1,1]
 
@@ -121,11 +142,21 @@ def setplot(plotdata):
     plotaxes.xlimits = [0,21]
     plotaxes.ylimits = [-0.4,0.6]
     plotaxes.title = 'Pressure'
+    plotaxes.afteraxes = fixup_gauge
+    
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
     plotitem.plot_var = 0
     plotitem.plotstyle = 'b-'
     plotitem.kwargs = {'linewidth': 3}
+    
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.outdir = outdir_fine
+    plotitem.plot_var = 0
+    plotitem.plotstyle = 'k-'
+    plotitem.kwargs = {'linewidth': 1}
     plotaxes.afteraxes = fixup_gauge
+    
+    
 
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via clawpack.visclaw.frametools.printframes:
@@ -145,9 +176,17 @@ def setplot(plotdata):
 
     return plotdata
 
+
 def plot_innerprod(current_data):
     return current_data.aux[2,:,:]
 
+def plot_innerprod_x(current_data):
+    x = current_data.x[:,0]
+    ipx = current_data.aux[2,:,0]
+    print('+++ x.shape, ipx.shape: ',x.shape, ipx.shape)
+    print('+++ abs(ipx).max() = ',abs(ipx).max())
+    return x,ipx
+    
 # Afteraxis functions:
 
 def addgauges(current_data):
