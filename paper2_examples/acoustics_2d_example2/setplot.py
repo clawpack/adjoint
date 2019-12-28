@@ -50,10 +50,10 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.blue_white_red
-    plotitem.add_colorbar = True
-    plotitem.show = True       # show on plot?
-    plotitem.pcolor_cmin = -0.2
-    plotitem.pcolor_cmax = 0.2
+    plotitem.add_colorbar = False
+    plotitem.show = True        # show on plot?
+    plotitem.pcolor_cmin = -0.15
+    plotitem.pcolor_cmax = 0.15
     plotitem.amr_patchedges_show = [0,0,0,0,0]
     plotitem.amr_celledges_show = [0,0,0,0,0]
     
@@ -128,19 +128,20 @@ def setplot(plotdata):
     plotitem.plotstyle = 'b-'
     plotitem.kwargs = {'linewidth': 2}
     
-    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
-    plotitem.outdir = outdir_fine
-    plotitem.plot_var = 0
-    plotitem.plotstyle = 'r-'
-    plotitem.kwargs = {'linewidth': 1}
-    plotaxes.afteraxes = fixup_gauge
+    if 0:
+        plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+        plotitem.outdir = outdir_fine
+        plotitem.plot_var = 0
+        plotitem.plotstyle = 'r-'
+        plotitem.kwargs = {'linewidth': 1}
+        plotaxes.afteraxes = fixup_gauge
 
     # Parameters used only when creating html and/or latex hardcopy
     # e.g., via clawpack.visclaw.frametools.printframes:
 
     plotdata.printfigs = True                # print figures
     plotdata.print_format = 'png'            # file format
-    plotdata.print_framenos = [0,1]          # list of frames to print
+    plotdata.print_framenos = 'all'          # list of frames to print
     plotdata.print_fignos = 'all'            # list of figures to print
     plotdata.html = True                     # create html files of plots?
     plotdata.html_homelink = '../README.html'   # pointer for top of index
@@ -166,10 +167,10 @@ def addgauges(current_data):
 def fixup(current_data):
     import pylab
     from pylab import plot
-    size = 28
+    size = 18
     plot_rectangle(current_data)
     # Uncomment this line if you want to generate plots without a title for the paper
-    #pylab.title(' ')
+    pylab.title(' ')
     pylab.xticks([-8, -4, 0, 4, 8], fontsize=size)
     pylab.yticks([0, 5, 10], fontsize=size)
     plot([0., 0.], [-1000., 1000.], 'k--')
@@ -177,7 +178,7 @@ def fixup(current_data):
 def fixup_innerprod(current_data):
     import pylab
     from pylab import plot
-    size = 28
+    size = 18
     plot_rectangle(current_data)
     pylab.xticks([-8, -4, 0, 4, 8], fontsize=size)
     pylab.yticks([0, 5, 10], fontsize=size)

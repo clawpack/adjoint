@@ -45,7 +45,7 @@ for k in range(len(truns)):
     
 tol = [.0025,.005,.01,.02]
 cpu_lte = [1329,581,225,63]
-cpu_a = [407,125,17,2]
+cpu_a = [407+5,125+5,17+5,2+5]
 err_a = [0.0027,.0083,.0354,.0837]
 err_lte = [.0031,.0067,.0122,.0347]
 cpu_fine = 2823.5
@@ -59,8 +59,8 @@ axis([1e-3,1e-1,1e-3,1e-1])
 loglog([1e-3,0.1],[1e-3,0.1],'k--')
 tick_params(axis='both', which='major', labelsize=fs)
 xlabel('tolerance specified',fontsize=fs)
-ylabel('max diff in p over [t1,t2]',fontsize=fs)
-legend(loc='lower right',framealpha=1,fontsize=10)
+ylabel('max error in p over [t1,t2]',fontsize=fs)
+legend(loc='lower right',framealpha=1,fontsize=12)
 if 1:
     fname = 'error_plot.png'
     savefig(fname, bbox_inches='tight')
@@ -78,7 +78,7 @@ tick_params(axis='both', which='major', labelsize=fs)
 grid(True)
 xlabel('tolerance specified',fontsize=fs)
 ylabel('CPU time (seconds)',fontsize=fs)
-legend(loc='lower right',framealpha=1)
+legend(loc='upper right',framealpha=1,fontsize=12)
 if 1:
     fname = 'cpu_plot.png'
     savefig(fname, bbox_inches='tight')
