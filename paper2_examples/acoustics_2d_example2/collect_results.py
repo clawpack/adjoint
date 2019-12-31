@@ -1,6 +1,7 @@
 
 """
-Initial tests of various ways to plot errors
+Initial tests of various ways to plot errors.
+For version used in paper, see make_cpu_vs_error_plot.py
 """
 
 from pylab import *
