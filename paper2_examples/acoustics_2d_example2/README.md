@@ -20,7 +20,7 @@ The code will produce two new folders: _output and _plots.
 The first one contains all the output files, while the latter one contains the plots and interactive 
 visualization apps.
 
-* Go to the main folder **acoustics_2d_ex3** and run in the terminal:
+* Go to the main folder **acoustics_2d_example3** and run in the terminal:
 
 ```
 make new

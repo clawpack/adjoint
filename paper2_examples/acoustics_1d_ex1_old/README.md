@@ -1,4 +1,6 @@
-This code produces Example 1, the first one-dimensional variable coefficient acoustics example, presented in ''Analysis and Performance Evaluation of Adjoint-Guided Adaptive Mesh Refinement Using Clawpack''.
+This code was for the original Example 1, the first one-dimensional variable
+coefficient acoustics example, presented in the preprint version of
+''Analysis and Performance Evaluation of Adjoint-Guided Adaptive Mesh Refinement Using Clawpack''.
 
 ### Folder Organization
 * **adjoint:**
