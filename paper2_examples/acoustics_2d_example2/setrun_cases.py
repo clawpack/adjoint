@@ -74,8 +74,8 @@ def setrun(claw_pkg='amrclaw'):
     clawdata.upper[1] = 11.000000e+00          # yupper
     
     # Number of grid cells:
-    clawdata.num_cells[0] = 50                # mx
-    clawdata.num_cells[1] = 40                # my
+    clawdata.num_cells[0] = 50       # mx
+    clawdata.num_cells[1] = 40       # my
     
 
     # ---------------
@@ -116,7 +116,7 @@ def setrun(claw_pkg='amrclaw'):
     # Specify at what times the results should be written to fort.q files.
     # Note that the time integration stops after the final output time.
  
-    clawdata.output_style = 2
+    clawdata.output_style = 1
  
     if clawdata.output_style==1:
         # Output ntimes frames at equally spaced times up to tfinal:
@@ -165,7 +165,7 @@ def setrun(claw_pkg='amrclaw'):
     
     # Initial time step for variable dt.  
     # (If dt_variable==0 then dt=dt_initial for all steps)
-    clawdata.dt_initial = 0.13 / 24.
+    clawdata.dt_initial = 0.13 
     
     # Max time step to be allowed if variable dt used:
     clawdata.dt_max = 1.000000e+99
@@ -325,7 +325,7 @@ def setrun(claw_pkg='amrclaw'):
     #------------------------------------------------------------------
     # Also need to set flagging method and appropriate tolerances above
 
-    flag_method = 'adjoint-error'
+    flag_method = 'forward-error'
 
     assert flag_method in ['forward-diff','forward-error',\
            'adjoint-mag','adjoint-error'], '*** Unsupported flag_method'
@@ -335,8 +335,7 @@ def setrun(claw_pkg='amrclaw'):
 
     # Flag for refinement based on Richardson error estimater:
     amrdata.flag_richardson = (flag_method in ['adjoint-error','forward-error'])
-    amrdata.flag_richardson_tol = 0.005 # suggested if using adjoint-error flag
-    amrdata.flag_richardson_tol = 0.005*0.015 # suggested if using forward-error flag
+    amrdata.flag_richardson_tol = 0.02*0.015 # suggested if using adjoint-error flag
 
     # Flag for refinement using routine flag2refine:
     amrdata.flag2refine = (flag_method in ['adjoint-mag','forward-diff'])

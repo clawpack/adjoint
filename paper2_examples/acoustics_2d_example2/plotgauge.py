@@ -7,7 +7,7 @@ t1 = 20.5
 t2 = 21.5
 
 labels = ['Fine grid','tol = 0.005','tol = 0.01','tol = 0.02','tol = 0.0025']
-outdirs = ['_output_1600x1200', '_output_005', '_output_01', 
+outdirs = ['_output_fine', '_output_005', '_output_01', 
            '_output_02', '_output_0025']
 colors = ['r','k','m','b','m']
 lws = [2.5,1.5,1.5,1.5,1.5]
